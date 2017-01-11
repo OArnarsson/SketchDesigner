@@ -1,3 +1,8 @@
-<p>
-  designer works!
-</p>
+<div class="fr-sp">
+    <div class="col-2 h1">
+        <button>Line</button>
+    </div>
+    <div class="col-10">
+       <canvas *ngFor="let canvas of canvasArr" [ngClass]="canvas.class" [attr.id]="canvas.canvasid"></canvas>
+    </div>
+</div>

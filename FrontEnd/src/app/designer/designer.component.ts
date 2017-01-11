@@ -1,33 +1,31 @@
-import {Component, Input, ViewChild, ElementRef} from '@angular/core';
+import {Component, Input, ViewChild, ElementRef, Renderer} from '@angular/core';
+import {Canvas} from '../Classes/canvas'
 
 @Component({
   selector: 'app-designer',
-  template: `<canvas #sketchCanvas class='sketchCanvas'
-  [attr.width]='_size'
-  [attr.height]='_size'></canvas>`,
+  templateUrl: 'designer.component.html',
   styleUrls: ['./designer.component.sass']
 })
 
 export class DesignerComponent {
-  private _size: number;
+    private renderer:Renderer;
+    public canvasArr:Canvas[];
+    public sketchCanvas:any;
 
-  @ViewChild("sketchCanvas") sketchCanvas: ElementRef;
-
-  constructor(){
-    this._size = 150;
+  constructor(rend: Renderer){
+      this.canvasArr = [];
+      this.mockCanvas();
+      this.renderer = rend;
   }
+    ngAfterViewInit() {
+        console.log();
+        //http://stackoverflow.com/questions/37421007/how-viewchild-can-get-elements-that-added-with-js-in-angular2
 
-  ngAfterViewInit() {
-    let context: CanvasRenderingContext2D = this.sketchCanvas.nativeElement.getContext("2d");
-    context.fillStyle = 'green';
-    context.fillRect(0, 0, 150, 150);
-  }
 
-  get size(){
-    return this._size;
-  }
+    };
 
-  @Input () set size(newValue: number){
-    this._size = Math.floor(newValue);
+  public mockCanvas(){
+      let can = new Canvas(this.renderer);
+      this.canvasArr.push(can);
   }
 }
