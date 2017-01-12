@@ -43,12 +43,11 @@ export class DesignerComponent {
   public setColor() {
     if(this.gui.strokeStyle != 'red') {
       this.gui.strokeStyle = "red";
-      this.activeCanvas.gui = this.gui;
     }
     else{
       this.gui.strokeStyle = 'black';
-      this.activeCanvas.gui = this.gui;
     }
+    this.activeCanvas.gui = this.gui;
   }
 
   public refreshCanvasObject(){
