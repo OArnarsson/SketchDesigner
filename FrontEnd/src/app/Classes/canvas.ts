@@ -1,113 +1,108 @@
 import {Renderer} from '@angular/core';
 import {GUI} from '../Classes/gui'
-import {BaseDrawing} from '../Classes/base-drawing'
+import {Pen} from './pen'
+import {advanceActivatedRoute} from "@angular/router/src/router_state";
 
 export class Canvas {
 
-    //Canvas Variables
-    private renderer:Renderer;
-    public rawCanvasObj:any;
-    public renderContext:CanvasRenderingContext2D;
-    public canvasWidth:number;
-    public canvasHeight:number;
-    public class:string;
+  //Canvas Variables
+  public rawCanvasObj: any;
+  public renderContext: CanvasRenderingContext2D;
+  public class: string;
+  public canvasWidth: number;
+  public canvasHeight: number;
+  public allDrawings: any[];
+  public activeDrawing: any;
+  public active: boolean;
 
-    //Utilities
-    public cursor:string;
-    public uiContent:GUI;
-    public drawingArr:any[];
+  //Utilities
+  public gui: GUI;
+  private renderer: Renderer;
+
+  constructor(rend: Renderer) {
+    this.gui = new GUI();
+    this.renderer = rend;
+    this.class = "mobile";
+    this.canvasWidth = 414;
+    this.canvasHeight = 736;
+    this.allDrawings = [];
+    this.activeDrawing = new Pen();
+    this.active = false;
+  }
 
 
-   //To Draw a simple line
-    public clickX = new Array();
-    public clickY = new Array();
-    public clickDrag = new Array();
-    public paint;
+  public mouseDown(e: any) {
+    this.active = true;
+    var startX = e.pageX - this.rawCanvasObj.offsetLeft;
+    var startY = e.pageY - this.rawCanvasObj.offsetTop;
 
-    constructor(rend: Renderer){
-        this.renderer = rend;
-        this.cursor = "line";
-        this.uiContent = new GUI();
-        this.drawingArr = [];
-        this.class="canvas col-5";
-        this.class = "mobile";
-        this.canvasWidth = 414;
-        this.canvasHeight = 736;
+    if(this.activeDrawing.tool == 'pen') {
+        this.activeDrawing.pushPos(startX, startY);
     }
 
-    public setClass(className){
-        this.class = className;
-    }
-    public prepareCanvas(){
+    this.redrawSimple();
+  }
+
+  public mouseMove(e: any) {
+    if(this.activeDrawing.tool == 'pen' && this.active) {
+      this.activeDrawing.pushPos(e.pageX - this.rawCanvasObj.offsetLeft, e.pageY - this.rawCanvasObj.offsetTop);
 
     }
 
-    //Mouse Event Functions
-    public mouseDown(e:any){
-        // Mouse down location
-        var mouseX = e.pageX - this.rawCanvasObj.offsetLeft;
-        var mouseY = e.pageY - this.rawCanvasObj.offsetTop;
+      this.redrawSimple();
+  }
 
-        this.paint = true;
-        this.addClick(mouseX, mouseY, false);
-        this.redrawSimple();
+  public mouseUp() {
+    this.allDrawings.push(this.activeDrawing);
+    this.active = false;
+
+    if(this.activeDrawing.tool == 'pen') {
+      this.activeDrawing = new Pen();
     }
-    public mouseMove(e:any){
-        if(this.paint){
-            this.addClick(e.pageX - this.rawCanvasObj.offsetLeft, e.pageY - this.rawCanvasObj.offsetTop, true);
-            this.redrawSimple();
+
+    this.redrawSimple();
+
+    console.log(this.allDrawings);
+  }
+
+
+  //Clears Canvas
+  public clearCanvas() {
+    this.renderContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+  }
+
+  //Renders the whole drawing
+  public redrawSimple() {
+    this.clearCanvas();
+
+    for(let drawing of this.allDrawings) {
+      if(drawing.tool == 'pen') {
+        this.renderContext.beginPath();
+        this.renderContext.moveTo(drawing.posX[0], drawing.posY[0]);
+        for (var i = 0; i < drawing.posX.length; i++) {
+          this.renderContext.lineTo(drawing.posX[i], drawing.posY[i]);
+          this.renderContext.stroke();
         }
-    }
-    public mouseUp(){
-        this.paint = false;
-        this.redrawSimple();
-    }
-    public mouseLeave(){
-        this.paint = false;
+      }
     }
 
+    this.renderContext.lineWidth = this.gui.lineWidth;
+    this.renderContext.lineCap = this.gui.lineCap;
+    this.renderContext.lineJoin = this.gui.lineJoin;
 
-
-    //Ckears Canvas
-    public clearCanvas()
-    {
-        this.renderContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+    if(this.gui.tool == 'pen') {
+      this.renderContext.beginPath();
+      this.renderContext.moveTo(this.activeDrawing.posX[0], this.activeDrawing.posY[0]);
+      for (var i = 0; i < this.activeDrawing.posX.length; i++) {
+        this.renderContext.lineTo(this.activeDrawing.posX[i], this.activeDrawing.posY[i]);
+        this.renderContext.stroke();
+      }
     }
 
-    //Adds click path to arr
-    public addClick(x, y, dragging)
-    {
-        this.clickX.push(x);
-        this.clickY.push(y);
-        this.clickDrag.push(dragging);
+    /*
+    if(this.gui.tool == 'square') {
+      this.renderContext.rect(10, 10, this.clickX[this.clickX.length], this.clickY[this.clickX.length])
     }
-
-    //Renders the whole drawing
-    public redrawSimple()
-    {
-        this.clearCanvas();
-        var radius = 5;
-        this.renderContext.strokeStyle = "#ff5a55";
-        this.renderContext.lineWidth = radius;
-
-        for(var i=0; i < this.clickX.length; i++)
-        {
-            this.renderContext.beginPath();
-
-            if(this.clickDrag[i] && i){
-                this.renderContext.moveTo(this.clickX[i-1], this.clickY[i-1]);
-            }
-
-            else{
-                this.renderContext.moveTo(this.clickX[i]-1, this.clickY[i]);
-            }
-
-            this.renderContext.lineTo(this.clickX[i], this.clickY[i]);
-            this.renderContext.closePath();
-            this.renderContext.stroke();
-        }
-    }
-
-
-
+    */
+  }
 }

@@ -1,7 +1,23 @@
 <div class="fr-sp">
     <div class="col-2 h1">
-        <button>Line</button>
-        <button (click)="NewCanvas()">New Canvas</button>
+      <button >Select</button>
+      <button >Zoom</button>
+      <button >Pen</button>
+      <button >Line</button>
+      <button >Square</button>
+      <button >Ellipse</button>
+      <button >Eraser</button>
+      <button >Text</button>
+      <button >Pen</button>
+      <button >Grid</button>
+      <button (click)="setColor()">COLOR TESTING!</button>
+      <button >Canvas Size</button>
+      <button (click)="newCanvas()">New Canvas</button>
+      <button >Delete Canvas</button>
+      <button >Undo</button>
+      <button >Redo</button>
+      <button >Save</button>
+      <button >Load</button>
     </div>
     <div #canvasContainer class="col-10">
        <canvas *ngFor="let canvas of canvasArr"
@@ -10,7 +26,6 @@
                (mousedown)="canvas.mouseDown($event)"
                (mousemove)="canvas.mouseMove($event)"
                (mouseup)="canvas.mouseUp()"
-               (mouseleave)="canvas.mouseLeave()"
                 width="{{canvas.canvasWidth}}"
                 height="{{canvas.canvasHeight}}">
        </canvas>
