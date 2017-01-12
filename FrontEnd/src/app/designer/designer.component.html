@@ -1,8 +1,17 @@
 <div class="fr-sp">
     <div class="col-2 h1">
         <button>Line</button>
+        <button (click)="NewCanvas()">New Canvas</button>
+        <button (click)="TestDraw()">Testing</button>
     </div>
-    <div class="col-10">
-       <canvas *ngFor="let canvas of canvasArr" [ngClass]="canvas.class" [attr.id]="canvas.canvasid"></canvas>
+    <div #canvasContainer class="col-10">
+       <canvas *ngFor="let canvas of canvasArr"
+               [ngClass]="canvas.class"
+               (click)="changeCanvas(canvas)"
+               (mousedown)="canvas.findxy('down',$event)"
+               (mousemove)="canvas.findxy('move',$event)"
+               (mouseup)="canvas.findxy('up',$event)"
+               (mouseout)="canvas.findxy('out',$event)">
+       </canvas>
     </div>
 </div>

@@ -10,22 +10,50 @@ import {Canvas} from '../Classes/canvas'
 export class DesignerComponent {
     private renderer:Renderer;
     public canvasArr:Canvas[];
-    public sketchCanvas:any;
+    public activeCanvas:Canvas;
 
   constructor(rend: Renderer){
       this.canvasArr = [];
-      this.mockCanvas();
+      this.NewCanvas();
       this.renderer = rend;
+
   }
+    //This is used to get the Dom elem of canvas parent elem.
+    @ViewChild('canvasContainer') canvasRef: ElementRef;
+
     ngAfterViewInit() {
-        console.log();
+        this.refreshCanvasObject();
         //http://stackoverflow.com/questions/37421007/how-viewchild-can-get-elements-that-added-with-js-in-angular2
-
-
     };
 
-  public mockCanvas(){
+    //LifeCycleHook, detects when a new canvas object has been created.
+    ngAfterViewChecked() {
+        this.refreshCanvasObject();
+    };
+
+  public NewCanvas(){
       let can = new Canvas(this.renderer);
       this.canvasArr.push(can);
+      this.activeCanvas = this.canvasArr[0];
+  }
+
+  public refreshCanvasObject(){
+      let i = 0;
+      for(let child of this.canvasRef.nativeElement.children){
+          this.canvasArr[i].rawCanvasObj = child;
+          this.canvasArr[i].renderContext = child.getContext("2d");
+          i++;
+      }
+  }
+  public TestDraw(){
+      this.activeCanvas.renderContext.moveTo(0,0);
+      this.activeCanvas.renderContext.lineTo(200,100);
+      this.activeCanvas.renderContext.stroke();
+      this.activeCanvas.renderContext.moveTo(200,0);
+      this.activeCanvas.renderContext.lineTo(0,100);
+      this.activeCanvas.renderContext.stroke();
+  }
+  public changeCanvas(canvas){
+      this.activeCanvas = canvas;
   }
 }
