@@ -2,16 +2,17 @@
     <div class="col-2 h1">
         <button>Line</button>
         <button (click)="NewCanvas()">New Canvas</button>
-        <button (click)="TestDraw()">Testing</button>
     </div>
     <div #canvasContainer class="col-10">
        <canvas *ngFor="let canvas of canvasArr"
                [ngClass]="canvas.class"
                (click)="changeCanvas(canvas)"
-               (mousedown)="canvas.findxy('down',$event)"
-               (mousemove)="canvas.findxy('move',$event)"
-               (mouseup)="canvas.findxy('up',$event)"
-               (mouseout)="canvas.findxy('out',$event)">
+               (mousedown)="canvas.mouseDown($event)"
+               (mousemove)="canvas.mouseMove($event)"
+               (mouseup)="canvas.mouseUp()"
+               (mouseleave)="canvas.mouseLeave()"
+                width="{{canvas.canvasWidth}}"
+                height="{{canvas.canvasHeight}}">
        </canvas>
     </div>
 </div>

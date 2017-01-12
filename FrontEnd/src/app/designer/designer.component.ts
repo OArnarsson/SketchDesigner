@@ -42,17 +42,11 @@ export class DesignerComponent {
       for(let child of this.canvasRef.nativeElement.children){
           this.canvasArr[i].rawCanvasObj = child;
           this.canvasArr[i].renderContext = child.getContext("2d");
+          this.canvasArr[i].prepareCanvas();
           i++;
       }
   }
-  public TestDraw(){
-      this.activeCanvas.renderContext.moveTo(0,0);
-      this.activeCanvas.renderContext.lineTo(200,100);
-      this.activeCanvas.renderContext.stroke();
-      this.activeCanvas.renderContext.moveTo(200,0);
-      this.activeCanvas.renderContext.lineTo(0,100);
-      this.activeCanvas.renderContext.stroke();
-  }
+
   public changeCanvas(canvas){
       this.activeCanvas = canvas;
   }

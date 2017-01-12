@@ -1,12 +1,15 @@
 export class BaseDrawing {
-    public prev: {};
-    public curr: {};
     public strokeColor: string;
     public lineWidth: number;
+    public clickX: number[];
+    public clickY: number[];
+    public clickDrag:any[];
+
 
     constructor(){
-        this.prev = {x:0, y:0};
-        this.curr = {x:0, y:0};
+        this.clickX = [];
+        this.clickY = [];
+        this.clickDrag = [];
         this.strokeColor = "black";
         this.lineWidth = 2;
     }
