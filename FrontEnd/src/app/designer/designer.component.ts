@@ -15,7 +15,7 @@ export class DesignerComponent {
     public activeCanvas:Canvas;
     public gui:GUI;
 
-  constructor(rend: Renderer, private cpType: ColorPickerService){
+  constructor(rend: Renderer){
       this.canvasArr = [];
       this.newCanvas();
       this.renderer = rend;
@@ -44,6 +44,7 @@ export class DesignerComponent {
   }
   public refreshGui(){
       this.activeCanvas.gui = this.gui;
+      console.log("From Designer: "+ this.activeCanvas.gui.tool);
   }
 
   public setColor(value) {
@@ -57,6 +58,16 @@ export class DesignerComponent {
   }
   public changeLineWidth($event){
       this.gui.lineWidth = $event.target.value;
+      this.refreshGui();
+  }
+  public changeLineCap(value){
+      this.gui.lineCap = value;
+      this.gui.lineJoin = value;
+      this.refreshGui();
+  }
+  public changeTool(value){
+      console.log("changeTool to:"+value);
+      this.gui.tool = value;
       this.refreshGui();
   }
 

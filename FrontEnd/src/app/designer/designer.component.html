@@ -1,11 +1,13 @@
 
 <div class="designContainer">
     <div class="leftSidebar">
-        <i class="fa fa-paper-plane" aria-hidden="true" [class.active]="gui.tool=='select'"></i>
-        <i class="fa fa-pencil" [class.active]="gui.tool=='pen'" aria-hidden="true"></i>
-        <i class="fa fa-square-o" aria-hidden="true" [class.active]="gui.tool=='square'"></i>
-        <i class="fa fa-circle-thin" aria-hidden="true" [class.active]="gui.tool=='circle'"></i>
-        <i class="fa fa-eraser" aria-hidden="true" [class.active]="gui.tool=='eraser'"></i>
+        <i (click)="changeTool('select')" class="fa fa-paper-plane" [class.active]="gui.tool=='select'" aria-hidden="true"></i>
+        <i (click)="changeTool('pen')" class="fa fa-paint-brush" [class.active]="gui.tool=='pen'" aria-hidden="true"></i>
+        <i (click)="changeTool('square')" class="fa fa-square-o" [class.active]="gui.tool=='square'" aria-hidden="true" ></i>
+        <i (click)="changeTool('circle')" class="fa fa-circle-thin" [class.active]="gui.tool=='circle'" aria-hidden="true" ></i>
+        <i (click)="changeTool('line')" class="fa fa-pencil" [class.active]="gui.tool=='line'" aria-hidden="true"></i>
+        <i (click)="changeTool('type')" class="fa fa-font" [class.active]="gui.tool=='type'" aria-hidden="true"></i>
+        <i (click)="changeTool('eraser')" class="fa fa-eraser" [class.active]="gui.tool=='eraser'" aria-hidden="true"></i>
         <i class="fa fa-file" aria-hidden="true" (click)="newCanvas()"></i>
     </div>
     <div #canvasContainer class="canvasCon">
@@ -36,6 +38,11 @@
         <div class="fr-sp">
             <h5 class="label">LineWidth (px)</h5>
             <input class="label" type="number" min="1" max="100" [value]="gui.lineWidth" (input)="changeLineWidth($event)">
+        </div>
+        <div class="fr-sp">
+            <h5 class="label">BrushStyle</h5>
+            <i class="fa fa-circle" aria-hidden="true" (click)="changeLineCap('round')" [class.active]="gui.lineCap=='round'"></i>
+            <i class="fa fa-square" aria-hidden="true" (click)="changeLineCap('square')" [class.active]="gui.lineCap=='square'"></i>
         </div>
     </div>
 </div>
