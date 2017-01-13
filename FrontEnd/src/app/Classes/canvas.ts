@@ -2,6 +2,8 @@ import {Renderer} from '@angular/core';
 import {GUI} from '../Classes/gui'
 import {Pen} from './pen'
 import {Square} from "./square";
+import {Line} from './line';
+import {Circle} from './circle';
 import {Select} from "./select";
 
 export class Canvas {
@@ -13,6 +15,7 @@ export class Canvas {
   public canvasWidth: number;
   public canvasHeight: number;
   public allDrawings: any[];
+  public undoneDrawings: any[];
   public activeDrawing: any;
   public active: boolean;
   public tempDrawing: any;
@@ -28,6 +31,7 @@ export class Canvas {
     this.canvasWidth = 248.4;
     this.canvasHeight = 441.6;
     this.allDrawings = [];
+    this.undoneDrawings = [];
     this.activeDrawing = new Pen();
     this.active = false;
     this.tempDrawing = JSON.parse(JSON.stringify(this.activeDrawing));
@@ -35,6 +39,9 @@ export class Canvas {
 
 
   public mouseDown(e: any) {
+    if(this.activeDrawing.tool != this.gui.tool) {
+      this.setToolClass(this.gui);
+    }
     this.active = true;
     this.activeDrawing.gui = this.gui;
     this.activeDrawing.tool = this.gui.tool.toString();
@@ -51,6 +58,15 @@ export class Canvas {
     if(this.activeDrawing.tool == 'square') {
       this.activeDrawing.startPos(startX, startY);
     }
+
+    if(this.activeDrawing.tool == 'line') {
+      this.activeDrawing.startPos(startX, startY);
+    }
+
+    if(this.activeDrawing.tool == 'circle') {
+      this.activeDrawing.startPos(startX, startY);
+    }
+
     if(this.activeDrawing.tool == 'select') {
        this.findDrawing(startX, startY);
     }
@@ -59,15 +75,28 @@ export class Canvas {
   }
 
   public mouseMove(e: any) {
+    var startX = e.pageX - this.rawCanvasObj.offsetLeft;
+    var startY = e.pageY - this.rawCanvasObj.offsetTop;
+
     if(this.activeDrawing.tool == 'pen' && this.active) {
-      this.activeDrawing.pushPos(e.pageX - this.rawCanvasObj.offsetLeft, e.pageY - this.rawCanvasObj.offsetTop);
-      this.activeDrawing.setBoxSize(e.pageX - this.rawCanvasObj.offsetLeft, e.pageY - this.rawCanvasObj.offsetTop);
-        this.redrawSimple();
+      this.activeDrawing.pushPos(startX, startY);
+      this.activeDrawing.setBoxSize(startX, startY);
+      this.redrawSimple();
     }
 
     if(this.activeDrawing.tool == 'square' && this.active) {
-      this.activeDrawing.endPos(e.pageX - this.rawCanvasObj.offsetLeft, e.pageY - this.rawCanvasObj.offsetTop);
-        this.redrawSimple();
+      this.activeDrawing.endPos(startX, startY);
+      this.redrawSimple();
+    }
+
+    if(this.activeDrawing.tool == 'line' && this.active) {
+      this.activeDrawing.endPos(startX, startY);
+      this.redrawSimple();
+    }
+
+    if(this.activeDrawing.tool == 'circle' && this.active) {
+      this.activeDrawing.endPos(startX, startY);
+      this.redrawSimple();
     }
 
 
@@ -76,16 +105,23 @@ export class Canvas {
   public mouseUp(gui: GUI) {
     this.active = false;
 
+    this.activeDrawing.gui = JSON.parse(this.getGUI());
+    this.allDrawings.push(this.activeDrawing);
+
     if(this.activeDrawing.tool == 'pen') {
-      this.activeDrawing.gui = JSON.parse(this.getGUI());
-      this.allDrawings.push(this.activeDrawing);
       this.activeDrawing = new Pen();
     }
 
     if(this.activeDrawing.tool == 'square') {
-      this.activeDrawing.gui = JSON.parse(this.getGUI());
-      this.allDrawings.push(this.activeDrawing);
       this.activeDrawing = new Square();
+    }
+
+    if(this.activeDrawing.tool == 'line') {
+      this.activeDrawing = new Line();
+    }
+
+    if(this.activeDrawing.tool == 'circle') {
+      this.activeDrawing = new Circle();
     }
 
     this.redrawSimple();
@@ -103,6 +139,12 @@ export class Canvas {
       if(gui.tool == "pen"){
           this.activeDrawing = new Pen();
       }
+      if(gui.tool == "line"){
+        this.activeDrawing = new Line();
+      }
+      if(gui.tool == "circle"){
+        this.activeDrawing = new Circle();
+     }
       if(gui.tool == "select"){
           this.activeDrawing = new Select(this.activeDrawing);
           this.redrawSimple();
@@ -126,6 +168,12 @@ export class Canvas {
       if(drawing.tool == 'square') {
         this.drawSquare(drawing);
       }
+      if(drawing.tool == 'line') {
+        this.drawLine(drawing);
+      }
+      if(drawing.tool == 'circle') {
+        this.drawCircle(drawing);
+      }
     }
 
     if(this.gui.tool == 'pen') {
@@ -133,6 +181,12 @@ export class Canvas {
     }
     if(this.gui.tool == 'square') {
       this.drawSquare(this.activeDrawing);
+    }
+    if(this.gui.tool == 'line') {
+      this.drawLine(this.activeDrawing);
+    }
+    if(this.gui.tool == 'circle') {
+      this.drawCircle(this.activeDrawing);
     }
     if(this.gui.tool == 'select'){
         this.drawSelect();
@@ -159,6 +213,32 @@ export class Canvas {
 
     this.renderContext.strokeRect(drawing.startX, drawing.startY, drawing.width, drawing.height);
   }
+
+  public drawLine(drawing: Line) {
+    this.renderContext.lineWidth = drawing.gui.lineWidth;
+    this.renderContext.lineCap = drawing.gui.lineCap;
+    this.renderContext.strokeStyle = drawing.gui.strokeStyle;
+
+    this.renderContext.beginPath();
+    this.renderContext.moveTo(drawing.startX, drawing.startY);
+    this.renderContext.lineTo(drawing.endX, drawing.endY);
+    this.renderContext.stroke();
+    this.renderContext.closePath();
+  }
+
+  public drawCircle(drawing: any) {
+    this.renderContext.lineWidth = drawing.gui.lineWidth;
+    this.renderContext.lineCap = drawing.gui.lineCap;
+    this.renderContext.strokeStyle = drawing.gui.strokeStyle;
+
+    this.renderContext.beginPath();
+    this.renderContext.moveTo(drawing.startX, drawing.startY + (drawing.endY - drawing.startY) / 2);
+    this.renderContext.bezierCurveTo(drawing.startX, drawing.startY, drawing.endX, drawing.startY, drawing.endX, drawing.startY + (drawing.endY - drawing.startY) / 2);
+    this.renderContext.bezierCurveTo(drawing.endX, drawing.endY, drawing.startX, drawing.endY, drawing.startX, drawing.startY + (drawing.endY - drawing.startY) / 2);
+    this.renderContext.closePath();
+    this.renderContext.stroke();
+  }
+
 
   public drawSelect(){
       var padding = 4;
@@ -201,7 +281,20 @@ export class Canvas {
               }
           }
       }
+  }
 
+  public undoDrawing() {
+    if(this.allDrawings.length > 0) {
+      this.undoneDrawings.push(this.allDrawings.pop());
+    }
+    this.redrawSimple();
+  }
+
+  public redoDrawing() {
+    if(this.undoneDrawings.length > 0) {
+      this.allDrawings.push(this.undoneDrawings.pop());
+    }
+    this.redrawSimple();
   }
 
 }

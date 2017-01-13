@@ -39,7 +39,7 @@ export class DesignerComponent {
       let can = new Canvas(this.renderer);
       can.gui = this.gui;
       this.canvasArr.push(can);
-      this.activeCanvas = this.canvasArr[0];
+      this.activeCanvas = this.canvasArr[this.canvasArr.length -1];
   }
   public refreshGui(){
       this.activeCanvas.setToolClass(this.gui);
@@ -67,6 +67,14 @@ export class DesignerComponent {
       console.log("changeTool to:"+value);
       this.gui.tool = value;
       this.refreshGui();
+  }
+  public undoRedo(action) {
+    if(action == 'undo') {
+      this.activeCanvas.undoDrawing();
+    }
+    else {
+      this.activeCanvas.redoDrawing();
+    }
   }
 
   public refreshCanvasObject(){
