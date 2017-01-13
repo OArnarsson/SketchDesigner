@@ -43,8 +43,7 @@ export class DesignerComponent {
       this.activeCanvas = this.canvasArr[0];
   }
   public refreshGui(){
-      this.activeCanvas.gui = this.gui;
-      console.log("From Designer: "+ this.activeCanvas.gui.tool);
+      this.activeCanvas.setToolClass(this.gui);
   }
 
   public setColor(value) {

@@ -35,9 +35,10 @@ export class Canvas {
   public mouseDown(e: any) {
     this.active = true;
     this.activeDrawing.gui = this.gui;
+    this.activeDrawing.tool = this.gui.tool.toString();
     var startX = e.pageX - this.rawCanvasObj.offsetLeft;
     var startY = e.pageY - this.rawCanvasObj.offsetTop;
-
+    console.log("the active drawing tool:"+ this.activeDrawing.tool);
     if(this.activeDrawing.tool == 'pen') {
       this.activeDrawing.pushPos(startX, startY);
     }
@@ -77,17 +78,25 @@ export class Canvas {
 
     this.redrawSimple();
   }
+
   public getGUI(){
     return JSON.stringify(this.gui);
   }
-
+  public setToolClass(gui:GUI){
+      this.gui = gui;
+      if(gui.tool == "square"){
+          this.activeDrawing = new Square();
+      }
+      if(gui.tool == "pen"){
+          this.activeDrawing = new Pen();
+      }
+      this.activeDrawing.gui = this.gui;
+  }
 
   //Clears Canvas
   public clearCanvas() {
     this.renderContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
   }
-
-
 
   //Renders the whole drawing
   public redrawSimple() {
