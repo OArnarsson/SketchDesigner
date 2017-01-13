@@ -16,6 +16,7 @@ export class Canvas {
   public canvasWidth: number;
   public canvasHeight: number;
   public allDrawings: any[];
+  public undoneDrawings: any[];
   public activeDrawing: any;
   public active: boolean;
 
@@ -30,6 +31,7 @@ export class Canvas {
     this.canvasWidth = 248.4;
     this.canvasHeight = 441.6;
     this.allDrawings = [];
+    this.undoneDrawings = [];
     this.activeDrawing = new Pen();
     this.active = false;
   }
@@ -252,7 +254,20 @@ export class Canvas {
               }
           }
       }
+  }
 
+  public undoDrawing() {
+    if(this.allDrawings.length > 0) {
+      this.undoneDrawings.push(this.allDrawings.pop());
+    }
+    this.redrawSimple();
+  }
+
+  public redoDrawing() {
+    if(this.undoneDrawings.length > 0) {
+      this.allDrawings.push(this.undoneDrawings.pop());
+    }
+    this.redrawSimple();
   }
 
 }

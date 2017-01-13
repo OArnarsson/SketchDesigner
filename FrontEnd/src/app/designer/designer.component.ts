@@ -69,6 +69,14 @@ export class DesignerComponent {
       this.gui.tool = value;
       this.refreshGui();
   }
+  public undoRedo(action) {
+    if(action == 'undo') {
+      this.activeCanvas.undoDrawing();
+    }
+    else {
+      this.activeCanvas.redoDrawing();
+    }
+  }
 
   public refreshCanvasObject(){
       let i = 0;
