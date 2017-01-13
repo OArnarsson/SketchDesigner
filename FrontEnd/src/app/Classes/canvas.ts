@@ -3,7 +3,6 @@ import {GUI} from '../Classes/gui'
 import {Pen} from './pen'
 import {Square} from "./square";
 import {Select} from "./select";
-import {advanceActivatedRoute} from "@angular/router/src/router_state";
 
 export class Canvas {
 
@@ -16,6 +15,7 @@ export class Canvas {
   public allDrawings: any[];
   public activeDrawing: any;
   public active: boolean;
+  public tempDrawing: any;
 
   //Utilities
   public gui: GUI;
@@ -30,6 +30,7 @@ export class Canvas {
     this.allDrawings = [];
     this.activeDrawing = new Pen();
     this.active = false;
+    this.tempDrawing = JSON.parse(JSON.stringify(this.activeDrawing));
   }
 
 
@@ -51,8 +52,7 @@ export class Canvas {
       this.activeDrawing.startPos(startX, startY);
     }
     if(this.activeDrawing.tool == 'select') {
-       let x = this.findDrawing(startX, startY);
-       console.log("found object created with: "+x);
+       this.findDrawing(startX, startY);
     }
 
     this.redrawSimple();
@@ -62,13 +62,15 @@ export class Canvas {
     if(this.activeDrawing.tool == 'pen' && this.active) {
       this.activeDrawing.pushPos(e.pageX - this.rawCanvasObj.offsetLeft, e.pageY - this.rawCanvasObj.offsetTop);
       this.activeDrawing.setBoxSize(e.pageX - this.rawCanvasObj.offsetLeft, e.pageY - this.rawCanvasObj.offsetTop);
+        this.redrawSimple();
     }
 
     if(this.activeDrawing.tool == 'square' && this.active) {
       this.activeDrawing.endPos(e.pageX - this.rawCanvasObj.offsetLeft, e.pageY - this.rawCanvasObj.offsetTop);
+        this.redrawSimple();
     }
 
-      this.redrawSimple();
+
   }
 
   public mouseUp(gui: GUI) {
@@ -92,6 +94,7 @@ export class Canvas {
   public getGUI(){
     return JSON.stringify(this.gui);
   }
+
   public setToolClass(gui:GUI){
       this.gui = gui;
       if(gui.tool == "square"){
@@ -101,7 +104,7 @@ export class Canvas {
           this.activeDrawing = new Pen();
       }
       if(gui.tool == "select"){
-          this.activeDrawing = new Select(this.allDrawings[this.allDrawings.length-1]);
+          this.activeDrawing = new Select(this.activeDrawing);
           this.redrawSimple();
       }
       this.activeDrawing.gui = this.gui;
@@ -132,7 +135,7 @@ export class Canvas {
       this.drawSquare(this.activeDrawing);
     }
     if(this.gui.tool == 'select'){
-        this.drawSelect(this.activeDrawing.drawing);
+        this.drawSelect();
     }
   }
 
@@ -156,8 +159,28 @@ export class Canvas {
 
     this.renderContext.strokeRect(drawing.startX, drawing.startY, drawing.width, drawing.height);
   }
-  public drawSelect(drawing: any){
 
+  public drawSelect(){
+      var padding = 4;
+      if(this.tempDrawing.gui.tool == "pen"){
+          this.drawPen(this.tempDrawing);
+          this.drawSelectBorder();
+          this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, (this.tempDrawing.endX-this.tempDrawing.startX)+(padding*2), (this.tempDrawing.endY-this.tempDrawing.startY)+(padding*2));
+          this.renderContext.restore();
+
+      }
+      if(this.tempDrawing.gui.tool == "square"){
+          this.drawSquare(this.tempDrawing);
+          this.drawSelectBorder();
+          this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, this.tempDrawing.width+(padding*2), this.tempDrawing.height+(padding*2));
+          this.renderContext.restore();
+      }
+  }
+  public drawSelectBorder(){
+      this.renderContext.save();
+      this.renderContext.lineCap = "square";
+      this.renderContext.strokeStyle = "#1492E6";
+      this.renderContext.lineWidth = 1;
   }
 
   public findDrawing(xCord, yCord){
@@ -166,13 +189,15 @@ export class Canvas {
           if(this.allDrawings[x].tool == 'pen'){
               if( this.allDrawings[x].startX <= xCord && xCord <= this.allDrawings[x].endX && this.allDrawings[x].startY <= yCord && yCord <= this.allDrawings[x].endY ) {
                   console.log("FOUND pen");
-                  return this.allDrawings[x];
+                  this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
+                  this.allDrawings.slice(x,1);
               }
           }
           if(this.allDrawings[x].tool == 'square'){
               if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].width+this.allDrawings[x].startX) && this.allDrawings[x].startY <= yCord && yCord <= (this.allDrawings[x].height+this.allDrawings[x].startY) ) {
                   console.log("FOUND square");
-                  return this.allDrawings[x];
+                  this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
+                  this.allDrawings.slice(x,1);
               }
           }
       }

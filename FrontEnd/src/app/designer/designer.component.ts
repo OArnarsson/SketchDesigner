@@ -1,7 +1,6 @@
-import {Component, Input, ViewChild, ElementRef, Renderer} from '@angular/core';
+import {Component, ViewChild, ElementRef, Renderer} from '@angular/core';
 import {Canvas} from '../Classes/canvas'
 import {GUI} from '../Classes/gui'
-import {ColorPickerService} from 'angular2-color-picker';
 
 @Component({
   selector: 'app-designer',
