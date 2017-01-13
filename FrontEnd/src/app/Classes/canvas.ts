@@ -1,6 +1,7 @@
 import {Renderer} from '@angular/core';
 import {GUI} from '../Classes/gui'
 import {Pen} from './pen'
+import {Square} from "./square";
 import {advanceActivatedRoute} from "@angular/router/src/router_state";
 
 export class Canvas {
@@ -41,12 +42,19 @@ export class Canvas {
       this.activeDrawing.pushPos(startX, startY);
     }
 
+    if(this.activeDrawing.tool == 'square') {
+      this.activeDrawing.startPos(startX, startY);
+    }
     this.redrawSimple();
   }
 
   public mouseMove(e: any) {
     if(this.activeDrawing.tool == 'pen' && this.active) {
       this.activeDrawing.pushPos(e.pageX - this.rawCanvasObj.offsetLeft, e.pageY - this.rawCanvasObj.offsetTop);
+    }
+
+    if(this.activeDrawing.tool == 'square' && this.active) {
+      this.activeDrawing.endPos(e.pageX - this.rawCanvasObj.offsetLeft, e.pageY - this.rawCanvasObj.offsetTop);
     }
 
       this.redrawSimple();
@@ -56,16 +64,20 @@ export class Canvas {
     this.active = false;
 
     if(this.activeDrawing.tool == 'pen') {
-      this.activeDrawing.gui = JSON.parse(this.getColor());
+      this.activeDrawing.gui = JSON.parse(this.getGUI());
       this.allDrawings.push(this.activeDrawing);
       this.activeDrawing = new Pen();
     }
 
-    this.redrawSimple();
+    if(this.activeDrawing.tool == 'square') {
+      this.activeDrawing.gui = JSON.parse(this.getGUI());
+      this.allDrawings.push(this.activeDrawing);
+      this.activeDrawing = new Square();
+    }
 
-    console.log(this.allDrawings);
+    this.redrawSimple();
   }
-  public getColor(){
+  public getGUI(){
     return JSON.stringify(this.gui);
   }
 
@@ -85,21 +97,17 @@ export class Canvas {
       if(drawing.tool == 'pen') {
         this.drawPen(drawing);
       }
+      if(drawing.tool == 'square') {
+        this.drawSquare(drawing);
+      }
     }
 
     if(this.gui.tool == 'pen') {
-      console.log(this.gui.strokeStyle);
-      this.renderContext.lineWidth = this.gui.lineWidth;
-      this.renderContext.lineCap = this.gui.lineCap;
-      this.renderContext.strokeStyle = this.gui.strokeStyle;
       this.drawPen(this.activeDrawing);
     }
-
-    /*
     if(this.gui.tool == 'square') {
-      this.renderContext.rect(10, 10, this.clickX[this.clickX.length], this.clickY[this.clickX.length])
+      this.drawSquare(this.activeDrawing);
     }
-    */
   }
 
   public drawPen(drawing: Pen) {
@@ -114,4 +122,12 @@ export class Canvas {
     }
     this.renderContext.closePath();
   }
+
+  public drawSquare(drawing: Square) {
+    this.renderContext.lineWidth = drawing.gui.lineWidth;
+    this.renderContext.lineCap = drawing.gui.lineCap;
+    this.renderContext.strokeStyle = drawing.gui.strokeStyle;
+
+    this.renderContext.strokeRect(drawing.startX, drawing.startY, drawing.width, drawing.height);
+    }
 }
