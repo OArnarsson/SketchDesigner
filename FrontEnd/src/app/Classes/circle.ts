@@ -1,6 +1,6 @@
 import {GUI} from '../Classes/gui'
 
-export class Line {
+export class Circle {
   public tool: string;
   public startX: number;
   public startY: number;
@@ -10,7 +10,7 @@ export class Line {
 
 
   constructor(){
-    this.tool = 'line';
+    this.tool = 'circle'
     this.gui = new GUI();
   }
 
@@ -20,7 +20,7 @@ export class Line {
   }
 
   endPos(x, y) {
-    this.endX = x
+    this.endX = x;
     this.endY = y;
   }
 }
