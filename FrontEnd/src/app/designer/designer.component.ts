@@ -14,7 +14,6 @@ export class DesignerComponent {
     public canvasArr:Canvas[];
     public activeCanvas:Canvas;
     public gui:GUI;
-    public selectedColor: string = "#127bdc";
 
   constructor(rend: Renderer, private cpType: ColorPickerService){
       this.canvasArr = [];
@@ -36,17 +35,32 @@ export class DesignerComponent {
         this.refreshCanvasObject();
     };
 
+    //Gui Functionality
   public newCanvas(){
       let can = new Canvas(this.renderer);
       can.gui = this.gui;
       this.canvasArr.push(can);
       this.activeCanvas = this.canvasArr[0];
   }
-
-  public setColor(event) {
-      this.gui.strokeStyle = event;
+  public refreshGui(){
       this.activeCanvas.gui = this.gui;
   }
+
+  public setColor(value) {
+      this.gui.strokeStyle = value;
+      this.refreshGui();
+  }
+
+  public changeCanvas(canvas){
+      this.activeCanvas = canvas;
+      canvas.gui = this.gui;
+  }
+  public changeLineWidth($event){
+      this.gui.lineWidth = $event.target.value;
+      this.refreshGui();
+  }
+
+
 
   public refreshCanvasObject(){
       let i = 0;
@@ -57,8 +71,5 @@ export class DesignerComponent {
       }
   }
 
-  public changeCanvas(canvas){
-    this.activeCanvas = canvas;
-    canvas.gui = this.gui;
-  }
+
 }
