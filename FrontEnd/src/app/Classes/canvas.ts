@@ -69,6 +69,8 @@ export class Canvas {
 
     if(this.activeDrawing.tool == 'select') {
        this.findDrawing(startX, startY);
+       this.activeDrawing.startX = startX;
+        this.activeDrawing.startY = startY;
     }
 
     this.redrawSimple();
@@ -98,8 +100,15 @@ export class Canvas {
       this.activeDrawing.endPos(startX, startY);
       this.redrawSimple();
     }
-
-
+    if(this.activeDrawing.tool == 'select' && this.active){
+        if(this.activeDrawing.found){
+            this.activeDrawing.moveXby = (startX - this.activeDrawing.startX);
+            this.activeDrawing.moveYby = (startY - this.activeDrawing.startY);
+            this.activeDrawing.startX = startX;
+            this.activeDrawing.startY = startY;
+            this.redrawSimple();
+        }
+    }
   }
 
   public mouseUp(gui: GUI) {
@@ -122,6 +131,11 @@ export class Canvas {
 
     if(this.activeDrawing.tool == 'circle') {
       this.activeDrawing = new Circle();
+    }
+    if(this.activeDrawing.tool == 'select'){
+        this.allDrawings.push(JSON.parse(JSON.stringify(this.tempDrawing)));
+        this.tempDrawing = new Pen();
+        this.activeDrawing.found = false;
     }
 
     this.redrawSimple();
@@ -189,6 +203,7 @@ export class Canvas {
       this.drawCircle(this.activeDrawing);
     }
     if(this.gui.tool == 'select'){
+        this.MoveObject();
         this.drawSelect();
     }
   }
@@ -239,14 +254,13 @@ export class Canvas {
     this.renderContext.stroke();
   }
 
-
   public drawSelect(){
       var padding = 4;
       if(this.tempDrawing.gui.tool == "pen"){
           this.drawPen(this.tempDrawing);
-          this.drawSelectBorder();
-          this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, (this.tempDrawing.endX-this.tempDrawing.startX)+(padding*2), (this.tempDrawing.endY-this.tempDrawing.startY)+(padding*2));
-          this.renderContext.restore();
+          //this.drawSelectBorder();
+          //this.renderContext.strokeRect(this.tempDrawing.startX+this.activeDrawing.moveXby-padding, this.tempDrawing.startY+this.activeDrawing.moveYby-padding, (this.tempDrawing.endX-this.tempDrawing.startX+this.activeDrawing.moveXby)+(padding*2), (this.tempDrawing.endY-this.tempDrawing.startY+this.activeDrawing.moveYby)+(padding*2));
+
 
       }
       if(this.tempDrawing.gui.tool == "square"){
@@ -256,6 +270,17 @@ export class Canvas {
           this.renderContext.restore();
       }
   }
+
+  public MoveObject(){
+      if(this.tempDrawing.gui.tool == 'pen'){
+          //TODO need to add function to map out the box value of the new moved object.
+          for (var i = 0; i < this.tempDrawing.posX.length; i++) {
+              this.tempDrawing.posX[i] = this.tempDrawing.posX[i]+this.activeDrawing.moveXby;
+              this.tempDrawing.posY[i] = this.tempDrawing.posY[i]+this.activeDrawing.moveYby;
+          }
+      }
+  }
+
   public drawSelectBorder(){
       this.renderContext.save();
       this.renderContext.lineCap = "square";
@@ -270,14 +295,18 @@ export class Canvas {
               if( this.allDrawings[x].startX <= xCord && xCord <= this.allDrawings[x].endX && this.allDrawings[x].startY <= yCord && yCord <= this.allDrawings[x].endY ) {
                   console.log("FOUND pen");
                   this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.allDrawings.slice(x,1);
+                  this.allDrawings[x] = new Pen();
+                  this.activeDrawing.found = true;
+                  return;
               }
           }
           if(this.allDrawings[x].tool == 'square'){
               if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].width+this.allDrawings[x].startX) && this.allDrawings[x].startY <= yCord && yCord <= (this.allDrawings[x].height+this.allDrawings[x].startY) ) {
                   console.log("FOUND square");
                   this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.allDrawings.slice(x,1);
+                  this.allDrawings[x] = new Pen();
+                  this.activeDrawing.found = true;
+                  return;
               }
           }
       }
