@@ -6,10 +6,10 @@ export class GUI {
   public tool: string;
 
   constructor(){
-    this.strokeStyle = "black";
+    this.strokeStyle = "#000000";
     this.lineCap = "round";
     this.lineJoin = "round";
-    this.lineWidth = 2;
+    this.lineWidth = 5;
     this.tool = 'pen';
   }
 }

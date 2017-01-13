@@ -7,4 +7,16 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app works!';
+  public sideMenu:boolean;
+
+  constructor(){
+      this.sideMenu = false;
+  }
+
+    public toggleSideMenu(){
+        this.sideMenu = !this.sideMenu;
+    }
+    public setSideMenuOff(){
+        this.sideMenu = false;
+    }
 }

@@ -23,8 +23,8 @@ export class Canvas {
     this.gui = new GUI();
     this.renderer = rend;
     this.class = "mobile";
-    this.canvasWidth = 414;
-    this.canvasHeight = 736;
+    this.canvasWidth = 248.4;
+    this.canvasHeight = 441.6;
     this.allDrawings = [];
     this.activeDrawing = new Pen();
     this.active = false;

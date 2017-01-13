@@ -6,6 +6,8 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { DesignerComponent } from './designer/designer.component';
 import { RouterModule, Routes } from '@angular/router';
+import {ColorPickerModule} from 'angular2-color-picker';
+
 
 const appRoutes: Routes = [
   {path: '', component: DesignerComponent},
@@ -21,7 +23,8 @@ imports: [
 BrowserModule,
 FormsModule,
 HttpModule,
-  RouterModule.forRoot(appRoutes)
+  RouterModule.forRoot(appRoutes),
+    ColorPickerModule
 ],
 providers: [],
 bootstrap: [AppComponent]

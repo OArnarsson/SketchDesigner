@@ -1,33 +1,41 @@
-<div class="fr-sp">
-    <div class="col-2 h1">
-      <button >Select</button>
-      <button >Zoom</button>
-      <button >Pen</button>
-      <button >Line</button>
-      <button >Square</button>
-      <button >Ellipse</button>
-      <button >Eraser</button>
-      <button >Text</button>
-      <button >Pen</button>
-      <button >Grid</button>
-      <button (click)="setColor()">COLOR TESTING!</button>
-      <button >Canvas Size</button>
-      <button (click)="newCanvas()">New Canvas</button>
-      <button >Delete Canvas</button>
-      <button >Undo</button>
-      <button >Redo</button>
-      <button >Save</button>
-      <button >Load</button>
+
+<div class="designContainer">
+    <div class="leftSidebar">
+        <i class="fa fa-paper-plane" aria-hidden="true" [class.active]="gui.tool=='select'"></i>
+        <i class="fa fa-pencil" [class.active]="gui.tool=='pen'" aria-hidden="true"></i>
+        <i class="fa fa-square-o" aria-hidden="true" [class.active]="gui.tool=='square'"></i>
+        <i class="fa fa-circle-thin" aria-hidden="true" [class.active]="gui.tool=='circle'"></i>
+        <i class="fa fa-eraser" aria-hidden="true" [class.active]="gui.tool=='eraser'"></i>
+        <i class="fa fa-file" aria-hidden="true" (click)="newCanvas()"></i>
     </div>
-    <div #canvasContainer class="col-10">
-       <canvas *ngFor="let canvas of canvasArr"
-               [ngClass]="canvas.class"
-               (click)="changeCanvas(canvas)"
-               (mousedown)="canvas.mouseDown($event)"
-               (mousemove)="canvas.mouseMove($event)"
-               (mouseup)="canvas.mouseUp(gui)"
+    <div #canvasContainer class="canvasCon">
+        <canvas *ngFor="let canvas of canvasArr"
+                [ngClass]="canvas.class"
+                (click)="changeCanvas(canvas)"
+                (mousedown)="canvas.mouseDown($event)"
+                (mousemove)="canvas.mouseMove($event)"
+                (mouseup)="canvas.mouseUp(gui)"
                 width="{{canvas.canvasWidth}}"
                 height="{{canvas.canvasHeight}}">
-       </canvas>
+        </canvas>
+    </div>
+    <div class="rightSidebar">
+        <h4>Appearance</h4>
+        <div class="fr-sp">
+            <h5 class="label">Opacity</h5>
+            <h5 class="label">{{opcaityInput.value}}%</h5>
+        </div>
+        <input #opcaityInput type="range" name="opacity" value="100">
+        <div class="fr-sp">
+            <input class="colorBox" [colorPicker]="gui.strokeStyle"
+                   (colorPickerChange)="setColor($event)"
+                   [style.background]="gui.strokeStyle"
+                   [cpPosition]="'bottom'" value="{{gui.strokeStyle}}"/>
+            <h5 class="label">Color</h5>
+        </div>
+        <div class="fr-sp">
+            <h5 class="label">LineWidth (px)</h5>
+            <input class="label" type="number" min="1" max="100" value="2">
+        </div>
     </div>
 </div>

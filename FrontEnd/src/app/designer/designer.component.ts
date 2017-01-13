@@ -1,6 +1,7 @@
 import {Component, Input, ViewChild, ElementRef, Renderer} from '@angular/core';
 import {Canvas} from '../Classes/canvas'
 import {GUI} from '../Classes/gui'
+import {ColorPickerService} from 'angular2-color-picker';
 
 @Component({
   selector: 'app-designer',
@@ -13,8 +14,9 @@ export class DesignerComponent {
     public canvasArr:Canvas[];
     public activeCanvas:Canvas;
     public gui:GUI;
+    public selectedColor: string = "#127bdc";
 
-  constructor(rend: Renderer){
+  constructor(rend: Renderer, private cpType: ColorPickerService){
       this.canvasArr = [];
       this.newCanvas();
       this.renderer = rend;
@@ -36,18 +38,14 @@ export class DesignerComponent {
 
   public newCanvas(){
       let can = new Canvas(this.renderer);
+      can.gui = this.gui;
       this.canvasArr.push(can);
       this.activeCanvas = this.canvasArr[0];
   }
 
-  public setColor() {
-    if(this.gui.strokeStyle != 'red') {
-      this.gui.strokeStyle = "red";
-    }
-    else{
-      this.gui.strokeStyle = 'black';
-    }
-    this.activeCanvas.gui = this.gui;
+  public setColor(event) {
+      this.gui.strokeStyle = event;
+      this.activeCanvas.gui = this.gui;
   }
 
   public refreshCanvasObject(){
