@@ -10,7 +10,7 @@
         <i (click)="changeTool('eraser')" class="fa fa-eraser" [class.active]="gui.tool=='eraser'" aria-hidden="true"></i>
         <i class="fa fa-file" aria-hidden="true" (click)="newCanvas()"></i>
     </div>
-    <div #canvasContainer class="canvasCon" id="customCurs">
+    <div #canvasContainer class="canvasCon">
         <canvas *ngFor="let canvas of canvasArr"
                 [ngClass]="canvas.class"
                 (click)="changeCanvas(canvas)"
