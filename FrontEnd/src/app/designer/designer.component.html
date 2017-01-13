@@ -5,12 +5,12 @@
         <i (click)="changeTool('pen')" class="fa fa-paint-brush" [class.active]="gui.tool=='pen'" aria-hidden="true"></i>
         <i (click)="changeTool('square')" class="fa fa-square-o" [class.active]="gui.tool=='square'" aria-hidden="true" ></i>
         <i (click)="changeTool('circle')" class="fa fa-circle-thin" [class.active]="gui.tool=='circle'" aria-hidden="true" ></i>
-        <i (click)="changeTool('line')" class="fa fa-pencil" [class.active]="gui.tool=='line'" aria-hidden="true"></i>
+        <i (click)="changeTool('line')" class="fa fa-minus" [class.active]="gui.tool=='line'" aria-hidden="true"></i>
         <i (click)="changeTool('type')" class="fa fa-font" [class.active]="gui.tool=='type'" aria-hidden="true"></i>
         <i (click)="changeTool('eraser')" class="fa fa-eraser" [class.active]="gui.tool=='eraser'" aria-hidden="true"></i>
         <i class="fa fa-file" aria-hidden="true" (click)="newCanvas()"></i>
     </div>
-    <div #canvasContainer class="canvasCon">
+    <div #canvasContainer class="canvasCon" id="customCurs">
         <canvas *ngFor="let canvas of canvasArr"
                 [ngClass]="canvas.class"
                 (click)="changeCanvas(canvas)"

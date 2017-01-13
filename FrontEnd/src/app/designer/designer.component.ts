@@ -70,8 +70,6 @@ export class DesignerComponent {
       this.refreshGui();
   }
 
-
-
   public refreshCanvasObject(){
       let i = 0;
       for(let child of this.canvasRef.nativeElement.children){
