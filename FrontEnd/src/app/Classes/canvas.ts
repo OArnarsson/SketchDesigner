@@ -280,6 +280,7 @@ export class Canvas {
           return;
       }
       this.renderContext.font = drawing.gui.fontSize+"px "+drawing.gui.font;
+      this.renderContext.fillStyle = drawing.gui.strokeStyle;
       this.renderContext.fillText(drawing.value,drawing.startX,drawing.startY);
   }
 
@@ -398,7 +399,6 @@ export class Canvas {
 
   public newText(value,xPos, yPos){
         this.activeDrawing = new Type();
-        let text = new Type();
         let paddingX = 5; //This works for the default font settings in gui
         let paddingY = 8; //It makes the text from input field appear in the same pos on canvas
         this.activeDrawing.tool = "type";
