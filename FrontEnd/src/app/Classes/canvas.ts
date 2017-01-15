@@ -21,13 +21,15 @@ export class Canvas {
   public tempDrawing: any;
   public snapGrid: boolean;
   public searchGrid: boolean;
+  public lastFound: boolean;
 
   //Utilities
   public gui: GUI;
   private renderer: Renderer;
 
   constructor(rend: Renderer) {
-    this.gui = new GUI();
+      this.lastFound = false;
+      this.gui = new GUI();
     this.renderer = rend;
     this.class = "mobile";
     this.canvasWidth = 248.4;
@@ -178,6 +180,9 @@ export class Canvas {
      }
       if(gui.tool == "select"){
           this.activeDrawing = new Select(this.activeDrawing);
+      }
+      if(gui.tool != "select"){
+          this.lastFound = false;
       }
       this.activeDrawing.gui = this.gui;
       this.setCursor();
@@ -370,6 +375,7 @@ export class Canvas {
                   this.activeDrawing.found = true;
                   this.rawCanvasObj.style.cursor = 'move';
                   console.log("found");
+                  this.lastFound = true;
                   return;
               }
           }
@@ -381,6 +387,7 @@ export class Canvas {
                   this.allDrawings[x] = new Pen();
                   this.activeDrawing.found = true;
                   this.rawCanvasObj.style.cursor = 'move';
+                  this.lastFound = true;
                   return;
               }
           }
@@ -390,10 +397,12 @@ export class Canvas {
                   this.allDrawings[x] = new Pen(); // This is used only because for some reason this.allDrawings.slice(x,1) doesn't work.
                   this.activeDrawing.found = true;
                   this.rawCanvasObj.style.cursor = 'move';
+                  this.lastFound = true;
                   return;
               }
           }
       }
+      this.lastFound = false;
       this.rawCanvasObj.style.cursor = 'default';
   }
 
@@ -431,4 +440,9 @@ export class Canvas {
     this.redrawSimple();
   }
 
+  public removeLast(){
+      //First we add it to the undoneDrawings
+      this.undoDrawing();
+      this.redrawSimple();
+  }
 }

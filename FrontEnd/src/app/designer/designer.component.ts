@@ -165,22 +165,26 @@ export class DesignerComponent {
               }
               else{
 
-                  if(this.gui.tool = 'select'){
-                      console.log("added to clipboard");
+                  if(this.gui.tool == 'select' && this.activeCanvas.lastFound){
                       if(this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1].startX != null){
                           this.clipboard = this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1];
                       }
-                      console.log(this.clipboard);
                   }
               }
               break;
           case "v":
               if(event.ctrlKey && this.clipboard != null){
-                  console.log("pasted the clipboard");
                   this.activeCanvas.allDrawings.push(JSON.parse(JSON.stringify(this.clipboard)));
                   this.activeCanvas.redrawSimple();
               }
               break;
+          case "delete":
+              if(this.gui.tool == 'select' && this.activeCanvas.lastFound){
+                  if(this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1].startX != null){
+                     this.activeCanvas.removeLast();
+                  }
+              }
+              break
           case "l":
               this.changeTool('line');
               break;
