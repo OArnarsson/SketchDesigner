@@ -17,4 +17,12 @@ export class Select {
         this.startX  = 0;
         this.startY = 0;
     }
+    startPos(x, y) {
+        this.startX = x;
+        this.startY = y;
+    }
+    movePos(x, y){
+        this.moveXby = x;
+        this.moveYby = y;
+    }
 }

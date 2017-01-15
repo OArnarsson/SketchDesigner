@@ -102,10 +102,8 @@ export class Canvas {
     }
     if(this.activeDrawing.tool == 'select' && this.active){
         if(this.activeDrawing.found){
-            this.activeDrawing.moveXby = (startX - this.activeDrawing.startX);
-            this.activeDrawing.moveYby = (startY - this.activeDrawing.startY);
-            this.activeDrawing.startX = startX;
-            this.activeDrawing.startY = startY;
+            this.activeDrawing.movePos((startX - this.activeDrawing.startX),(startY - this.activeDrawing.startY))
+            this.activeDrawing.startPos(startX,startY);
             this.redrawSimple();
         }
     }
@@ -113,7 +111,7 @@ export class Canvas {
 
   public mouseUp(gui: GUI) {
     this.active = false;
-
+      this.renderContext.save();
     this.activeDrawing.gui = JSON.parse(this.getGUI());
     this.allDrawings.push(this.activeDrawing);
 
@@ -138,7 +136,10 @@ export class Canvas {
         this.activeDrawing.found = false;
     }
 
-    this.redrawSimple();
+    //this.redrawSimple();
+    if(this.activeDrawing.tool == 'select'){
+        this.renderContext.restore();
+    }
   }
 
   public getGUI(){
@@ -161,9 +162,9 @@ export class Canvas {
      }
       if(gui.tool == "select"){
           this.activeDrawing = new Select(this.activeDrawing);
-          this.redrawSimple();
       }
       this.activeDrawing.gui = this.gui;
+      this.redrawSimple();
   }
 
   //Clears Canvas
@@ -256,31 +257,53 @@ export class Canvas {
 
   public drawSelect(){
       var padding = 4;
-      if(this.tempDrawing.gui.tool == "pen"){
-          this.drawPen(this.tempDrawing);
-          //this.drawSelectBorder();
-          //this.renderContext.strokeRect(this.tempDrawing.startX+this.activeDrawing.moveXby-padding, this.tempDrawing.startY+this.activeDrawing.moveYby-padding, (this.tempDrawing.endX-this.tempDrawing.startX+this.activeDrawing.moveXby)+(padding*2), (this.tempDrawing.endY-this.tempDrawing.startY+this.activeDrawing.moveYby)+(padding*2));
-
-
-      }
-      if(this.tempDrawing.gui.tool == "square"){
+      var tool = this.tempDrawing.gui.tool;
+      if(tool == "square"){
           this.drawSquare(this.tempDrawing);
           this.drawSelectBorder();
           this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, this.tempDrawing.width+(padding*2), this.tempDrawing.height+(padding*2));
           this.renderContext.restore();
       }
+      else{
+          if(tool == 'pen'){
+              this.drawPen(this.tempDrawing);
+          }
+          if(tool == 'circle'){
+              this.drawCircle(this.tempDrawing);
+          }
+          if(tool == 'line'){
+              this.drawLine(this.tempDrawing);
+          }
+
+          this.drawSelectBorder();
+          this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, (this.tempDrawing.endX-this.tempDrawing.startX)+(padding*2), (this.tempDrawing.endY-this.tempDrawing.startY)+(padding*2));
+      }
   }
 
   public MoveObject(){
+      this.tempDrawing.startX = (this.tempDrawing.startX + this.activeDrawing.moveXby);
+      this.tempDrawing.startY = (this.tempDrawing.startY + this.activeDrawing.moveYby);
+
       if(this.tempDrawing.gui.tool == 'pen'){
-          //TODO need to add function to map out the box value of the new moved object.
+          this.tempDrawing.endX = (this.tempDrawing.endX + this.activeDrawing.moveXby);
+          this.tempDrawing.endY = (this.tempDrawing.endY + this.activeDrawing.moveYby);
           for (var i = 0; i < this.tempDrawing.posX.length; i++) {
               this.tempDrawing.posX[i] = this.tempDrawing.posX[i]+this.activeDrawing.moveXby;
               this.tempDrawing.posY[i] = this.tempDrawing.posY[i]+this.activeDrawing.moveYby;
           }
       }
+      if(this.tempDrawing.gui.tool == 'circle'){
+          this.tempDrawing.endX = (this.tempDrawing.endX + this.activeDrawing.moveXby);
+          this.tempDrawing.endY = (this.tempDrawing.endY + this.activeDrawing.moveYby);
+      }
+      if(this.tempDrawing.gui.tool == 'line'){
+          this.tempDrawing.endX = (this.tempDrawing.endX + this.activeDrawing.moveXby);
+          this.tempDrawing.endY = (this.tempDrawing.endY + this.activeDrawing.moveYby);
+      }
+
   }
 
+  //This renders the Border around the object, we can style it here.
   public drawSelectBorder(){
       this.renderContext.save();
       this.renderContext.lineCap = "square";
@@ -291,15 +314,6 @@ export class Canvas {
   public findDrawing(xCord, yCord){
       console.log("searched");
       for(let x=0; x< this.allDrawings.length; x++){
-          if(this.allDrawings[x].tool == 'pen'){
-              if( this.allDrawings[x].startX <= xCord && xCord <= this.allDrawings[x].endX && this.allDrawings[x].startY <= yCord && yCord <= this.allDrawings[x].endY ) {
-                  console.log("FOUND pen");
-                  this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.allDrawings[x] = new Pen();
-                  this.activeDrawing.found = true;
-                  return;
-              }
-          }
           if(this.allDrawings[x].tool == 'square'){
               if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].width+this.allDrawings[x].startX) && this.allDrawings[x].startY <= yCord && yCord <= (this.allDrawings[x].height+this.allDrawings[x].startY) ) {
                   console.log("FOUND square");
@@ -307,6 +321,20 @@ export class Canvas {
                   this.allDrawings[x] = new Pen();
                   this.activeDrawing.found = true;
                   return;
+              }
+          }
+          else{
+              if( this.allDrawings[x].startX <= xCord && xCord <= this.allDrawings[x].endX && this.allDrawings[x].startY <= yCord && yCord <= this.allDrawings[x].endY ) {
+                  this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
+                  console.log("FOUND:"+this.tempDrawing.gui.tool);
+                  this.allDrawings[x] = new Pen(); // This is used only because for some reason this.allDrawings.slice(x,1) doesn't work.
+                  this.activeDrawing.found = true;
+                  return;
+              }
+              if(this.allDrawings[x].tool == 'line'){
+                  console.log("this is start x:"+this.allDrawings[x].startX + " y:"+ this.allDrawings[x].startY);
+                  console.log("this is end x:"+this.allDrawings[x].endX + " y:"+ this.allDrawings[x].endY);
+                  console.log("clicked x:"+xCord + " y:"+ yCord);
               }
           }
       }
