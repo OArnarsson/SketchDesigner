@@ -157,6 +157,9 @@ export class Canvas {
       if(tool == 'square' || tool == 'circle' || tool == 'line'){
           this.rawCanvasObj.style.cursor = 'crosshair';
       }
+      if(tool == 'type'){
+          this.rawCanvasObj.style.cursor = 'text';
+      }
   }
 
   public setToolClass(gui:GUI){
@@ -280,10 +283,12 @@ export class Canvas {
 
   public newText(value,xPos, yPos){
     let text = new Type();
+    let paddingX = 5; //This works for the default font settings in gui
+    let paddingY = 8; //It makes the text from input field appear in the same pos on canvas
     text.tool = "type";
     text.gui = this.gui;
-    text.startX = xPos-this.rawCanvasObj.offsetLeft;
-    text.startY = yPos-this.rawCanvasObj.offsetTop;
+    text.startX = paddingX+xPos-this.rawCanvasObj.offsetLeft;
+    text.startY = paddingY+yPos-this.rawCanvasObj.offsetTop+text.gui.fontSize;
     if(value == null){
         value = ""
     }
@@ -340,7 +345,6 @@ export class Canvas {
       }
 
   }
-
   //This renders the Border around the object, we can style it here.
   public drawSelectBorder(){
       this.renderContext.lineCap = "square";

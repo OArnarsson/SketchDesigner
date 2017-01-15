@@ -63,6 +63,7 @@ export class DesignerComponent {
       this.refreshGui();
   }
 
+
   public changeCanvas(canvas){
       this.activeCanvas = canvas;
       canvas.gui = this.gui;
@@ -77,6 +78,9 @@ export class DesignerComponent {
       this.refreshGui();
   }
   public changeTool(value){
+      if(value != "type"){
+          this.textInput.nativeElement.style.display = 'none';
+      }
       this.gui.tool = value;
       this.refreshGui();
   }
@@ -136,9 +140,6 @@ export class DesignerComponent {
           return true;
       }
       return false;
-  }
-  public doneTyping(){
-      console.log("done typing");
   }
   public analyzeKey(key){
       if(this.gui.tool == 'type' && this.textInput.nativeElement.style.display == 'block'){
