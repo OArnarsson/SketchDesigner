@@ -13,7 +13,7 @@ export class DesignerComponent {
     public canvasArr:Canvas[];
     public activeCanvas:Canvas;
     public gui:GUI;
-    public hasCtrl:boolean;
+    public clipboard:any;
 
 
   constructor(rend: Renderer){
@@ -21,10 +21,10 @@ export class DesignerComponent {
       this.newCanvas();
       this.renderer = rend;
       this.gui = new GUI();
-      this.hasCtrl = false;
+      this.clipboard = null;
       //This is used for keyShortcuts
-      this.renderer.listenGlobal('document', 'keyup', (event)=>{
-          this.analyzeKey(event.key);
+      this.renderer.listenGlobal('document', 'keydown', (event)=>{
+          this.analyzeKey(event);
       });
 
       //This is used for displaying input
@@ -141,7 +141,8 @@ export class DesignerComponent {
       }
       return false;
   }
-  public analyzeKey(key){
+  public analyzeKey(event:any){
+      let key = event.key;
       if(this.gui.tool == 'type' && this.textInput.nativeElement.style.display == 'block'){
           if(key.toLowerCase() == 'enter'){
               this.hideVirtual();
@@ -159,7 +160,26 @@ export class DesignerComponent {
               this.changeTool('square');
               break;
           case "c":
-              this.changeTool('circle');
+              if(!event.ctrlKey){
+                  this.changeTool('circle');
+              }
+              else{
+
+                  if(this.gui.tool = 'select'){
+                      console.log("added to clipboard");
+                      if(this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1].startX != null){
+                          this.clipboard = this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1];
+                      }
+                      console.log(this.clipboard);
+                  }
+              }
+              break;
+          case "v":
+              if(event.ctrlKey && this.clipboard != null){
+                  console.log("pasted the clipboard");
+                  this.activeCanvas.allDrawings.push(JSON.parse(JSON.stringify(this.clipboard)));
+                  this.activeCanvas.redrawSimple();
+              }
               break;
           case "l":
               this.changeTool('line');
@@ -171,21 +191,17 @@ export class DesignerComponent {
               this.changeTool('eraser');
               break;
           case "z":
-              if(this.hasCtrl){
-                  this.hasCtrl = false;
+              if(event.ctrlKey){
                   this.undoRedo('undo');
               }
               break;
           case "y":
-              if(this.hasCtrl){
-                  this.hasCtrl = false;
+              if(event.ctrlKey){
                   this.undoRedo('redo');
               }
               break;
           case "a":
               this.newCanvas();
-          case "control":
-              this.hasCtrl = true;
       }
   }
 
