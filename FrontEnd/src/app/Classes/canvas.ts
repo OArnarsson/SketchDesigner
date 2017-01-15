@@ -5,6 +5,7 @@ import {Square} from "./square";
 import {Line} from './line';
 import {Circle} from './circle';
 import {Select} from "./select";
+import {Type} from "./type";
 export class Canvas {
 
   //Canvas Variables
@@ -203,6 +204,9 @@ export class Canvas {
       if(drawing.tool == 'circle') {
         this.drawCircle(drawing);
       }
+      if(drawing.tool == 'type') {
+          this.drawText(drawing);
+      }
     }
 
     if(this.gui.tool == 'pen') {
@@ -269,6 +273,25 @@ export class Canvas {
     this.renderContext.stroke();
   }
 
+  public drawText(drawing: Type){
+      this.renderContext.font = drawing.gui.fontSize+"px "+drawing.gui.font;
+      this.renderContext.fillText(drawing.value,drawing.startX,drawing.startY);
+  }
+
+  public newText(value,xPos, yPos){
+    let text = new Type();
+    text.tool = "type";
+    text.gui = this.gui;
+    text.startX = xPos-this.rawCanvasObj.offsetLeft;
+    text.startY = yPos-this.rawCanvasObj.offsetTop;
+    if(value == null){
+        value = ""
+    }
+    text.value = value;
+    this.allDrawings.push(JSON.parse(JSON.stringify(text)));
+    this.drawText(text);
+  }
+
   public drawSelect(){
       var padding = 4;
       var tool = this.tempDrawing.gui.tool;
@@ -326,9 +349,9 @@ export class Canvas {
   }
 
   public tagGrid(){
-      console.log("startX"+this.tempDrawing.startX +", center"+124+", EndX:"+this.tempDrawing.startX );
+      //console.log("startX"+this.tempDrawing.startX +", center"+124+", EndX:"+this.tempDrawing.startX );
       if(this.searchGrid && this.tempDrawing.startX == 124 || this.tempDrawing.endX == 124){
-          console.log("found");
+          //console.log("found");
           this.renderContext.save();
           this.drawSelectBorder();
           this.renderContext.beginPath();

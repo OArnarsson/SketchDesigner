@@ -22,12 +22,19 @@ export class DesignerComponent {
       this.renderer = rend;
       this.gui = new GUI();
       this.hasCtrl = false;
+      //This is used for keyShortcuts
       this.renderer.listenGlobal('document', 'keyup', (event)=>{
           this.analyzeKey(event.key);
+      });
+
+      //This is used for displaying input
+      this.renderer.listenGlobal('document', 'mousedown', (event)=>{
+          this.displayVirtualInput(event);
       });
   }
     //This is used to get the Dom elem of canvas parent elem.
     @ViewChild('canvasContainer') canvasRef: ElementRef;
+    @ViewChild('textInput') textInput: ElementRef;
 
     ngAfterViewInit() {
         this.refreshCanvasObject();
@@ -90,8 +97,56 @@ export class DesignerComponent {
           i++;
       }
   }
+  public displayVirtualInput(event:any){
+      console.log(this.textInput.nativeElement.style.display);
+      //first we check if user input is on the canvas
+      if(this.gui.tool == 'type' && this.VirtualInCanvas(this.activeCanvas.rawCanvasObj,event.pageX,event.pageY)){
+          if(this.textInput.nativeElement.style.display != 'block'){
+              let left = event.pageX+ "px";
+              let top = event.pageY+ "px";
+              this.textInput.nativeElement.style.position = 'absolute';
+              this.textInput.nativeElement.style.top = top;
+              this.textInput.nativeElement.style.left = left;
+              this.textInput.nativeElement.style.display = 'block';
+              console.log(this.textInput.nativeElement.id);
+          }
+          //now we check if user is trying to click away from the input
+          else{
+              if(!this.VirtualInCanvas(this.textInput.nativeElement,event.pageX,event.pageY)){
+                  this.hideVirtual();
+              }
+          }
+
+      }
+  }
+  public hideVirtual(){
+      if(this.textInput.nativeElement.value == ""){
+          this.textInput.nativeElement.value = "New Text";
+      }
+      this.activeCanvas.newText(this.textInput.nativeElement.value, this.textInput.nativeElement.offsetLeft, this.textInput.nativeElement.offsetTop);
+      this.textInput.nativeElement.value = "";
+      this.textInput.nativeElement.style.display = 'none';
+  }
+
+  public VirtualInCanvas(rawObject:HTMLElement,x,y){
+      if(rawObject.offsetLeft <= x && x <=
+          (rawObject.offsetLeft+rawObject.offsetWidth)
+          && rawObject.offsetTop <= y
+          && y <= (rawObject.offsetTop+rawObject.offsetHeight)){
+          return true;
+      }
+      return false;
+  }
+  public doneTyping(){
+      console.log("done typing");
+  }
   public analyzeKey(key){
-      // console.log(key);
+      if(this.gui.tool == 'type' && this.textInput.nativeElement.style.display == 'block'){
+          if(key.toLowerCase() == 'enter'){
+              this.hideVirtual();
+          }
+          return;
+      }
       switch (key.toLowerCase()){
           case "s":
               this.changeTool('select');

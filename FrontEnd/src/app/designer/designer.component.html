@@ -12,6 +12,7 @@
         <!--<i (click)="undoRedo('redo')" class="fa fa-repeat" aria-hidden="true"></i><div>Redo (CTRL+ Y)</div>-->
         <i class="fa fa-file" aria-hidden="true" (click)="newCanvas()"></i><div>Artboard (A)</div>
     </div>
+    <input type="text" #textInput placeholder="New Text" id="virtualInput" (mouseleave)="doneTyping()">
     <div #canvasContainer class="canvasCon">
         <canvas *ngFor="let canvas of canvasArr"
                 [ngClass]="canvas.class"
