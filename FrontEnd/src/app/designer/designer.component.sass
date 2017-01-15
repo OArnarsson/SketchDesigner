@@ -104,17 +104,19 @@
 .leftSidebar
   i
     &:hover + div
+      display: block
       opacity: 1
   div
-    transition: opacity 0.3s ease-in
+    transition: all 0.3s ease-in
     opacity: 0
+    display: none
     position: absolute
     left: 50px
-    padding: 1%
+    padding: 2% 0% 2% 10%
     border: $borderSize solid $borderColor
     background-color: $unitColor
     color: $unitFontColor
-    min-width: 55px
+    min-width: 100px
     text-align: center
     &:hover
       cursor: default

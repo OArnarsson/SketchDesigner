@@ -1,16 +1,16 @@
 
 <div class="designContainer">
     <div class="leftSidebar">
-        <i (click)="changeTool('select')" class="fa fa-paper-plane" [class.active]="gui.tool=='select'" aria-hidden="true"></i><div>Select</div>
-        <i (click)="changeTool('pen')" class="fa fa-paint-brush" [class.active]="gui.tool=='pen'" aria-hidden="true"></i><div>Pen</div>
-        <i (click)="changeTool('square')" class="fa fa-square-o" [class.active]="gui.tool=='square'" aria-hidden="true"></i><div>Rectangle</div>
-        <i (click)="changeTool('circle')" class="fa fa-circle-thin" [class.active]="gui.tool=='circle'" aria-hidden="true"></i><div>Ellipse</div>
-        <i (click)="changeTool('line')" class="fa fa-minus" [class.active]="gui.tool=='line'" aria-hidden="true"></i><div>Line</div>
-        <i (click)="changeTool('type')" class="fa fa-font" [class.active]="gui.tool=='type'" aria-hidden="true"></i><div>Text</div>
-        <i (click)="changeTool('eraser')" class="fa fa-eraser" [class.active]="gui.tool=='eraser'" aria-hidden="true"></i><div>Eraser</div>
-        <i (click)="undoRedo('undo')" class="fa fa-undo" aria-hidden="true"></i><div>Undo</div>
-        <i (click)="undoRedo('redo')" class="fa fa-repeat" aria-hidden="true"></i><div>Redo</div>
-        <i class="fa fa-file" aria-hidden="true" (click)="newCanvas()"></i><div>Artboard</div>
+        <i (click)="changeTool('select')" class="fa fa-paper-plane" [class.active]="gui.tool=='select'" aria-hidden="true"></i><div>Select (S)</div>
+        <i (click)="changeTool('pen')" class="fa fa-paint-brush" [class.active]="gui.tool=='pen'" aria-hidden="true"></i><div>Brush (B)</div>
+        <i (click)="changeTool('square')" class="fa fa-square-o" [class.active]="gui.tool=='square'" aria-hidden="true"></i><div>Rectangle (R)</div>
+        <i (click)="changeTool('circle')" class="fa fa-circle-thin" [class.active]="gui.tool=='circle'" aria-hidden="true"></i><div>Circle (C)</div>
+        <i (click)="changeTool('line')" class="fa fa-minus" [class.active]="gui.tool=='line'" aria-hidden="true"></i><div>Line (L)</div>
+        <i (click)="changeTool('type')" class="fa fa-font" [class.active]="gui.tool=='type'" aria-hidden="true"></i><div>Text (T)</div>
+        <i (click)="changeTool('eraser')" class="fa fa-eraser" [class.active]="gui.tool=='eraser'" aria-hidden="true"></i><div>Eraser (E)</div>
+        <!--<i (click)="undoRedo('undo')" class="fa fa-undo" aria-hidden="true"></i><div>Undo (CTRL+ Z)</div>-->
+        <!--<i (click)="undoRedo('redo')" class="fa fa-repeat" aria-hidden="true"></i><div>Redo (CTRL+ Y)</div>-->
+        <i class="fa fa-file" aria-hidden="true" (click)="newCanvas()"></i><div>Artboard (A)</div>
     </div>
     <div #canvasContainer class="canvasCon">
         <canvas *ngFor="let canvas of canvasArr"
@@ -18,7 +18,7 @@
                 (click)="changeCanvas(canvas)"
                 (mousedown)="canvas.mouseDown($event)"
                 (mousemove)="canvas.mouseMove($event)"
-                (mouseup)="canvas.mouseUp(gui)"
+                (mouseup)="canvas.mouseUp()"
                 width="{{canvas.canvasWidth}}"
                 height="{{canvas.canvasHeight}}">
         </canvas>

@@ -79,7 +79,7 @@ export class Canvas {
     this.redrawSimple();
   }
 
-  public mouseMove(e: any, x?) {
+  public mouseMove(e: any) {
 
     var startX = e.pageX - this.rawCanvasObj.offsetLeft;
     var startY = e.pageY - this.rawCanvasObj.offsetTop;
@@ -106,26 +106,14 @@ export class Canvas {
     }
     if(this.activeDrawing.tool == 'select' && this.active){
         if(this.activeDrawing.found){
-            if(x){
-                this.snapGrid = false;
-            }
             this.activeDrawing.movePos((startX - this.activeDrawing.startX),(startY - this.activeDrawing.startY))
             this.activeDrawing.startPos(startX,startY);
-            if(!this.snapGrid){
-
-                this.redrawSimple();
-            }
-            else{
-                this.snapGrid = true;
-                window.setTimeout(this.mouseMove(e, true),2000);
-            }
-
-            //this.active = this.
+            this.redrawSimple();
         }
     }
   }
 
-  public mouseUp(gui: GUI) {
+  public mouseUp() {
     this.active = false;
       this.renderContext.save();
     this.activeDrawing.gui = JSON.parse(this.getGUI());

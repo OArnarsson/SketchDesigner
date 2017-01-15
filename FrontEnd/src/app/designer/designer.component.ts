@@ -13,6 +13,7 @@ export class DesignerComponent {
     public canvasArr:Canvas[];
     public activeCanvas:Canvas;
     public gui:GUI;
+    public hasCtrl:boolean;
 
 
   constructor(rend: Renderer){
@@ -20,6 +21,10 @@ export class DesignerComponent {
       this.newCanvas();
       this.renderer = rend;
       this.gui = new GUI();
+      this.hasCtrl = false;
+      this.renderer.listenGlobal('document', 'keyup', (event)=>{
+          this.analyzeKey(event.key);
+      });
   }
     //This is used to get the Dom elem of canvas parent elem.
     @ViewChild('canvasContainer') canvasRef: ElementRef;
@@ -83,6 +88,48 @@ export class DesignerComponent {
           this.canvasArr[i].rawCanvasObj = child;
           this.canvasArr[i].renderContext = child.getContext("2d");
           i++;
+      }
+  }
+  public analyzeKey(key){
+      // console.log(key);
+      switch (key.toLowerCase()){
+          case "s":
+              this.changeTool('select');
+              break;
+          case "b":
+              this.changeTool('pen');
+              break;
+          case "r":
+              this.changeTool('square');
+              break;
+          case "c":
+              this.changeTool('circle');
+              break;
+          case "l":
+              this.changeTool('line');
+              break;
+          case "t":
+              this.changeTool('type');
+              break;
+          case "e":
+              this.changeTool('eraser');
+              break;
+          case "z":
+              if(this.hasCtrl){
+                  this.hasCtrl = false;
+                  this.undoRedo('undo');
+              }
+              break;
+          case "y":
+              if(this.hasCtrl){
+                  this.hasCtrl = false;
+                  this.undoRedo('redo');
+              }
+              break;
+          case "a":
+              this.newCanvas();
+          case "control":
+              this.hasCtrl = true;
       }
   }
 
