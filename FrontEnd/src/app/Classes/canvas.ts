@@ -182,7 +182,6 @@ export class Canvas {
       this.activeDrawing.gui = this.gui;
       this.setCursor();
       this.redrawSimple();
-
   }
 
   //Clears Canvas
@@ -277,24 +276,11 @@ export class Canvas {
   }
 
   public drawText(drawing: Type){
+      if(drawing.value == null){
+          return;
+      }
       this.renderContext.font = drawing.gui.fontSize+"px "+drawing.gui.font;
       this.renderContext.fillText(drawing.value,drawing.startX,drawing.startY);
-  }
-
-  public newText(value,xPos, yPos){
-    let text = new Type();
-    let paddingX = 5; //This works for the default font settings in gui
-    let paddingY = 8; //It makes the text from input field appear in the same pos on canvas
-    text.tool = "type";
-    text.gui = this.gui;
-    text.startX = paddingX+xPos-this.rawCanvasObj.offsetLeft;
-    text.startY = paddingY+yPos-this.rawCanvasObj.offsetTop+text.gui.fontSize;
-    if(value == null){
-        value = ""
-    }
-    text.value = value;
-    this.allDrawings.push(JSON.parse(JSON.stringify(text)));
-    this.drawText(text);
   }
 
   public drawSelect(){
@@ -304,6 +290,13 @@ export class Canvas {
           this.drawSquare(this.tempDrawing);
           this.drawSelectBorder();
           this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, this.tempDrawing.width+(padding*2), this.tempDrawing.height+(padding*2));
+
+      }
+      if(tool == "type"){
+          this.drawText(this.tempDrawing);
+          this.drawSelectBorder();
+          let StartY = this.tempDrawing.startY - this.tempDrawing.gui.fontSize;
+          this.renderContext.strokeRect(this.tempDrawing.startX-padding, StartY-padding, this.tempDrawing.width+(padding*2), this.tempDrawing.height+(padding*2));
 
       }
       else{
@@ -375,6 +368,18 @@ export class Canvas {
                   this.allDrawings[x] = new Pen();
                   this.activeDrawing.found = true;
                   this.rawCanvasObj.style.cursor = 'move';
+                  console.log("found");
+                  return;
+              }
+          }
+          if(this.allDrawings[x].tool == 'type'){
+              //For some reason we need to offset startY.
+              let StartY = this.allDrawings[x].startY - this.allDrawings[x].gui.fontSize;
+              if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].width+this.allDrawings[x].startX) && StartY <= yCord && yCord <= (this.allDrawings[x].height+StartY) ) {
+                  this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
+                  this.allDrawings[x] = new Pen();
+                  this.activeDrawing.found = true;
+                  this.rawCanvasObj.style.cursor = 'move';
                   return;
               }
           }
@@ -390,6 +395,27 @@ export class Canvas {
       }
       this.rawCanvasObj.style.cursor = 'default';
   }
+
+  public newText(value,xPos, yPos){
+        this.activeDrawing = new Type();
+        let text = new Type();
+        let paddingX = 5; //This works for the default font settings in gui
+        let paddingY = 8; //It makes the text from input field appear in the same pos on canvas
+        this.activeDrawing.tool = "type";
+        this.activeDrawing.gui = this.gui;
+        this.activeDrawing.startX = paddingX+xPos-this.rawCanvasObj.offsetLeft;
+        this.activeDrawing.startY = paddingY+yPos-this.rawCanvasObj.offsetTop+this.activeDrawing.gui.fontSize;
+        this.activeDrawing.width = value.length + (value.length*(this.activeDrawing.gui.fontSize/2));
+        this.activeDrawing.height = paddingY + this.activeDrawing.gui.fontSize;
+        if(value == null){
+            value = ""
+        }
+        this.activeDrawing.value = value;
+        this.allDrawings.push(JSON.parse(JSON.stringify(this.activeDrawing)));
+        this.drawText(this.activeDrawing);
+        this.active = false;
+        this.renderContext.save();
+    }
 
   public undoDrawing() {
     if(this.allDrawings.length > 0) {
