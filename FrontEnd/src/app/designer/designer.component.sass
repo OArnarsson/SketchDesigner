@@ -101,3 +101,25 @@
   -ms-transform: rotate(135deg)
   -o-transform: rotate(135deg)
   transform: rotate(135deg)
+.leftSidebar
+  i
+    &:hover + div
+      opacity: 1
+  div
+    transition: opacity 0.3s ease-in
+    opacity: 0
+    position: absolute
+    left: 50px
+    padding: 1%
+    border: $borderSize solid $borderColor
+    background-color: $unitColor
+    color: $unitFontColor
+    min-width: 55px
+    text-align: center
+    &:hover
+      cursor: default
+@for $i from 1 through 10
+  .leftSidebar
+    div
+      &:nth-of-type(#{$i})
+        top: 10px + (($i - 1) * 41)

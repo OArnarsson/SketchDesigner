@@ -14,6 +14,7 @@ export class DesignerComponent {
     public activeCanvas:Canvas;
     public gui:GUI;
 
+
   constructor(rend: Renderer){
       this.canvasArr = [];
       this.newCanvas();
@@ -64,7 +65,6 @@ export class DesignerComponent {
       this.refreshGui();
   }
   public changeTool(value){
-      console.log("changeTool to:"+value);
       this.gui.tool = value;
       this.refreshGui();
   }
