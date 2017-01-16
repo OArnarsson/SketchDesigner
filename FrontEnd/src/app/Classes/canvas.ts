@@ -1,11 +1,7 @@
 import {Renderer} from '@angular/core';
 import {GUI} from '../Classes/gui'
-import {Pen} from './pen'
-import {Square} from "./square";
-import {Line} from './line';
-import {Circle} from './circle';
+import {Drawing} from './drawing'
 import {Select} from "./select";
-import {Type} from "./type";
 export class Canvas {
 
   //Canvas Variables
@@ -28,15 +24,15 @@ export class Canvas {
   private renderer: Renderer;
 
   constructor(rend: Renderer) {
-      this.lastFound = false;
-      this.gui = new GUI();
+    this.lastFound = false;
+    this.gui = new GUI();
     this.renderer = rend;
     this.class = "mobile";
     this.canvasWidth = 248.4;
     this.canvasHeight = 441.6;
     this.allDrawings = [];
     this.undoneDrawings = [];
-    this.activeDrawing = new Pen();
+    this.activeDrawing = new Drawing(this.gui.tool);
     this.active = false;
     this.snapGrid = false;
     this.searchGrid = true;
@@ -53,6 +49,13 @@ export class Canvas {
     this.activeDrawing.tool = this.gui.tool.toString();
     var startX = e.pageX - this.rawCanvasObj.offsetLeft;
     var startY = e.pageY - this.rawCanvasObj.offsetTop;
+
+    if(this.activeDrawing.tool == 'select') {
+      this.findDrawing(startX, startY);
+      this.activeDrawing.startX = startX;
+      this.activeDrawing.startY = startY;
+    }
+
     if(this.activeDrawing.tool == 'pen') {
       this.activeDrawing.pushPos(startX, startY);
       this.activeDrawing.startX = startX;
@@ -61,22 +64,8 @@ export class Canvas {
       this.activeDrawing.endY = startY;
     }
 
-    if(this.activeDrawing.tool == 'square') {
+    else {
       this.activeDrawing.startPos(startX, startY);
-    }
-
-    if(this.activeDrawing.tool == 'line') {
-      this.activeDrawing.startPos(startX, startY);
-    }
-
-    if(this.activeDrawing.tool == 'circle') {
-      this.activeDrawing.startPos(startX, startY);
-    }
-
-    if(this.activeDrawing.tool == 'select') {
-       this.findDrawing(startX, startY);
-       this.activeDrawing.startX = startX;
-        this.activeDrawing.startY = startY;
     }
 
     this.redrawSimple();
@@ -118,34 +107,18 @@ export class Canvas {
 
   public mouseUp() {
     this.active = false;
-      this.renderContext.save();
+    this.renderContext.save();
     this.activeDrawing.gui = JSON.parse(this.getGUI());
     this.allDrawings.push(this.activeDrawing);
 
-    if(this.activeDrawing.tool == 'pen') {
-      this.activeDrawing = new Pen();
-    }
-
-    if(this.activeDrawing.tool == 'square') {
-      this.activeDrawing = new Square();
-    }
-
-    if(this.activeDrawing.tool == 'line') {
-      this.activeDrawing = new Line();
-    }
-
-    if(this.activeDrawing.tool == 'circle') {
-      this.activeDrawing = new Circle();
-    }
     if(this.activeDrawing.tool == 'select'){
         this.allDrawings.push(JSON.parse(JSON.stringify(this.tempDrawing)));
-        this.tempDrawing = new Pen();
+        this.tempDrawing = new Drawing(this.gui.tool);
         this.activeDrawing.found = false;
     }
 
-    //this.redrawSimple();
-    if(this.activeDrawing.tool == 'select'){
-        this.renderContext.restore();
+    else {
+      this.activeDrawing = new Drawing(this.gui.tool);
     }
   }
 
@@ -159,25 +132,14 @@ export class Canvas {
       if(tool == 'square' || tool == 'circle' || tool == 'line'){
           this.rawCanvasObj.style.cursor = 'crosshair';
       }
-      if(tool == 'type'){
+      if(tool == 'text'){
           this.rawCanvasObj.style.cursor = 'text';
       }
   }
 
   public setToolClass(gui:GUI){
-      this.gui = gui;
-      if(gui.tool == "square"){
-          this.activeDrawing = new Square();
-      }
-      if(gui.tool == "pen"){
-          this.activeDrawing = new Pen();
-      }
-      if(gui.tool == "line"){
-        this.activeDrawing = new Line();
-      }
-      if(gui.tool == "circle"){
-        this.activeDrawing = new Circle();
-     }
+     this.gui = gui;
+     this.activeDrawing = new Drawing(this.gui.tool);
       if(gui.tool == "select"){
           this.activeDrawing = new Select(this.activeDrawing);
       }
@@ -211,7 +173,7 @@ export class Canvas {
       if(drawing.tool == 'circle') {
         this.drawCircle(drawing);
       }
-      if(drawing.tool == 'type') {
+      if(drawing.tool == 'text') {
           this.drawText(drawing);
       }
     }
@@ -234,7 +196,7 @@ export class Canvas {
     }
   }
 
-  public drawPen(drawing: Pen) {
+  public drawPen(drawing: Drawing) {
     this.renderContext.lineWidth = drawing.gui.lineWidth;
     this.renderContext.lineCap = drawing.gui.lineCap;
     this.renderContext.strokeStyle = drawing.gui.strokeStyle;
@@ -247,15 +209,15 @@ export class Canvas {
     this.renderContext.closePath();
   }
 
-  public drawSquare(drawing: Square) {
+  public drawSquare(drawing: Drawing) {
     this.renderContext.lineWidth = drawing.gui.lineWidth;
     this.renderContext.lineCap = drawing.gui.lineCap;
     this.renderContext.strokeStyle = drawing.gui.strokeStyle;
 
-    this.renderContext.strokeRect(drawing.startX, drawing.startY, drawing.width, drawing.height);
+    this.renderContext.strokeRect(drawing.startX, drawing.startY, drawing.endX, drawing.endY);
   }
 
-  public drawLine(drawing: Line) {
+  public drawLine(drawing: Drawing) {
     this.renderContext.lineWidth = drawing.gui.lineWidth;
     this.renderContext.lineCap = drawing.gui.lineCap;
     this.renderContext.strokeStyle = drawing.gui.strokeStyle;
@@ -267,7 +229,7 @@ export class Canvas {
     this.renderContext.closePath();
   }
 
-  public drawCircle(drawing: any) {
+  public drawCircle(drawing: Drawing) {
     this.renderContext.lineWidth = drawing.gui.lineWidth;
     this.renderContext.lineCap = drawing.gui.lineCap;
     this.renderContext.strokeStyle = drawing.gui.strokeStyle;
@@ -280,7 +242,7 @@ export class Canvas {
     this.renderContext.stroke();
   }
 
-  public drawText(drawing: Type){
+  public drawText(drawing: Drawing){
       if(drawing.value == null){
           return;
       }
@@ -298,7 +260,7 @@ export class Canvas {
           this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, this.tempDrawing.width+(padding*2), this.tempDrawing.height+(padding*2));
 
       }
-      if(tool == "type"){
+      if(tool == "text"){
           this.drawText(this.tempDrawing);
           this.drawSelectBorder();
           let StartY = this.tempDrawing.startY - this.tempDrawing.gui.fontSize;
@@ -371,7 +333,8 @@ export class Canvas {
           if(this.allDrawings[x].tool == 'square'){
               if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].width+this.allDrawings[x].startX) && this.allDrawings[x].startY <= yCord && yCord <= (this.allDrawings[x].height+this.allDrawings[x].startY) ) {
                   this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.allDrawings[x] = new Pen();
+                  this.undoneDrawings.push(this.allDrawings[x]);
+                  this.allDrawings.splice(x, 1);
                   this.activeDrawing.found = true;
                   this.rawCanvasObj.style.cursor = 'move';
                   console.log("found");
@@ -379,12 +342,12 @@ export class Canvas {
                   return;
               }
           }
-          if(this.allDrawings[x].tool == 'type'){
+          if(this.allDrawings[x].tool == 'text'){
               //For some reason we need to offset startY.
               let StartY = this.allDrawings[x].startY - this.allDrawings[x].gui.fontSize;
               if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].width+this.allDrawings[x].startX) && StartY <= yCord && yCord <= (this.allDrawings[x].height+StartY) ) {
                   this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.allDrawings[x] = new Pen();
+                  this.allDrawings[x] = new Drawing(this.gui.tool);
                   this.activeDrawing.found = true;
                   this.rawCanvasObj.style.cursor = 'move';
                   this.lastFound = true;
@@ -394,7 +357,7 @@ export class Canvas {
           else{
               if( this.allDrawings[x].startX <= xCord && xCord <= this.allDrawings[x].endX && this.allDrawings[x].startY <= yCord && yCord <= this.allDrawings[x].endY ) {
                   this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.allDrawings[x] = new Pen(); // This is used only because for some reason this.allDrawings.slice(x,1) doesn't work.
+                  this.allDrawings[x] = new Drawing(this.gui.tool); // This is used only because for some reason this.allDrawings.slice(x,1) doesn't work.
                   this.activeDrawing.found = true;
                   this.rawCanvasObj.style.cursor = 'move';
                   this.lastFound = true;
@@ -407,10 +370,10 @@ export class Canvas {
   }
 
   public newText(value,xPos, yPos){
-        this.activeDrawing = new Type();
+        this.activeDrawing = new Drawing(this.gui.tool);
         let paddingX = 5; //This works for the default font settings in gui
         let paddingY = 8; //It makes the text from input field appear in the same pos on canvas
-        this.activeDrawing.tool = "type";
+        this.activeDrawing.tool = "text";
         this.activeDrawing.gui = this.gui;
         this.activeDrawing.startX = paddingX+xPos-this.rawCanvasObj.offsetLeft;
         this.activeDrawing.startY = paddingY+yPos-this.rawCanvasObj.offsetTop+this.activeDrawing.gui.fontSize;

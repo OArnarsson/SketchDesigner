@@ -78,7 +78,7 @@ export class DesignerComponent {
       this.refreshGui();
   }
   public changeTool(value){
-      if(value != "type"){
+      if(value != "text"){
           this.textInput.nativeElement.style.display = 'none';
       }
       this.gui.tool = value;
@@ -104,7 +104,7 @@ export class DesignerComponent {
   public displayVirtualInput(event:any){
       console.log(this.textInput.nativeElement.style.display);
       //first we check if user input is on the canvas
-      if(this.gui.tool == 'type' && this.VirtualInCanvas(this.activeCanvas.rawCanvasObj,event.pageX,event.pageY)){
+      if(this.gui.tool == 'text' && this.VirtualInCanvas(this.activeCanvas.rawCanvasObj,event.pageX,event.pageY)){
           if(this.textInput.nativeElement.style.display != 'block'){
               let left = event.pageX+ "px";
               let top = event.pageY+ "px";
@@ -132,6 +132,14 @@ export class DesignerComponent {
       this.textInput.nativeElement.style.display = 'none';
   }
 
+  public deleteDrawing() {
+    if(this.gui.tool == 'select' && this.activeCanvas.lastFound){
+      if(this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1].startX != null){
+        this.activeCanvas.removeLast();
+      }
+    }
+  }
+
   public VirtualInCanvas(rawObject:HTMLElement,x,y){
       if(rawObject.offsetLeft <= x && x <=
           (rawObject.offsetLeft+rawObject.offsetWidth)
@@ -143,7 +151,7 @@ export class DesignerComponent {
   }
   public analyzeKey(event:any){
       let key = event.key;
-      if(this.gui.tool == 'type' && this.textInput.nativeElement.style.display == 'block'){
+      if(this.gui.tool == 'text' && this.textInput.nativeElement.style.display == 'block'){
           if(key.toLowerCase() == 'enter'){
               this.hideVirtual();
           }
@@ -179,17 +187,13 @@ export class DesignerComponent {
               }
               break;
           case "delete":
-              if(this.gui.tool == 'select' && this.activeCanvas.lastFound){
-                  if(this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1].startX != null){
-                     this.activeCanvas.removeLast();
-                  }
-              }
+              this.deleteDrawing();
               break
           case "l":
               this.changeTool('line');
               break;
           case "t":
-              this.changeTool('type');
+              this.changeTool('text');
               break;
           case "e":
               this.changeTool('eraser');
