@@ -183,7 +183,7 @@ export class DesignerComponent {
           case "v":
               if(event.ctrlKey && this.clipboard != null){
                   this.activeCanvas.allDrawings.push(JSON.parse(JSON.stringify(this.clipboard)));
-                  this.activeCanvas.redrawSimple();
+                  this.activeCanvas.redrawCanvas();
               }
               break;
           case "delete":
