@@ -1,4 +1,6 @@
 import {GUI} from '../Classes/gui'
+import {Selection} from '../Classes/selection'
+
 
 export class Drawing {
   public tool: string;
@@ -9,6 +11,7 @@ export class Drawing {
   public posX: number[];
   public posY: number[];
   public value: string;
+  public selection: Selection;
   public gui: GUI;
 
 

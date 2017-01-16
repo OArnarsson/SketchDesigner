@@ -1,10 +1,11 @@
 export class Selection {
+
   public lowX: number;
   public lowY: number;
   public highX: number;
   public highY: number;
 
-  constructor(tool,startX: number, startY: number, endX: number, endY: number) {
+  constructor(tool, startX: number, startY: number, endX: number, endY: number) {
     if(tool == 'square'){
       if(startX < 0) {
         startX = endX + startX;
@@ -16,6 +17,7 @@ export class Selection {
       endX = endX+startX;
       endY = endY+startY;
     }
+
     if(Math.abs(startX) > Math.abs(endX)) {
       this.lowX = Math.abs(endX);
       this.highX = Math.abs(startX);

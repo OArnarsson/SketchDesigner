@@ -1,6 +1,7 @@
 import {Renderer} from '@angular/core';
 import {GUI} from '../Classes/gui'
 import {Drawing} from './drawing'
+import {Selection} from '../Classes/selection'
 import {Select} from "./select";
 export class Canvas {
 
@@ -35,7 +36,6 @@ export class Canvas {
     this.searchGrid = true;
     this.tempDrawing = this.activeDrawing;
   }
-
 
   public mouseDown(e: any) {
     if(this.activeDrawing.tool != this.gui.tool) {
@@ -89,18 +89,19 @@ export class Canvas {
 
   public mouseUp() {
     this.active = false;
-    this.renderContext.save();
     this.activeDrawing.gui = JSON.parse(this.getGUI());
+    this.activeDrawing.selection = new Selection(this.activeDrawing.tool, this.activeDrawing.startX, this.activeDrawing.startY, this.activeDrawing.endX, this.activeDrawing.endY);
+    console.log(this.activeDrawing);
     this.allDrawings.push(this.activeDrawing);
 
-      if (this.activeDrawing.tool == 'select') {
-        this.allDrawings.push(this.tempDrawing);
-        this.tempDrawing = new Drawing();
-        this.activeDrawing.found = false;
-      }
-      else {
-        this.activeDrawing = new Drawing();
-      }
+    if (this.activeDrawing.tool == 'select') {
+      this.allDrawings.push(this.tempDrawing);
+      this.tempDrawing = new Drawing();
+      this.activeDrawing.found = false;
+    }
+    else {
+      this.activeDrawing = new Drawing();
+    }
   }
 
   public getGUI(){
@@ -259,7 +260,6 @@ export class Canvas {
       //console.log("startX"+this.tempDrawing.startX +", center"+124+", EndX:"+this.tempDrawing.startX );
       if(this.searchGrid && this.tempDrawing.startX == 124 || this.tempDrawing.endX == 124){
           //console.log("found");
-          this.renderContext.save();
           this.drawSelectBorder();
           this.renderContext.beginPath();
           this.renderContext.moveTo(124, 0);
@@ -313,8 +313,8 @@ export class Canvas {
         let paddingY = 8; //It makes the text from input field appear in the same pos on canvas
         this.activeDrawing.tool = "text";
         this.activeDrawing.gui = this.gui;
-        this.activeDrawing.startX = paddingX+xPos-this.rawCanvasObj.offsetLeft;
-        this.activeDrawing.startY = paddingY+yPos-this.rawCanvasObj.offsetTop+this.activeDrawing.gui.fontSize;
+        this.activeDrawing.startPos(paddingX+xPos-this.rawCanvasObj.offsetLeft, paddingY+yPos-this.rawCanvasObj.offsetTop+this.activeDrawing.gui.fontSize);
+        this.activeDrawing.endPos(value.length + (value.length*(this.activeDrawing.gui.fontSize/2)), paddingY + this.activeDrawing.gui.fontSize);
         this.activeDrawing.width = value.length + (value.length*(this.activeDrawing.gui.fontSize/2));
         this.activeDrawing.height = paddingY + this.activeDrawing.gui.fontSize;
         if(value == null){
@@ -324,7 +324,6 @@ export class Canvas {
         this.allDrawings.push(JSON.parse(JSON.stringify(this.activeDrawing)));
         this.drawObject(this.activeDrawing, true);
         this.active = false;
-        this.renderContext.save();
     }
 
   public undoDrawing() {
