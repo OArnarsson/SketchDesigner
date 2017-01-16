@@ -12,9 +12,9 @@ export class Drawing {
   public gui: GUI;
 
 
-    constructor(tool: string){
+    constructor(){
       this.gui = new GUI();
-      this.tool = tool;
+      this.tool = this.gui.tool.toString();
       this.posX = [];
       this.posY = [];
       this.value = "";
@@ -42,7 +42,7 @@ export class Drawing {
       this.posY.push(y);
     }
 
-    setBoxSize(x, y){
+    setBoxSize(x, y) {
         if(x < this.startX){
             this.startX = x;
         }
