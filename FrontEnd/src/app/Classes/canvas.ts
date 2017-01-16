@@ -140,37 +140,29 @@ export class Canvas {
     for(let drawing of this.allDrawings) {
       this.renderContext.beginPath();
 
-      this.drawObject(drawing);
+      this.drawObject(drawing, false);
 
       this.renderContext.stroke();
       this.renderContext.closePath();
     }
-    if(!this.active){
 
-    }
-
-    if(this.gui.tool == 'pen') {
-      this.drawPen(this.activeDrawing);
-    }
-    if(this.gui.tool == 'square') {
-      this.drawObject(this.activeDrawing);
-    }
-    if(this.gui.tool == 'line') {
-      this.drawLine(this.activeDrawing);
-    }
-    if(this.gui.tool == 'circle') {
-      this.drawCircle(this.activeDrawing);
-    }
     if(this.gui.tool == 'select'){
         this.MoveObject();
         this.drawSelect();
     }
+    else {
+      this.drawObject(this.activeDrawing, true);
+    }
   }
 
-  public drawObject(drawing: Drawing) {
+  public drawObject(drawing: Drawing, isLive) {
     this.renderContext.lineWidth = drawing.gui.lineWidth;
     this.renderContext.lineCap = drawing.gui.lineCap;
     this.renderContext.strokeStyle = drawing.gui.strokeStyle;
+
+    if(isLive) {
+      this.renderContext.beginPath();
+    }
 
     if(drawing.tool == 'pen') {
       this.renderContext.moveTo(drawing.posX[0], drawing.posY[0]);
@@ -202,83 +194,32 @@ export class Canvas {
       this.renderContext.fillStyle = drawing.gui.strokeStyle;
       this.renderContext.fillText(drawing.value,drawing.startX,drawing.startY);
     }
-  }
 
-  public drawPen(drawing: Drawing) {
-    this.renderContext.lineWidth = drawing.gui.lineWidth;
-    this.renderContext.lineCap = drawing.gui.lineCap;
-    this.renderContext.strokeStyle = drawing.gui.strokeStyle;
-    this.renderContext.beginPath();
-    this.renderContext.moveTo(drawing.posX[0], drawing.posY[0]);
-    for (var i = 0; i < drawing.posX.length; i++) {
-      this.renderContext.lineTo(drawing.posX[i], drawing.posY[i]);
-
+    if(isLive) {
+      this.renderContext.stroke();
+      this.renderContext.closePath();
     }
-    this.renderContext.stroke();
-    this.renderContext.closePath();
-  }
-
-  public drawLine(drawing: Drawing) {
-    this.renderContext.lineWidth = drawing.gui.lineWidth;
-    this.renderContext.lineCap = drawing.gui.lineCap;
-    this.renderContext.strokeStyle = drawing.gui.strokeStyle;
-
-    this.renderContext.beginPath();
-    this.renderContext.moveTo(drawing.startX, drawing.startY);
-    this.renderContext.lineTo(drawing.endX, drawing.endY);
-    this.renderContext.stroke();
-    this.renderContext.closePath();
-  }
-
-  public drawCircle(drawing: Drawing) {
-    this.renderContext.lineWidth = drawing.gui.lineWidth;
-    this.renderContext.lineCap = drawing.gui.lineCap;
-    this.renderContext.strokeStyle = drawing.gui.strokeStyle;
-
-    this.renderContext.beginPath();
-    this.renderContext.moveTo(drawing.startX, drawing.startY + (drawing.endY - drawing.startY) / 2);
-    this.renderContext.bezierCurveTo(drawing.startX, drawing.startY, drawing.endX, drawing.startY, drawing.endX, drawing.startY + (drawing.endY - drawing.startY) / 2);
-    this.renderContext.bezierCurveTo(drawing.endX, drawing.endY, drawing.startX, drawing.endY, drawing.startX, drawing.startY + (drawing.endY - drawing.startY) / 2);
-    this.renderContext.closePath();
-    this.renderContext.stroke();
-  }
-
-  public drawText(drawing: Drawing){
-      if(drawing.value == null){
-          return;
-      }
-      this.renderContext.font = drawing.gui.fontSize+"px "+drawing.gui.font;
-      this.renderContext.fillStyle = drawing.gui.strokeStyle;
-      this.renderContext.fillText(drawing.value,drawing.startX,drawing.startY);
   }
 
   public drawSelect(){
       var padding = 4;
       var tool = this.tempDrawing.gui.tool;
       if(tool == "square"){
-          this.drawObject(this.tempDrawing);
+          this.drawObject(this.tempDrawing, true);
           this.drawSelectBorder();
           this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, this.tempDrawing.width+(padding*2), this.tempDrawing.height+(padding*2));
 
       }
       if(tool == "text"){
-          this.drawText(this.tempDrawing);
+          this.drawObject(this.tempDrawing, true);
+
           this.drawSelectBorder();
           let StartY = this.tempDrawing.startY - this.tempDrawing.gui.fontSize;
           this.renderContext.strokeRect(this.tempDrawing.startX-padding, StartY-padding, this.tempDrawing.width+(padding*2), this.tempDrawing.height+(padding*2));
 
       }
       else{
-          if(tool == 'pen'){
-              this.drawPen(this.tempDrawing);
-          }
-          if(tool == 'circle'){
-              this.drawCircle(this.tempDrawing);
-          }
-          if(tool == 'line'){
-              this.drawLine(this.tempDrawing);
-          }
-
+        this.drawObject(this.tempDrawing, true);
           this.drawSelectBorder();
           this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, (this.tempDrawing.endX-this.tempDrawing.startX)+(padding*2), (this.tempDrawing.endY-this.tempDrawing.startY)+(padding*2));
           //this.tagGrid();
@@ -381,7 +322,7 @@ export class Canvas {
         }
         this.activeDrawing.value = value;
         this.allDrawings.push(JSON.parse(JSON.stringify(this.activeDrawing)));
-        this.drawText(this.activeDrawing);
+        this.drawObject(this.activeDrawing, true);
         this.active = false;
         this.renderContext.save();
     }
