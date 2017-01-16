@@ -7,7 +7,6 @@
         <i (click)="changeTool('circle')" class="fa fa-circle-thin" [class.active]="gui.tool=='circle'" aria-hidden="true"></i><div>Circle (C)</div>
         <i (click)="changeTool('line')" class="fa fa-minus" [class.active]="gui.tool=='line'" aria-hidden="true"></i><div>Line (L)</div>
         <i (click)="changeTool('text')" class="fa fa-font" [class.active]="gui.tool=='text'" aria-hidden="true"></i><div>Text (T)</div>
-        <i (click)="changeTool('eraser')" class="fa fa-eraser" [class.active]="gui.tool=='eraser'" aria-hidden="true"></i><div>Eraser (E)</div>
         <i (click)="undoRedo('undo')" class="fa fa-undo" aria-hidden="true"></i><div>Undo (CTRL+ Z)</div>
         <i (click)="undoRedo('redo')" class="fa fa-repeat" aria-hidden="true"></i><div>Redo (CTRL+ Y)</div>
         <i (click)="deleteDrawing()" class="fa fa-trash" aria-hidden="true"></i><div>Remove (Delete)</div>
