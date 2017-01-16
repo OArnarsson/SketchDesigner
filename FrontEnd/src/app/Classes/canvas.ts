@@ -17,14 +17,11 @@ export class Canvas {
   public tempDrawing: any;
   public snapGrid: boolean;
   public searchGrid: boolean;
-  public lastFound: boolean;
-
   //Utilities
   public gui: GUI;
   private renderer: Renderer;
 
   constructor(rend: Renderer) {
-    this.lastFound = false;
     this.gui = new GUI();
     this.renderer = rend;
     this.class = "mobile";
@@ -36,7 +33,7 @@ export class Canvas {
     this.active = false;
     this.snapGrid = false;
     this.searchGrid = true;
-    this.tempDrawing = JSON.parse(JSON.stringify(this.activeDrawing));
+    this.tempDrawing = this.activeDrawing;
   }
 
 
@@ -97,11 +94,10 @@ export class Canvas {
     this.allDrawings.push(this.activeDrawing);
 
       if (this.activeDrawing.tool == 'select') {
-        this.allDrawings.push(JSON.parse(JSON.stringify(this.tempDrawing)));
+        this.allDrawings.push(this.tempDrawing);
         this.tempDrawing = new Drawing();
         this.activeDrawing.found = false;
       }
-
       else {
         this.activeDrawing = new Drawing();
       }
@@ -127,9 +123,6 @@ export class Canvas {
      this.activeDrawing = new Drawing();
       if(gui.tool == "select"){
           this.activeDrawing = new Select(this.activeDrawing);
-      }
-      if(gui.tool != "select"){
-          this.lastFound = false;
       }
       this.activeDrawing.gui = this.gui;
       this.setCursor();
@@ -346,7 +339,6 @@ export class Canvas {
                   this.activeDrawing.found = true;
                   this.rawCanvasObj.style.cursor = 'move';
                   console.log("found");
-                  this.lastFound = true;
                   return;
               }
           }
@@ -358,7 +350,6 @@ export class Canvas {
                   this.allDrawings[x] = new Drawing();
                   this.activeDrawing.found = true;
                   this.rawCanvasObj.style.cursor = 'move';
-                  this.lastFound = true;
                   return;
               }
           }
@@ -368,13 +359,11 @@ export class Canvas {
                   this.allDrawings[x] = new Drawing(); // This is used only because for some reason this.allDrawings.slice(x,1) doesn't work.
                   this.activeDrawing.found = true;
                   this.rawCanvasObj.style.cursor = 'move';
-                  this.lastFound = true;
                   return;
               }
           }
       }
-      this.lastFound = false;
-      this.rawCanvasObj.style.cursor = 'default';
+     this.rawCanvasObj.style.cursor = 'default';
   }
 
   public newText(value,xPos, yPos){

@@ -133,7 +133,7 @@ export class DesignerComponent {
   }
 
   public deleteDrawing() {
-    if(this.gui.tool == 'select' && this.activeCanvas.lastFound){
+    if(this.gui.tool == 'select'){
       if(this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1].startX != null){
         this.activeCanvas.removeLast();
       }
@@ -172,8 +172,7 @@ export class DesignerComponent {
                   this.changeTool('circle');
               }
               else{
-
-                  if(this.gui.tool == 'select' && this.activeCanvas.lastFound){
+                  if(this.gui.tool == 'select'){
                       if(this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1].startX != null){
                           this.clipboard = this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1];
                       }
