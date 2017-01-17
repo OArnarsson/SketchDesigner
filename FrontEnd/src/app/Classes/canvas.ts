@@ -11,11 +11,11 @@ export class Canvas {
   public class: string;
   public canvasWidth: number;
   public canvasHeight: number;
-  public allDrawings: any[];
-  public undoneDrawings: any[];
-  public activeDrawing: any;
+  public allDrawings: Drawing[];
+  public undoneDrawings: Drawing[];
+  public activeDrawing: Drawing;
   public active: boolean;
-  public tempDrawing: any;
+  public tempDrawing: Drawing;
   public snapGrid: boolean;
   public searchGrid: boolean;
   //Utilities
@@ -123,7 +123,7 @@ export class Canvas {
      this.gui = gui;
      this.activeDrawing = new Drawing();
       if(gui.tool == "select"){
-          this.activeDrawing = new Select(this.activeDrawing);
+          this.activeDrawing = new Drawing();
       }
       this.activeDrawing.gui = this.gui;
       this.setCursor();
@@ -208,7 +208,7 @@ export class Canvas {
       if(tool == "square"){
           this.drawObject(this.tempDrawing, true);
           this.drawSelectBorder();
-          this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, this.tempDrawing.width+(padding*2), this.tempDrawing.height+(padding*2));
+          this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, this.tempDrawing.endX+(padding*2), this.tempDrawing.endY+(padding*2));
 
       }
       if(tool == "text"){
@@ -216,7 +216,7 @@ export class Canvas {
 
           this.drawSelectBorder();
           let StartY = this.tempDrawing.startY - this.tempDrawing.gui.fontSize;
-          this.renderContext.strokeRect(this.tempDrawing.startX-padding, StartY-padding, this.tempDrawing.width+(padding*2), this.tempDrawing.height+(padding*2));
+          this.renderContext.strokeRect(this.tempDrawing.startX-padding, StartY-padding, this.tempDrawing.endX+(padding*2), this.tempDrawing.endY+(padding*2));
 
       }
       else{
@@ -286,7 +286,7 @@ export class Canvas {
           if(this.allDrawings[x].tool == 'text'){
               //For some reason we need to offset startY.
               let StartY = this.allDrawings[x].startY - this.allDrawings[x].gui.fontSize;
-              if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].width+this.allDrawings[x].startX) && StartY <= yCord && yCord <= (this.allDrawings[x].height+StartY) ) {
+              if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].endX+this.allDrawings[x].startX) && StartY <= yCord && yCord <= (this.allDrawings[x].endY+StartY) ) {
                   this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
                   this.allDrawings[x] = new Drawing();
                   this.activeDrawing.found = true;
@@ -315,8 +315,8 @@ export class Canvas {
         this.activeDrawing.gui = this.gui;
         this.activeDrawing.startPos(paddingX+xPos-this.rawCanvasObj.offsetLeft, paddingY+yPos-this.rawCanvasObj.offsetTop+this.activeDrawing.gui.fontSize);
         this.activeDrawing.endPos(value.length + (value.length*(this.activeDrawing.gui.fontSize/2)), paddingY + this.activeDrawing.gui.fontSize);
-        this.activeDrawing.width = value.length + (value.length*(this.activeDrawing.gui.fontSize/2));
-        this.activeDrawing.height = paddingY + this.activeDrawing.gui.fontSize;
+        this.activeDrawing.endX = value.length + (value.length*(this.activeDrawing.gui.fontSize/2));
+        this.activeDrawing.endY = paddingY + this.activeDrawing.gui.fontSize;
         if(value == null){
             value = ""
         }

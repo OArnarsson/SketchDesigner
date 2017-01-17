@@ -10,7 +10,10 @@ export class Drawing {
   public endY: number;
   public posX: number[];
   public posY: number[];
+  public moveXby: number;
+  public moveYby: number;
   public value: string;
+  public found: boolean;
   public selection: Selection;
   public gui: GUI;
 
@@ -20,6 +23,8 @@ export class Drawing {
       this.tool = this.gui.tool.toString();
       this.posX = [];
       this.posY = [];
+      this.moveXby = 0;
+      this.moveYby = 0;
       this.value = "";
     }
 
@@ -38,6 +43,11 @@ export class Drawing {
       this.endX = x;
       this.endY = y;
     }
+  }
+
+  movePos(x, y){
+    this.moveXby = x;
+    this.moveYby = y;
   }
 
     pushPos(x, y) {
