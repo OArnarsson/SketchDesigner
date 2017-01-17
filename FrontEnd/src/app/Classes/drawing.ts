@@ -46,10 +46,12 @@ export class Drawing {
     }
   }
 
-  movePos(x, y){
-    this.moveXby = x;
-    this.moveYby = y;
-  }
+    movePos(x, y){  
+        this.startX += x;
+        this.startY += y;
+        this.endX += x;
+        this.endY += y;
+    }
 
     pushPos(x, y) {
       this.posX.push(x);
@@ -70,5 +72,6 @@ export class Drawing {
             this.endY = y;
         }
     }
+
 }
 
