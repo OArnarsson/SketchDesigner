@@ -2,7 +2,6 @@ import {Renderer} from '@angular/core';
 import {GUI} from '../Classes/gui'
 import {Drawing} from './drawing'
 import {Selection} from '../Classes/selection'
-import {Select} from "./select";
 export class Canvas {
 
   //Canvas Variables
@@ -11,18 +10,24 @@ export class Canvas {
   public class: string;
   public canvasWidth: number;
   public canvasHeight: number;
-  public allDrawings: any[];
-  public undoneDrawings: any[];
-  public activeDrawing: any;
+  public allDrawings: Drawing[];
+  public undoneDrawings: Drawing[];
+  public activeDrawing: Drawing;
   public active: boolean;
-  public tempDrawing: any;
+  public tempDrawing: Drawing;
   public snapGrid: boolean;
   public searchGrid: boolean;
+
+  //Move Props
+    public moveX:number;
+    public moveY:number;
+    public isMoving:boolean;
   //Utilities
   public gui: GUI;
   private renderer: Renderer;
 
   constructor(rend: Renderer) {
+      this.isMoving = false;
     this.gui = new GUI();
     this.renderer = rend;
     this.class = "mobile";
@@ -42,14 +47,18 @@ export class Canvas {
       this.setToolClass(this.gui);
     }
     this.active = true;
+
     this.activeDrawing.gui = this.gui;
     this.activeDrawing.tool = this.gui.tool.toString();
     var startX = e.pageX - this.rawCanvasObj.offsetLeft;
     var startY = e.pageY - this.rawCanvasObj.offsetTop;
+    this.moveX = startX;
+    this.moveY = startY;
 
     this.activeDrawing.startPos(startX, startY);
+    console.log("MouseDown:"+this.activeDrawing.tool);
 
-    if(this.activeDrawing.tool == 'select') {
+    if(this.gui.tool == 'select') {
       this.findDrawing(startX, startY);
     }
     else {
@@ -66,10 +75,13 @@ export class Canvas {
     var startY = e.pageY - this.rawCanvasObj.offsetTop;
 
     if(this.active) {
-      if (this.activeDrawing.tool == 'select') {
+      if (this.gui.tool == 'select') {
         if (this.activeDrawing.found) {
-          this.activeDrawing.movePos((startX - this.activeDrawing.startX), (startY - this.activeDrawing.startY))
-          this.activeDrawing.startPos(startX, startY);
+            this.activeDrawing.moveXby = (startX- this.moveX);
+            this.activeDrawing.moveYby = (startY-this.moveY);
+            this.moveX = startX;
+            this.moveY = startY;
+          //this.activeDrawing.startPos(startX, startY);
         }
       }
 
@@ -89,19 +101,19 @@ export class Canvas {
 
   public mouseUp() {
     this.active = false;
-    this.activeDrawing.gui = JSON.parse(this.getGUI());
-    this.activeDrawing.selection = new Selection(this.activeDrawing.tool, this.activeDrawing.startX, this.activeDrawing.startY, this.activeDrawing.endX, this.activeDrawing.endY);
-    console.log(this.activeDrawing);
-    this.allDrawings.push(this.activeDrawing);
-
-    if (this.activeDrawing.tool == 'select') {
-      this.allDrawings.push(this.tempDrawing);
-      this.tempDrawing = new Drawing();
+    if(this.gui.tool != "select"){
+        this.activeDrawing.gui = JSON.parse(this.getGUI());
+        this.activeDrawing.selection = new Selection(this.activeDrawing.tool, this.activeDrawing.startX, this.activeDrawing.startY, this.activeDrawing.endX, this.activeDrawing.endY);
+    }
+    this.activeDrawing.moveXby = 0;
+    this.activeDrawing.moveYby = 0;
+    this.activeDrawing.found = false;
+    if(this.gui.tool !="select"){
+        this.allDrawings.push(this.activeDrawing);
+    }
       this.activeDrawing.found = false;
-    }
-    else {
       this.activeDrawing = new Drawing();
-    }
+
   }
 
   public getGUI(){
@@ -122,10 +134,9 @@ export class Canvas {
   public setToolClass(gui:GUI){
      this.gui = gui;
      this.activeDrawing = new Drawing();
-      if(gui.tool == "select"){
-          this.activeDrawing = new Select(this.activeDrawing);
+      if(gui.tool != "select"){
+          this.activeDrawing.gui = this.gui;
       }
-      this.activeDrawing.gui = this.gui;
       this.setCursor();
       this.redrawCanvas();
   }
@@ -140,9 +151,7 @@ export class Canvas {
     this.clearCanvas();
     for(let drawing of this.allDrawings) {
       this.renderContext.beginPath();
-
       this.drawObject(drawing, false);
-
       this.renderContext.stroke();
       this.renderContext.closePath();
     }
@@ -204,51 +213,30 @@ export class Canvas {
 
   public drawSelect(){
       var padding = 4;
-      var tool = this.tempDrawing.gui.tool;
-      if(tool == "square"){
-          this.drawObject(this.tempDrawing, true);
+      var tool = this.activeDrawing.gui.tool;
+        this.drawObject(this.activeDrawing, true);
           this.drawSelectBorder();
-          this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, this.tempDrawing.width+(padding*2), this.tempDrawing.height+(padding*2));
-
-      }
-      if(tool == "text"){
-          this.drawObject(this.tempDrawing, true);
-
-          this.drawSelectBorder();
-          let StartY = this.tempDrawing.startY - this.tempDrawing.gui.fontSize;
-          this.renderContext.strokeRect(this.tempDrawing.startX-padding, StartY-padding, this.tempDrawing.width+(padding*2), this.tempDrawing.height+(padding*2));
-
-      }
-      else{
-        this.drawObject(this.tempDrawing, true);
-          this.drawSelectBorder();
-          this.renderContext.strokeRect(this.tempDrawing.startX-padding, this.tempDrawing.startY-padding, (this.tempDrawing.endX-this.tempDrawing.startX)+(padding*2), (this.tempDrawing.endY-this.tempDrawing.startY)+(padding*2));
+          this.renderContext.strokeRect(this.activeDrawing.selection.lowX-padding, this.activeDrawing.selection.lowY-padding, (this.activeDrawing.selection.highX-this.activeDrawing.selection.lowX)+(padding*2), (this.activeDrawing.selection.highY-this.activeDrawing.selection.lowY)+(padding*2));
           //this.tagGrid();
-      }
   }
 
   public MoveObject(){
-      this.tempDrawing.startX = (this.tempDrawing.startX + this.activeDrawing.moveXby);
-      this.tempDrawing.startY = (this.tempDrawing.startY + this.activeDrawing.moveYby);
-
-      if(this.tempDrawing.gui.tool == 'pen'){
-          this.tempDrawing.endX = (this.tempDrawing.endX + this.activeDrawing.moveXby);
-          this.tempDrawing.endY = (this.tempDrawing.endY + this.activeDrawing.moveYby);
-          for (var i = 0; i < this.tempDrawing.posX.length; i++) {
-              this.tempDrawing.posX[i] = this.tempDrawing.posX[i]+this.activeDrawing.moveXby;
-              this.tempDrawing.posY[i] = this.tempDrawing.posY[i]+this.activeDrawing.moveYby;
-          }
-      }
-      if(this.tempDrawing.gui.tool == 'circle'){
-          this.tempDrawing.endX = (this.tempDrawing.endX + this.activeDrawing.moveXby);
-          this.tempDrawing.endY = (this.tempDrawing.endY + this.activeDrawing.moveYby);
-      }
-      if(this.tempDrawing.gui.tool == 'line'){
-          this.tempDrawing.endX = (this.tempDrawing.endX + this.activeDrawing.moveXby);
-          this.tempDrawing.endY = (this.tempDrawing.endY + this.activeDrawing.moveYby);
+      if(this.activeDrawing.tool != "square") {
+      this.activeDrawing.endPos(this.activeDrawing.endX , this.activeDrawing.endY);
+      this.activeDrawing.startPos(this.activeDrawing.startX, this.activeDrawing.startY);
       }
 
+      this.activeDrawing.movePos(this.activeDrawing.moveXby, this.activeDrawing.moveYby);
+      this.activeDrawing.selection.movePos(this.activeDrawing.moveXby, this.activeDrawing.moveYby);
+
+    if(this.activeDrawing.gui.tool == 'pen') {
+      for (var i = 0; i < this.activeDrawing.posX.length; i++) {
+        this.activeDrawing.posX[i] = this.activeDrawing.posX[i] + this.activeDrawing.moveXby;
+        this.activeDrawing.posY[i] = this.activeDrawing.posY[i] + this.activeDrawing.moveYby;
+      }
+    }
   }
+
   //This renders the Border around the object, we can style it here.
   public drawSelectBorder(){
       this.renderContext.lineCap = "square";
@@ -271,40 +259,17 @@ export class Canvas {
   }
 
   public findDrawing(xCord, yCord){
-      for(let x=0; x< this.allDrawings.length; x++){
-          if(this.allDrawings[x].tool == 'square'){
-              if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].endX+this.allDrawings[x].startX) && this.allDrawings[x].startY <= yCord && yCord <= (this.allDrawings[x].endY+this.allDrawings[x].startY) ) {
-                  this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.undoneDrawings.push(this.allDrawings[x]);
-                  this.allDrawings.splice(x, 1);
-                  this.activeDrawing.found = true;
-                  this.rawCanvasObj.style.cursor = 'move';
-                  console.log("found");
-                  return;
-              }
-          }
-          if(this.allDrawings[x].tool == 'text'){
-              //For some reason we need to offset startY.
-              let StartY = this.allDrawings[x].startY - this.allDrawings[x].gui.fontSize;
-              if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].width+this.allDrawings[x].startX) && StartY <= yCord && yCord <= (this.allDrawings[x].height+StartY) ) {
-                  this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.allDrawings[x] = new Drawing();
-                  this.activeDrawing.found = true;
-                  this.rawCanvasObj.style.cursor = 'move';
-                  return;
-              }
-          }
-          else{
-              if( this.allDrawings[x].startX <= xCord && xCord <= this.allDrawings[x].endX && this.allDrawings[x].startY <= yCord && yCord <= this.allDrawings[x].endY ) {
-                  this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.allDrawings[x] = new Drawing(); // This is used only because for some reason this.allDrawings.slice(x,1) doesn't work.
-                  this.activeDrawing.found = true;
-                  this.rawCanvasObj.style.cursor = 'move';
-                  return;
-              }
-          }
+    for(let x=0; x< this.allDrawings.length; x++){
+      var selection = this.allDrawings[x].selection;
+      if( selection.lowX <= xCord && xCord <= selection.highX && selection.lowY <= yCord && yCord <= selection.highY ) {
+        this.activeDrawing = this.allDrawings[x];
+        this.undoneDrawings.push(this.allDrawings[x]);
+        this.activeDrawing.found = true;
+        this.rawCanvasObj.style.cursor = 'move';
+        return;
       }
-     this.rawCanvasObj.style.cursor = 'default';
+    }
+    this.rawCanvasObj.style.cursor = 'default';
   }
 
   public newText(value,xPos, yPos){
@@ -314,14 +279,13 @@ export class Canvas {
         this.activeDrawing.tool = "text";
         this.activeDrawing.gui = this.gui;
         this.activeDrawing.startPos(paddingX+xPos-this.rawCanvasObj.offsetLeft, paddingY+yPos-this.rawCanvasObj.offsetTop+this.activeDrawing.gui.fontSize);
-        this.activeDrawing.endPos(value.length + (value.length*(this.activeDrawing.gui.fontSize/2)), paddingY + this.activeDrawing.gui.fontSize);
-        this.activeDrawing.width = value.length + (value.length*(this.activeDrawing.gui.fontSize/2));
-        this.activeDrawing.height = paddingY + this.activeDrawing.gui.fontSize;
+        this.activeDrawing.endPos(paddingX+xPos-this.rawCanvasObj.offsetLeft + this.canvasWidth,(paddingY + this.activeDrawing.gui.fontSize*2));
+        this.activeDrawing.selection =  new Selection(this.activeDrawing.tool,this.activeDrawing.startX, this.activeDrawing.startY-paddingY, this.activeDrawing.endX, this.activeDrawing.endY+(paddingY*2));
         if(value == null){
             value = ""
         }
         this.activeDrawing.value = value;
-        this.allDrawings.push(JSON.parse(JSON.stringify(this.activeDrawing)));
+        this.allDrawings.push(this.activeDrawing);
         this.drawObject(this.activeDrawing, true);
         this.active = false;
     }
