@@ -26,6 +26,7 @@ export class Drawing {
       this.moveXby = 0;
       this.moveYby = 0;
       this.value = "";
+      this.found = false;
       this.selection = new Selection(this.tool, 0, 0, 0, 0);
     }
 
@@ -35,20 +36,16 @@ export class Drawing {
   }
 
   endPos(x, y) {
-    if(this.tool == 'square') {
-      this.endX = x - this.startX;
-      this.endY = y - this.startY;
-    }
-
-      if(this.tool == 'text') {
-          this.endX = 200;
-          this.endY = 200;
-      }
-
-    else {
       this.endX = x;
       this.endY = y;
-    }
+    if(this.tool == 'square') {
+          this.endX = x - this.startX;
+          this.endY = y - this.startY;
+      }
+      if(this.tool == 'text') {
+          this.endX = this.startX+100;
+          this.endY = this.startY-28;
+      }
   }
 
     movePos(x, y){

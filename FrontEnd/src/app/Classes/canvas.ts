@@ -67,7 +67,8 @@ export class Canvas {
       }
       this.activeDrawing.endPos(startX,startY);
     }
-    this.redrawCanvas();
+    console.log("start(x,y):"+this.activeDrawing.startX+","+this.activeDrawing.startX+"end(x,y):"+this.activeDrawing.endX+","+this.activeDrawing.endY);
+          this.redrawCanvas();
   }
 
   public mouseMove(e: any) {
@@ -81,10 +82,8 @@ export class Canvas {
             this.activeDrawing.moveYby = (startY-this.moveY);
             this.moveX = startX;
             this.moveY = startY;
-          //this.activeDrawing.startPos(startX, startY);
         }
       }
-
       else {
         if (this.activeDrawing.tool == 'pen') {
           this.activeDrawing.pushPos(startX, startY);
@@ -95,25 +94,22 @@ export class Canvas {
         }
       }
     }
-
-    this.redrawCanvas();
+    if(this.active){
+        this.redrawCanvas();
+    }
   }
 
   public mouseUp() {
     this.active = false;
-    if(this.gui.tool != "select"){
-        this.activeDrawing.gui = JSON.parse(this.getGUI());
-        this.activeDrawing.selection = new Selection(this.activeDrawing.tool, this.activeDrawing.startX, this.activeDrawing.startY, this.activeDrawing.endX, this.activeDrawing.endY);
-    }
     this.activeDrawing.moveXby = 0;
     this.activeDrawing.moveYby = 0;
     this.activeDrawing.found = false;
     if(this.gui.tool !="select"){
+        this.activeDrawing.gui = JSON.parse(this.getGUI());
+        this.activeDrawing.selection = new Selection(this.activeDrawing.tool, this.activeDrawing.startX, this.activeDrawing.startY, this.activeDrawing.endX, this.activeDrawing.endY);
         this.allDrawings.push(this.activeDrawing);
+        this.activeDrawing = new Drawing();
     }
-      this.activeDrawing.found = false;
-      this.activeDrawing = new Drawing();
-
   }
 
   public getGUI(){
@@ -134,11 +130,12 @@ export class Canvas {
   public setToolClass(gui:GUI){
      this.gui = gui;
      this.activeDrawing = new Drawing();
+      this.setCursor();
       if(gui.tool != "select"){
           this.activeDrawing.gui = this.gui;
+          this.redrawCanvas();
       }
-      this.setCursor();
-      this.redrawCanvas();
+
   }
 
   //Clears Canvas
@@ -157,8 +154,10 @@ export class Canvas {
     }
 
     if(this.gui.tool == 'select'){
-        this.MoveObject();
-        this.drawSelect();
+        if(this.activeDrawing.found){
+            this.MoveObject();
+            this.drawSelect();
+        }
     }
     else {
       this.drawObject(this.activeDrawing, true);
