@@ -40,17 +40,25 @@ export class Drawing {
       this.endY = y - this.startY;
     }
 
+      if(this.tool == 'text') {
+          this.endX = 200;
+          this.endY = 200;
+      }
+
     else {
       this.endX = x;
       this.endY = y;
     }
   }
 
-    movePos(x, y){  
+    movePos(x, y){
         this.startX += x;
         this.startY += y;
-        this.endX += x;
-        this.endY += y;
+
+        if(this.tool != 'square') {
+            this.endX += x;
+            this.endY += y;
+        }
     }
 
     pushPos(x, y) {

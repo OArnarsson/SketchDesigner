@@ -2,7 +2,6 @@ import {Renderer} from '@angular/core';
 import {GUI} from '../Classes/gui'
 import {Drawing} from './drawing'
 import {Selection} from '../Classes/selection'
-import {start} from "repl";
 export class Canvas {
 
   //Canvas Variables
@@ -215,33 +214,20 @@ export class Canvas {
   public drawSelect(){
       var padding = 4;
       var tool = this.activeDrawing.gui.tool;
-      if(tool == "square"){
-          this.drawObject(this.activeDrawing, true);
-          this.drawSelectBorder();
-          this.renderContext.strokeRect(this.activeDrawing.startX-padding, this.activeDrawing.startY-padding, this.activeDrawing.endX+(padding*2), this.activeDrawing.endY+(padding*2));
-
-      }
-      if(tool == "text"){
-          this.drawObject(this.activeDrawing, true);
-
-          this.drawSelectBorder();
-          let StartY = this.activeDrawing.startY - this.activeDrawing.gui.fontSize;
-          this.renderContext.strokeRect(this.activeDrawing.startX-padding, StartY-padding, this.activeDrawing.endX+(padding*2), this.activeDrawing.endY+(padding*2));
-
-      }
-      else{
         this.drawObject(this.activeDrawing, true);
           this.drawSelectBorder();
           this.renderContext.strokeRect(this.activeDrawing.selection.lowX-padding, this.activeDrawing.selection.lowY-padding, (this.activeDrawing.selection.highX-this.activeDrawing.selection.lowX)+(padding*2), (this.activeDrawing.selection.highY-this.activeDrawing.selection.lowY)+(padding*2));
           //this.tagGrid();
-      }
   }
 
   public MoveObject(){
-    this.activeDrawing.startPos(this.activeDrawing.startX + this.activeDrawing.moveXby, this.activeDrawing.startY + this.activeDrawing.moveYby);
-    this.activeDrawing.endPos(this.activeDrawing.endX + this.activeDrawing.moveXby, this.activeDrawing.endY + this.activeDrawing.moveYby);
-    this.activeDrawing.movePos(this.activeDrawing.moveXby, this.activeDrawing.moveYby);
-    this.activeDrawing.selection.movePos(this.activeDrawing.moveXby, this.activeDrawing.moveYby);
+      if(this.activeDrawing.tool != "square") {
+      this.activeDrawing.endPos(this.activeDrawing.endX , this.activeDrawing.endY);
+      this.activeDrawing.startPos(this.activeDrawing.startX, this.activeDrawing.startY);
+      }
+
+      this.activeDrawing.movePos(this.activeDrawing.moveXby, this.activeDrawing.moveYby);
+      this.activeDrawing.selection.movePos(this.activeDrawing.moveXby, this.activeDrawing.moveYby);
 
     if(this.activeDrawing.gui.tool == 'pen') {
       for (var i = 0; i < this.activeDrawing.posX.length; i++) {
@@ -293,14 +279,13 @@ export class Canvas {
         this.activeDrawing.tool = "text";
         this.activeDrawing.gui = this.gui;
         this.activeDrawing.startPos(paddingX+xPos-this.rawCanvasObj.offsetLeft, paddingY+yPos-this.rawCanvasObj.offsetTop+this.activeDrawing.gui.fontSize);
-        this.activeDrawing.endPos(value.length + (value.length*(this.activeDrawing.gui.fontSize/2)), paddingY + this.activeDrawing.gui.fontSize);
-        this.activeDrawing.endX = value.length + (value.length*(this.activeDrawing.gui.fontSize/2));
-        this.activeDrawing.endY = paddingY + this.activeDrawing.gui.fontSize;
+        this.activeDrawing.endPos(paddingX+xPos-this.rawCanvasObj.offsetLeft + this.canvasWidth,(paddingY + this.activeDrawing.gui.fontSize*2));
+        this.activeDrawing.selection =  new Selection(this.activeDrawing.tool,this.activeDrawing.startX, this.activeDrawing.startY-paddingY, this.activeDrawing.endX, this.activeDrawing.endY+(paddingY*2));
         if(value == null){
             value = ""
         }
         this.activeDrawing.value = value;
-        this.allDrawings.push(JSON.parse(JSON.stringify(this.activeDrawing)));
+        this.allDrawings.push(this.activeDrawing);
         this.drawObject(this.activeDrawing, true);
         this.active = false;
     }
