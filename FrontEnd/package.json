@@ -1,6 +1,7 @@
 {
   "name": "front-end",
   "version": "0.0.0",
+  "main": "index.js",
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
@@ -24,7 +25,11 @@
     "core-js": "^2.4.1",
     "rxjs": "5.0.0-beta.12",
     "ts-helpers": "^1.1.1",
-    "zone.js": "^0.6.23"
+    "zone.js": "^0.6.23",
+    "body-parser": "^1.15.2",
+    "cors": "^2.8.1",
+    "express": "^4.14.0",
+    "lodash": "^4.17.4"
   },
   "devDependencies": {
     "@types/jasmine": "^2.2.30",
