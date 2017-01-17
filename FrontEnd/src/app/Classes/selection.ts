@@ -4,8 +4,11 @@ export class Selection {
   public lowY: number;
   public highX: number;
   public highY: number;
+  private buffer: number;
 
   constructor(tool, startX: number, startY: number, endX: number, endY: number) {
+    this.buffer = 10;
+
     if(tool == 'square'){
       if(startX < 0) {
         startX = endX + startX;
@@ -19,20 +22,20 @@ export class Selection {
     }
 
     if(Math.abs(startX) > Math.abs(endX)) {
-      this.lowX = Math.abs(endX);
-      this.highX = Math.abs(startX);
+      this.lowX = Math.abs(endX - this.buffer);
+      this.highX = Math.abs(startX + this.buffer);
     }
     else {
-      this.lowX = Math.abs(startX);
-      this.highX = Math.abs(endX);
+      this.lowX = Math.abs(startX - this.buffer);
+      this.highX = Math.abs(endX + this.buffer);
     }
     if(Math.abs(startY) > Math.abs(endY)) {
-      this.lowY = Math.abs(endY);
-      this.highY = Math.abs(startY);
+      this.lowY = Math.abs(endY - this.buffer);
+      this.highY = Math.abs(startY + this.buffer);
     }
     else {
-      this.lowY = Math.abs(startY);
-      this.highY = Math.abs(endY);
+      this.lowY = Math.abs(startY - this.buffer);
+      this.highY = Math.abs(endY + this.buffer);
     }
   }
 
