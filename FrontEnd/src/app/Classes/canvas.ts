@@ -2,7 +2,6 @@ import {Renderer} from '@angular/core';
 import {GUI} from '../Classes/gui'
 import {Drawing} from './drawing'
 import {Selection} from '../Classes/selection'
-import {Select} from "./select";
 export class Canvas {
 
   //Canvas Variables
@@ -49,7 +48,7 @@ export class Canvas {
 
     this.activeDrawing.startPos(startX, startY);
 
-    if(this.activeDrawing.tool == 'select') {
+    if(this.gui.tool == 'select') {
       this.findDrawing(startX, startY);
     }
     else {
@@ -66,7 +65,7 @@ export class Canvas {
     var startY = e.pageY - this.rawCanvasObj.offsetTop;
 
     if(this.active) {
-      if (this.activeDrawing.tool == 'select') {
+      if (this.gui.tool == 'select') {
         if (this.activeDrawing.found) {
           this.activeDrawing.movePos((startX - this.activeDrawing.startX), (startY - this.activeDrawing.startY))
           this.activeDrawing.startPos(startX, startY);
@@ -228,27 +227,18 @@ export class Canvas {
   }
 
   public MoveObject(){
-      this.tempDrawing.startX = (this.tempDrawing.startX + this.activeDrawing.moveXby);
-      this.tempDrawing.startY = (this.tempDrawing.startY + this.activeDrawing.moveYby);
+    this.tempDrawing.startPos(this.tempDrawing.startX + this.activeDrawing.moveXby, this.tempDrawing.startY + this.activeDrawing.moveYby);
+    this.tempDrawing.endPos(this.tempDrawing.endX + this.activeDrawing.moveXby, this.tempDrawing.endY + this.activeDrawing.moveYby);
+    this.tempDrawing.selection.movePos(this.activeDrawing.moveXby, this.activeDrawing.moveYby);
 
-      if(this.tempDrawing.gui.tool == 'pen'){
-          this.tempDrawing.endX = (this.tempDrawing.endX + this.activeDrawing.moveXby);
-          this.tempDrawing.endY = (this.tempDrawing.endY + this.activeDrawing.moveYby);
-          for (var i = 0; i < this.tempDrawing.posX.length; i++) {
-              this.tempDrawing.posX[i] = this.tempDrawing.posX[i]+this.activeDrawing.moveXby;
-              this.tempDrawing.posY[i] = this.tempDrawing.posY[i]+this.activeDrawing.moveYby;
-          }
+    if(this.tempDrawing.gui.tool == 'pen') {
+      for (var i = 0; i < this.tempDrawing.posX.length; i++) {
+        this.tempDrawing.posX[i] = this.tempDrawing.posX[i] + this.activeDrawing.moveXby;
+        this.tempDrawing.posY[i] = this.tempDrawing.posY[i] + this.activeDrawing.moveYby;
       }
-      if(this.tempDrawing.gui.tool == 'circle'){
-          this.tempDrawing.endX = (this.tempDrawing.endX + this.activeDrawing.moveXby);
-          this.tempDrawing.endY = (this.tempDrawing.endY + this.activeDrawing.moveYby);
-      }
-      if(this.tempDrawing.gui.tool == 'line'){
-          this.tempDrawing.endX = (this.tempDrawing.endX + this.activeDrawing.moveXby);
-          this.tempDrawing.endY = (this.tempDrawing.endY + this.activeDrawing.moveYby);
-      }
-
+    }
   }
+
   //This renders the Border around the object, we can style it here.
   public drawSelectBorder(){
       this.renderContext.lineCap = "square";
@@ -271,40 +261,19 @@ export class Canvas {
   }
 
   public findDrawing(xCord, yCord){
-      for(let x=0; x< this.allDrawings.length; x++){
-          if(this.allDrawings[x].tool == 'square'){
-              if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].endX+this.allDrawings[x].startX) && this.allDrawings[x].startY <= yCord && yCord <= (this.allDrawings[x].endY+this.allDrawings[x].startY) ) {
-                  this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.undoneDrawings.push(this.allDrawings[x]);
-                  this.allDrawings.splice(x, 1);
-                  this.activeDrawing.found = true;
-                  this.rawCanvasObj.style.cursor = 'move';
-                  console.log("found");
-                  return;
-              }
-          }
-          if(this.allDrawings[x].tool == 'text'){
-              //For some reason we need to offset startY.
-              let StartY = this.allDrawings[x].startY - this.allDrawings[x].gui.fontSize;
-              if( this.allDrawings[x].startX <= xCord && xCord <= (this.allDrawings[x].endX+this.allDrawings[x].startX) && StartY <= yCord && yCord <= (this.allDrawings[x].endY+StartY) ) {
-                  this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.allDrawings[x] = new Drawing();
-                  this.activeDrawing.found = true;
-                  this.rawCanvasObj.style.cursor = 'move';
-                  return;
-              }
-          }
-          else{
-              if( this.allDrawings[x].startX <= xCord && xCord <= this.allDrawings[x].endX && this.allDrawings[x].startY <= yCord && yCord <= this.allDrawings[x].endY ) {
-                  this.tempDrawing = JSON.parse(JSON.stringify(this.allDrawings[x]));
-                  this.allDrawings[x] = new Drawing(); // This is used only because for some reason this.allDrawings.slice(x,1) doesn't work.
-                  this.activeDrawing.found = true;
-                  this.rawCanvasObj.style.cursor = 'move';
-                  return;
-              }
-          }
+    for(let x=0; x< this.allDrawings.length; x++){
+      console.log(this.allDrawings[x]);
+      var selection = this.allDrawings[x].selection;
+      if( selection.lowX <= xCord && xCord <= selection.highX && selection.lowY <= yCord && yCord <= selection.highY ) {
+        this.tempDrawing = this.allDrawings[x];
+        this.undoneDrawings.push(this.allDrawings[x]);
+        this.allDrawings.splice(x, 1);
+        this.activeDrawing.found = true;
+        this.rawCanvasObj.style.cursor = 'move';
+        return;
       }
-     this.rawCanvasObj.style.cursor = 'default';
+    }
+    this.rawCanvasObj.style.cursor = 'default';
   }
 
   public newText(value,xPos, yPos){

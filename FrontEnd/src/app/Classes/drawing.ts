@@ -26,6 +26,7 @@ export class Drawing {
       this.moveXby = 0;
       this.moveYby = 0;
       this.value = "";
+      this.selection = new Selection(this.tool, 0, 0, 0, 0);
     }
 
   startPos(x, y) {

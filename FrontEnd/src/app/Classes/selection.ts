@@ -36,6 +36,13 @@ export class Selection {
     }
   }
 
+  movePos(x, y) {
+    this.lowX += x;
+    this.highX += x;
+    this.lowY += y;
+    this.highY += y;
+  }
+
   topLeft() {
     return (this.lowX, this.highY);
   }
