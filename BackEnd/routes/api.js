@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const Jsoncanvas  require('../../FrontEnd/src/app/Classes/json-canvas');
+
+var x = new Jsoncanvas();
 
 var bingo = [{
   "userId": 1,

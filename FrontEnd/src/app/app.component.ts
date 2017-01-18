@@ -23,8 +23,8 @@ export class AppComponent {
     }
 
     ngOnInit() {
-      this.designerService.getAllDesigns().subscribe(designs => {
-        this.designs = designs;
-      })
+      //this.designerService.getAllDesigns().subscribe(designs => {
+       // this.designs = designs;
+      //})
     }
 }
