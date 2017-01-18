@@ -8,4 +8,13 @@
     <div class="fr-sp"><h5>Save</h5><h5>Ctrl + S</h5></div>
     <div class="fr-sp"><h5>Save As</h5><h5>Shift + Ctrl + S</h5></div>
 </div>
+
+<div class="container">
+  <div class="row" *ngFor="let bingo of designs">
+    <div class="card card-block">
+      <h4 class="card-title">{{ bingo.title }}</h4>
+      <p class="card-text">{{bingo.body}}</p>
+    </div>
+  </div>
+</div>
 <router-outlet></router-outlet>

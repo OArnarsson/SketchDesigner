@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { DesignerComponent } from './designer/designer.component';
 import { RouterModule, Routes } from '@angular/router';
 import {ColorPickerModule} from 'angular2-color-picker';
+import {DesignerService} from './designer.service';
 
 
 const appRoutes: Routes = [
@@ -26,7 +27,7 @@ HttpModule,
   RouterModule.forRoot(appRoutes),
     ColorPickerModule
 ],
-providers: [],
+providers: [DesignerService], //This talks to the API
 bootstrap: [AppComponent]
 })
 
