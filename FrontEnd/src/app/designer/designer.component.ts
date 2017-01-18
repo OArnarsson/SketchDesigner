@@ -1,6 +1,7 @@
 import {Component, ViewChild, ElementRef, Renderer} from '@angular/core';
 import {Canvas} from '../Classes/canvas'
 import {GUI} from '../Classes/gui'
+import {Drawing} from "../Classes/drawing";
 
 @Component({
   selector: 'app-designer',
@@ -252,15 +253,16 @@ export class DesignerComponent {
               }
               else{
                   if(this.gui.tool == 'select'){
-                      if(this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1].startX != null){
-                          this.clipboard = this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length-1];
+                      if(this.activeCanvas.activeDrawing.startX != null){
+                          this.clipboard = this.activeCanvas.activeDrawing;
                       }
                   }
               }
               break;
           case "v":
               if(event.ctrlKey && this.clipboard != null){
-                  this.activeCanvas.allDrawings.push(JSON.parse(JSON.stringify(this.clipboard)));
+                  let copiedDrawing = new Drawing(JSON.parse(JSON.stringify(this.clipboard)));
+                  this.activeCanvas.allDrawings.push(copiedDrawing);
                   this.activeCanvas.redrawCanvas();
               }
               break;
