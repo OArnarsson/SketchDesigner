@@ -60,7 +60,8 @@ export class DesignerComponent {
 
   public setColor(value) {
       this.gui.strokeStyle = value;
-      this.refreshGui();
+      this.activeCanvas.activeDrawing.gui.strokeStyle = value;
+      this.activeCanvas.redrawCanvas();
   }
 
 
@@ -70,12 +71,14 @@ export class DesignerComponent {
   }
   public changeLineWidth($event){
       this.gui.lineWidth = $event.target.value;
-      this.refreshGui();
+      this.activeCanvas.activeDrawing.gui.lineWidth = $event.target.value;
+      this.activeCanvas.redrawCanvas();
   }
+
   public changeLineCap(value){
-      this.gui.lineCap = value;
-      this.gui.lineJoin = value;
-      this.refreshGui();
+      this.activeCanvas.activeDrawing.gui.lineCap = value;
+      this.activeCanvas.activeDrawing.gui.lineJoin = value;
+      this.activeCanvas.redrawCanvas();
   }
   public changeTool(value){
       if(value != "text"){

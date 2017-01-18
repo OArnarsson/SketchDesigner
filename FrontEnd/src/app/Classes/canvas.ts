@@ -109,6 +109,7 @@ export class Canvas {
         this.activeDrawing.selection = new Selection(this.activeDrawing.tool, this.activeDrawing.startX, this.activeDrawing.startY, this.activeDrawing.endX, this.activeDrawing.endY);
         this.allDrawings.push(this.activeDrawing);
         this.activeDrawing = new Drawing();
+        this.activeDrawing.gui = this.gui;
     }
   }
 

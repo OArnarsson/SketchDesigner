@@ -32,20 +32,20 @@
         </div>
         <input type="range" value="100" #opacity>
         <div class="fr-sp">
-            <input class="colorBox" [colorPicker]="gui.strokeStyle"
+            <input class="colorBox" [colorPicker]="activeCanvas.activeDrawing.gui.strokeStyle"
                    (colorPickerChange)="setColor($event)"
-                   [style.background]="gui.strokeStyle"
-                   [cpPosition]="'bottom'" value="{{gui.strokeStyle}}"/>
+                   [style.background]="activeCanvas.activeDrawing.gui.strokeStyle"
+                   [cpPosition]="'bottom'" value="{{activeCanvas.activeDrawing.gui.strokeStyle}}"/>
             <h5 class="label">Color</h5>
         </div>
         <div class="fr-sp">
             <h5 class="label">LineWidth (px)</h5>
-            <input class="label" type="number" min="1" max="100" [value]="gui.lineWidth" (input)="changeLineWidth($event)">
+            <input class="label" type="number" min="1" max="100" [value]="activeCanvas.activeDrawing.gui.lineWidth" (input)="changeLineWidth($event)">
         </div>
         <div class="fr-sp">
             <h5 class="label">BrushStyle</h5>
-            <i class="fa fa-circle" aria-hidden="true" (click)="changeLineCap('round')" [class.active]="gui.lineCap=='round'"></i>
-            <i class="fa fa-square" aria-hidden="true" (click)="changeLineCap('square')" [class.active]="gui.lineCap=='square'"></i>
+            <i class="fa fa-circle" aria-hidden="true" (click)="changeLineCap('round')" [class.active]="activeCanvas.activeDrawing.gui.lineCap=='round'"></i>
+            <i class="fa fa-square" aria-hidden="true" (click)="changeLineCap('square')" [class.active]="activeCanvas.activeDrawing.gui.lineCap=='square'"></i>
         </div>
     </div>
 </div>
