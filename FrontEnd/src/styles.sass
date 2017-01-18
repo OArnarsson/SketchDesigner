@@ -8,10 +8,11 @@ body
   margin: 0
   padding: 0
   &::-webkit-scrollbar
-    -webkit-box-shadow: inset 0 0 2px rgba(200, 200, 200, 0)
+    -webkit-box-shadow: inset 0 0 1px rgba(200, 200, 200, 0)
+    width: 15px
   &::-webkit-scrollbar-thumb
-    background-color: $borderColor
-    outline: 1px solid $borderColor
+    background-color: $unitColor*0.8
+    outline: 1px solid $unitColor*0.8
 
 
 .col-1
@@ -98,7 +99,13 @@ body
   text-align: center
 .checked
   text-decoration: line-through
-
+.ex-pad
+  i, input, h5
+    margin-right: 6%
+  h5
+    margin-left: 6%
+  i.fa-square-o
+    padding-right: 1px
 
 input[type=range]
   -webkit-appearance: none
@@ -186,7 +193,6 @@ input[type=range]:focus::-ms-fill-lower
 
 input[type=range]:focus::-ms-fill-upper
   background: #666666
-
 
 
 

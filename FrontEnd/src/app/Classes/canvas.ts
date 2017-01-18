@@ -169,6 +169,8 @@ export class Canvas {
     this.renderContext.lineWidth = drawing.gui.lineWidth;
     this.renderContext.lineCap = drawing.gui.lineCap;
     this.renderContext.strokeStyle = drawing.gui.strokeStyle;
+    this.renderContext.fillStyle = drawing.gui.fillStyle;
+    this.renderContext.globalAlpha = drawing.gui.opacity/100;
 
     if(isLive) {
       this.renderContext.beginPath();
@@ -179,16 +181,26 @@ export class Canvas {
       for (var i = 0; i < drawing.posX.length; i++) {
         this.renderContext.lineTo(drawing.posX[i], drawing.posY[i]);
       }
+      if(drawing.gui.hasFill){
+          this.renderContext.fill();
+      }
+
     }
 
     if(drawing.tool == 'square') {
       this.renderContext.strokeRect(drawing.startX, drawing.startY, drawing.endX, drawing.endY);
+        if(drawing.gui.hasFill){
+            this.renderContext.fillRect(drawing.startX, drawing.startY, drawing.endX, drawing.endY);
+        }
     }
 
     if(drawing.tool == 'circle') {
       this.renderContext.moveTo(drawing.startX, drawing.startY + (drawing.endY - drawing.startY) / 2);
       this.renderContext.bezierCurveTo(drawing.startX, drawing.startY, drawing.endX, drawing.startY, drawing.endX, drawing.startY + (drawing.endY - drawing.startY) / 2);
       this.renderContext.bezierCurveTo(drawing.endX, drawing.endY, drawing.startX, drawing.endY, drawing.startX, drawing.startY + (drawing.endY - drawing.startY) / 2);
+        if(drawing.gui.hasFill){
+            this.renderContext.fill();
+        }
     }
 
     if(drawing.tool == 'line') {
@@ -277,7 +289,7 @@ export class Canvas {
         let paddingX = 5; //This works for the default font settings in gui
         let paddingY = 8; //It makes the text from input field appear in the same pos on canvas
         this.activeDrawing.tool = "text";
-        this.activeDrawing.gui = this.gui;
+        this.activeDrawing.gui = JSON.parse(JSON.stringify(this.gui));
         this.activeDrawing.startPos(paddingX+xPos-this.rawCanvasObj.offsetLeft, paddingY+yPos-this.rawCanvasObj.offsetTop+this.activeDrawing.gui.fontSize);
         this.activeDrawing.endPos(this.canvasWidth-paddingX,this.activeDrawing.gui.fontSize-2);
         this.activeDrawing.selection =  new Selection(this.activeDrawing.tool,this.activeDrawing.startX+(paddingX*2.5), this.activeDrawing.startY-paddingY, this.activeDrawing.endX-(paddingX*2.5), this.activeDrawing.endY+(paddingY*2));
@@ -287,6 +299,7 @@ export class Canvas {
         this.activeDrawing.value = value;
         this.allDrawings.push(this.activeDrawing);
         this.drawObject(this.activeDrawing, true);
+        this.activeDrawing = new Drawing();
         this.active = false;
     }
 

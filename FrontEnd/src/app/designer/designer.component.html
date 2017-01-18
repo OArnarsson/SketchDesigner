@@ -28,18 +28,24 @@
         <h4>Appearance</h4>
         <div class="fr-sp">
             <h5 class="label">Opacity</h5>
-            <h5 class="label">{{opacity.value}}%</h5>
+            <h5 class="label" >{{activeCanvas.activeDrawing.gui.opacity}}%</h5>
         </div>
-        <input type="range" value="100" #opacity>
-        <div class="fr-sp">
+        <input type="range" value="{{activeCanvas.activeDrawing.gui.opacity}}" (mousemove)="changeOpacity($event)">
+        <div class="fr-sp ex-pad" *ngIf="onDisplay(activeCanvas.activeDrawing.gui.tool)">
+            <i (click)="toogleHasColor('fill')" [ngClass]="getFaIconClass(activeCanvas.activeDrawing.gui.hasFill)" aria-hidden="true"></i>
+            <input class="colorBox" [colorPicker]="activeCanvas.activeDrawing.gui.fillStyle"
+                   (colorPickerChange)="setColor($event,'fill')"
+                   [style.background]="activeCanvas.activeDrawing.gui.fillStyle"
+                   [cpPosition]="'left'"/>
+            <h5 class="big-label">Fill</h5>
+        </div>
+        <div class="fr-sp ex-pad">
+            <i (click)="toogleHasColor('border')" [ngClass]="getFaIconClass(activeCanvas.activeDrawing.gui.hasBorder)" aria-hidden="true"></i>
             <input class="colorBox" [colorPicker]="activeCanvas.activeDrawing.gui.strokeStyle"
-                   (colorPickerChange)="setColor($event)"
+                   (colorPickerChange)="setColor($event,'stroke')"
                    [style.background]="activeCanvas.activeDrawing.gui.strokeStyle"
-                   [cpPosition]="'bottom'" value="{{activeCanvas.activeDrawing.gui.strokeStyle}}"/>
-            <h5 class="label">Color</h5>
-        </div>
-        <div class="fr-sp">
-            <h5 class="label">LineWidth (px)</h5>
+                   [cpPosition]="'left'"/>
+            <h5 class="big-label">Border</h5>
             <input class="label" type="number" min="1" max="100" [value]="activeCanvas.activeDrawing.gui.lineWidth" (input)="changeLineWidth($event)">
         </div>
         <div class="fr-sp">

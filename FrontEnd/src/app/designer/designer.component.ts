@@ -57,13 +57,47 @@ export class DesignerComponent {
   public refreshGui(){
       this.activeCanvas.setToolClass(this.gui);
   }
+  public onDisplay(tool){
+      if(tool != 'text' && tool != 'line'){
+          return true;
+      }
+  }
 
-  public setColor(value) {
-      this.gui.strokeStyle = value;
-      this.activeCanvas.activeDrawing.gui.strokeStyle = value;
+  public getFaIconClass(bully){
+      if(bully){
+          return "fa fa-check-square";
+      }
+      else{
+          return "fa fa-square-o";
+      }
+  }
+  public toogleHasColor(val){
+      if(val == 'fill'){
+          this.activeCanvas.activeDrawing.gui.hasFill = !this.activeCanvas.activeDrawing.gui.hasFill;
+      }
+      else{
+        this.activeCanvas.activeDrawing.gui.hasBorder = !this.activeCanvas.activeDrawing.gui.hasBorder;
+      }
       this.activeCanvas.redrawCanvas();
   }
 
+  public setColor(value,val) {
+      if(val == 'stroke'){
+        this.gui.strokeStyle = value;
+        this.activeCanvas.activeDrawing.gui.strokeStyle = value;
+        this.activeCanvas.activeDrawing.gui.hasBorder = true;
+      }
+      else{
+          this.gui.fillStyle = value;
+          this.activeCanvas.activeDrawing.gui.fillStyle = value;
+          this.activeCanvas.activeDrawing.gui.hasFill = true;
+      }
+      this.activeCanvas.redrawCanvas();
+  }
+  public changeOpacity($event){
+      this.activeCanvas.activeDrawing.gui.opacity = $event.target.value;
+      this.activeCanvas.redrawCanvas();
+  }
 
   public changeCanvas(canvas){
       this.activeCanvas = canvas;
