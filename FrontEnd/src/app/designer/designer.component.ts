@@ -92,11 +92,9 @@ export class DesignerComponent {
   }
   public toogleHasColor(val){
       if(val == 'fill'){
-          this.gui.hasFill = ! this.gui.hasFill;
           this.activeCanvas.activeDrawing.gui.hasFill= !this.activeCanvas.activeDrawing.gui.hasFill;
       }
       else{
-          this.gui.hasBorder = ! this.gui.hasBorder;
         this.activeCanvas.activeDrawing.gui.hasBorder = !this.activeCanvas.activeDrawing.gui.hasBorder;
       }
       this.activeCanvas.redrawCanvas();
