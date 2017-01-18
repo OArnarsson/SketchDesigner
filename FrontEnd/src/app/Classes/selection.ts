@@ -51,6 +51,7 @@ export class Selection {
   }
 
   topMiddle() {
+    return [this.getWidth(), this.highY];
   }
 
   topRight() {
@@ -62,6 +63,7 @@ export class Selection {
   }
 
   bottomMiddle() {
+    return [this.getWidth(), this.lowY];
   }
 
   bottomRight() {
@@ -69,9 +71,11 @@ export class Selection {
   }
 
   midLeft() {
+    return [this.lowX, this.getHeight()];
   }
 
   midRight() {
+    return [this.highX, this.getHeight()];
   }
 
   public getWidth(){
