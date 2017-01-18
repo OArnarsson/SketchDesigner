@@ -43,8 +43,8 @@ export class Drawing {
           this.endY = y - this.startY;
       }
       if(this.tool == 'text') {
-          this.endX = this.startX+100;
-          this.endY = this.startY-28;
+          this.endX = this.startX+x;
+          this.endY = this.startY-y;
       }
   }
 

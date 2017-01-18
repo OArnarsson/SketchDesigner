@@ -278,8 +278,8 @@ export class Canvas {
         this.activeDrawing.tool = "text";
         this.activeDrawing.gui = this.gui;
         this.activeDrawing.startPos(paddingX+xPos-this.rawCanvasObj.offsetLeft, paddingY+yPos-this.rawCanvasObj.offsetTop+this.activeDrawing.gui.fontSize);
-        this.activeDrawing.endPos(paddingX+xPos-this.rawCanvasObj.offsetLeft + this.canvasWidth,(paddingY + this.activeDrawing.gui.fontSize*2));
-        this.activeDrawing.selection =  new Selection(this.activeDrawing.tool,this.activeDrawing.startX, this.activeDrawing.startY-paddingY, this.activeDrawing.endX, this.activeDrawing.endY+(paddingY*2));
+        this.activeDrawing.endPos(this.canvasWidth-paddingX,this.activeDrawing.gui.fontSize-2);
+        this.activeDrawing.selection =  new Selection(this.activeDrawing.tool,this.activeDrawing.startX+(paddingX*2.5), this.activeDrawing.startY-paddingY, this.activeDrawing.endX-(paddingX*2.5), this.activeDrawing.endY+(paddingY*2));
         if(value == null){
             value = ""
         }
