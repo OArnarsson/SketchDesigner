@@ -47,35 +47,31 @@ export class Selection {
   }
 
   topLeft() {
-    return (this.lowX, this.highY);
+    return [this.lowX, this.highY];
   }
 
   topMiddle() {
-    return (this.highX-this.lowX, this.highY);
   }
 
   topRight() {
-    return (this.highX, this.highY);
+    return [this.highX, this.highY];
   }
 
   bottomLeft() {
-    return (this.lowX, this.lowY);
+    return [this.lowX, this.lowY];
   }
 
   bottomMiddle() {
-    return (this.highX-this.lowX, this.lowY);
   }
 
   bottomRight() {
-    return (this.highX, this.lowY);
+    return [this.highX, this.lowY];
   }
 
   midLeft() {
-    return (this.lowX, this.highX-this.lowY);
   }
 
   midRight() {
-    return (this.highX, this.highX-this.lowY);
   }
 
   public getWidth(){

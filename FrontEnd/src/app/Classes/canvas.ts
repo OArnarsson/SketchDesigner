@@ -234,10 +234,34 @@ export class Canvas {
   public drawSelect(){
       var padding = 4;
       var tool = this.activeDrawing.gui.tool;
-        this.drawObject(this.activeDrawing, true);
-          this.drawSelectBorder();
-          this.renderContext.strokeRect(this.activeDrawing.selection.lowX-padding, this.activeDrawing.selection.lowY-padding, (this.activeDrawing.selection.highX-this.activeDrawing.selection.lowX)+(padding*2), (this.activeDrawing.selection.highY-this.activeDrawing.selection.lowY)+(padding*2));
+      this.drawObject(this.activeDrawing, true);
+      this.drawSelectBorder();
+      this.renderContext.strokeRect(this.activeDrawing.selection.lowX-padding, this.activeDrawing.selection.lowY-padding, (this.activeDrawing.selection.highX-this.activeDrawing.selection.lowX)+(padding*2), (this.activeDrawing.selection.highY-this.activeDrawing.selection.lowY)+(padding*2));
           //this.tagGrid();
+
+    var draggables = [];
+    draggables.push(this.activeDrawing.selection.topLeft());
+    draggables.push(this.activeDrawing.selection.topMiddle());
+    draggables.push(this.activeDrawing.selection.topRight());
+    draggables.push(this.activeDrawing.selection.midLeft());
+    draggables.push(this.activeDrawing.selection.midRight());
+    draggables.push(this.activeDrawing.selection.bottomLeft());
+    draggables.push(this.activeDrawing.selection.bottomMiddle());
+    draggables.push(this.activeDrawing.selection.bottomRight());
+    padding = 7.5;
+
+    this.renderContext.strokeStyle = 'red'; // BOTTOM Y
+    this.renderContext.strokeRect(draggables[0][0] - padding, draggables[0][1] + padding, padding, -padding);
+    this.renderContext.strokeRect(draggables[2][0] + padding, draggables[2][1] + padding, -padding, -padding);
+    this.renderContext.strokeStyle = 'green'; //TOP Y
+    this.renderContext.strokeRect(draggables[5][0] - padding, draggables[5][1] - padding, padding, padding);
+    this.renderContext.strokeRect(draggables[7][0] + padding, draggables[7][1] - padding, -padding, padding);
+    this.renderContext.strokeStyle = 'blue'; //MIDDLE X
+    this.renderContext.strokeRect(draggables[0][0] + (draggables[1][0]-padding)/2, draggables[1][1] + padding, padding, -padding);
+    this.renderContext.strokeRect(draggables[5][0] + (draggables[6][0]-padding)/2, draggables[6][1] - padding, padding, padding);
+    this.renderContext.strokeStyle = 'black'; //MIDDLE Y
+    this.renderContext.strokeRect(draggables[3][0] - padding, draggables[0][1] - (draggables[3][1] + padding)/2, padding, padding);
+    this.renderContext.strokeRect(draggables[4][0] + padding, draggables[1][1] - (draggables[4][1] - padding)/2, -padding, -padding);
   }
 
   public MoveObject(){
