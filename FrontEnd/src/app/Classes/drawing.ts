@@ -18,7 +18,7 @@ export class Drawing {
   public gui: GUI;
 
 
-    constructor(){
+    constructor(obj?){
       this.gui = new GUI();
       this.tool = this.gui.tool.toString();
       this.posX = [];
@@ -27,7 +27,13 @@ export class Drawing {
       this.moveYby = 0;
       this.value = "";
       this.found = false;
-      this.selection = new Selection(this.tool, 0, 0, 0, 0);
+
+
+      // This maps the JSON parse into a drawing class, not an object class
+      for (var prop in obj) this[prop] = obj[prop];
+      if(obj != null) this.selection = new Selection(this.tool, this.startX, this.startY, this.endX, this.endY);
+      // If we are not parsing, we do not have a valid endX and endY in all cases
+      else this.selection = new Selection(this.tool, 0, 0, 0, 0);
     }
 
   startPos(x, y) {
