@@ -31,7 +31,7 @@
             <h5 class="label" >{{activeCanvas.activeDrawing.gui.opacity}}%</h5>
         </div>
         <input type="range" value="{{activeCanvas.activeDrawing.gui.opacity}}" (mousemove)="changeOpacity($event)">
-        <div class="fr-sp ex-pad" *ngIf="onDisplay(activeCanvas.activeDrawing.gui.tool)">
+        <div class="fr-sp ex-pad" *ngIf="displayFill(activeCanvas.activeDrawing.gui.tool)">
             <i (click)="toogleHasColor('fill')" [ngClass]="getFaIconClass(activeCanvas.activeDrawing.gui.hasFill)" aria-hidden="true"></i>
             <input class="colorBox" [colorPicker]="activeCanvas.activeDrawing.gui.fillStyle"
                    (colorPickerChange)="setColor($event,'fill')"
@@ -39,7 +39,7 @@
                    [cpPosition]="'left'"/>
             <h5 class="big-label">Fill</h5>
         </div>
-        <div class="fr-sp ex-pad">
+        <div class="fr-sp ex-pad" *ngIf="displayBorder(activeCanvas.activeDrawing.gui.tool)">
             <i (click)="toogleHasColor('border')" [ngClass]="getFaIconClass(activeCanvas.activeDrawing.gui.hasBorder)" aria-hidden="true"></i>
             <input class="colorBox" [colorPicker]="activeCanvas.activeDrawing.gui.strokeStyle"
                    (colorPickerChange)="setColor($event,'stroke')"
@@ -48,10 +48,25 @@
             <h5 class="big-label">Border</h5>
             <input class="label" type="number" min="1" max="100" [value]="activeCanvas.activeDrawing.gui.lineWidth" (input)="changeLineWidth($event)">
         </div>
-        <div class="fr-sp">
+        <div class="fr-sp" *ngIf="displayBrushStyle(activeCanvas.activeDrawing.gui.tool)">
             <h5 class="label">BrushStyle</h5>
             <i class="fa fa-circle" aria-hidden="true" (click)="changeLineCap('round')" [class.active]="activeCanvas.activeDrawing.gui.lineCap=='round'"></i>
             <i class="fa fa-square" aria-hidden="true" (click)="changeLineCap('square')" [class.active]="activeCanvas.activeDrawing.gui.lineCap=='square'"></i>
+        </div>
+        <div class="fr-sp" *ngIf="displayTextMenu(activeCanvas.activeDrawing.gui.tool)">
+            <i (click)="toggleFontStyle('bold')" class="fa fa-bold" aria-hidden="true" [ngClass]="{'active': activeCanvas.activeDrawing.gui.fonty.bold}"></i>
+            <i (click)="toggleFontStyle('italic')" class="fa fa-italic" aria-hidden="true" [ngClass]="{'active': activeCanvas.activeDrawing.gui.fonty.italic}"></i>
+            <select [ngModel]="activeCanvas.activeDrawing.gui.fonty.font" (change)="changeFontFamily($event.target.value)">
+                <option [value]="i" *ngFor="let i of activeCanvas.activeDrawing.gui.fonty.allFonts">{{i}}</option>
+            </select>
+        </div>
+        <div class="fr-sp" *ngIf="displayTextMenu(activeCanvas.activeDrawing.gui.tool)">
+            <input class="colorBox" [colorPicker]="activeCanvas.activeDrawing.gui.strokeStyle"
+                   (colorPickerChange)="setColor($event,'stroke')"
+                   [style.background]="activeCanvas.activeDrawing.gui.strokeStyle"
+                   [cpPosition]="'left'"/>
+            <h5 class="big-label-pad">Fill</h5>
+            <input class="label" type="number" min="1" max="100" [value]="activeCanvas.activeDrawing.gui.fonty.fontSize" (input)="changeFontSize($event)">
         </div>
     </div>
 </div>

@@ -212,7 +212,15 @@ export class Canvas {
       if(drawing.value == null){
         return;
       }
-      this.renderContext.font = drawing.gui.fontSize+"px "+drawing.gui.font;
+      let x = "";
+      if(drawing.gui.fonty.bold){
+          x = "bold ";
+      }
+      if(drawing.gui.fonty.italic){
+          x = x + "italic ";
+      }
+      x = x + drawing.gui.fonty.fontSize+"px "+" "+drawing.gui.fonty.font;
+      this.renderContext.font = x;
       this.renderContext.fillStyle = drawing.gui.strokeStyle;
       this.renderContext.fillText(drawing.value,drawing.startX,drawing.startY);
     }
@@ -290,8 +298,8 @@ export class Canvas {
         let paddingY = 8; //It makes the text from input field appear in the same pos on canvas
         this.activeDrawing.tool = "text";
         this.activeDrawing.gui = JSON.parse(JSON.stringify(this.gui));
-        this.activeDrawing.startPos(paddingX+xPos-this.rawCanvasObj.offsetLeft, paddingY+yPos-this.rawCanvasObj.offsetTop+this.activeDrawing.gui.fontSize);
-        this.activeDrawing.endPos(this.canvasWidth-paddingX,this.activeDrawing.gui.fontSize-2);
+        this.activeDrawing.startPos(paddingX+xPos-this.rawCanvasObj.offsetLeft, paddingY+yPos-this.rawCanvasObj.offsetTop+this.activeDrawing.gui.fonty.fontSize);
+        this.activeDrawing.endPos(this.canvasWidth-paddingX,this.activeDrawing.gui.fonty.fontSize-2);
         this.activeDrawing.selection =  new Selection(this.activeDrawing.tool,this.activeDrawing.startX+(paddingX*2.5), this.activeDrawing.startY-paddingY, this.activeDrawing.endX-(paddingX*2.5), this.activeDrawing.endY+(paddingY*2));
         if(value == null){
             value = ""

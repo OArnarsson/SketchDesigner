@@ -57,11 +57,30 @@ export class DesignerComponent {
   public refreshGui(){
       this.activeCanvas.setToolClass(this.gui);
   }
-  public onDisplay(tool){
+  public displayFill(tool){
       if(tool != 'text' && tool != 'line'){
           return true;
       }
+      return false;
   }
+    public displayBorder(tool){
+        if(tool != 'text'){
+            return true;
+        }
+        return false;
+    }
+    public displayBrushStyle(tool){
+        if(tool == 'pen' || tool == 'line'){
+            return true;
+        }
+        return false;
+    }
+    public displayTextMenu(tool){
+        if(tool == 'text' ){
+            return true;
+        }
+        return false;
+    }
 
   public getFaIconClass(bully){
       if(bully){
@@ -73,13 +92,26 @@ export class DesignerComponent {
   }
   public toogleHasColor(val){
       if(val == 'fill'){
-          this.activeCanvas.activeDrawing.gui.hasFill = !this.activeCanvas.activeDrawing.gui.hasFill;
+          this.gui.hasFill = ! this.gui.hasFill;
+          this.activeCanvas.activeDrawing.gui.hasFill= !this.activeCanvas.activeDrawing.gui.hasFill;
       }
       else{
+          this.gui.hasBorder = ! this.gui.hasBorder;
         this.activeCanvas.activeDrawing.gui.hasBorder = !this.activeCanvas.activeDrawing.gui.hasBorder;
       }
       this.activeCanvas.redrawCanvas();
   }
+    public toggleFontStyle(val){
+        if(val == 'bold'){
+            this.gui.fonty.bold = ! this.gui.fonty.bold;
+            this.activeCanvas.activeDrawing.gui.fonty.bold = !this.activeCanvas.activeDrawing.gui.fonty.bold;
+        }
+        else{
+            this.gui.fonty.italic = ! this.gui.fonty.italic;
+            this.activeCanvas.activeDrawing.gui.fonty.italic = !this.activeCanvas.activeDrawing.gui.fonty.italic;
+        }
+        this.activeCanvas.redrawCanvas();
+    }
 
   public setColor(value,val) {
       if(val == 'stroke'){
@@ -108,6 +140,11 @@ export class DesignerComponent {
       this.activeCanvas.activeDrawing.gui.lineWidth = $event.target.value;
       this.activeCanvas.redrawCanvas();
   }
+    public changeFontSize($event){
+        this.gui.fonty.fontSize = $event.target.value;
+        this.activeCanvas.activeDrawing.gui.fonty.fontSize = $event.target.value;
+        this.activeCanvas.redrawCanvas();
+    }
 
   public changeLineCap(value){
       this.activeCanvas.activeDrawing.gui.lineCap = value;
@@ -120,6 +157,11 @@ export class DesignerComponent {
       }
       this.gui.tool = value;
       this.refreshGui();
+  }
+  public changeFontFamily(value){
+      this.activeCanvas.gui.fonty.font = value;
+      this.activeCanvas.activeDrawing.gui.fonty.font = value;
+      this.activeCanvas.redrawCanvas();
   }
   public undoRedo(action) {
     if(action == 'undo') {
@@ -149,6 +191,8 @@ export class DesignerComponent {
               this.textInput.nativeElement.style.top = top;
               this.textInput.nativeElement.style.left = left;
               this.textInput.nativeElement.style.display = 'block';
+              this.textInput.nativeElement.style.color = this.activeCanvas.gui.strokeStyle;
+              this.textInput.nativeElement.style.font = this.activeCanvas.gui.fonty.font;
               console.log(this.textInput.nativeElement.id);
           }
           //now we check if user is trying to click away from the input

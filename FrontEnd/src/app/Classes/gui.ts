@@ -1,3 +1,4 @@
+import {Fonty} from './fonty'
 export class GUI {
   public strokeStyle: string;
   public fillStyle: string;
@@ -5,8 +6,7 @@ export class GUI {
   public lineCap: string;
   public lineJoin: string;
   public tool: string;
-  public font: string;
-  public fontSize: number;
+  public fonty:Fonty;
   public opacity: number;
   public hasFill:boolean;
   public hasBorder:boolean;
@@ -17,14 +17,11 @@ export class GUI {
     this.lineJoin = "round";
     this.lineWidth = 5;
     this.tool = 'pen';
-    this.font = 'Titillium Web';
-    this.fontSize = 30;
     this.opacity = 100;
     this.hasFill = false;
     this.hasBorder = true;
     this.fillStyle = "#FFFFFF";
+    this.fonty = new Fonty();
   }
-  getFontString(fontsize, font){
-      return this.fontSize+"px"+" "+this.font;
-  }
+
 }
