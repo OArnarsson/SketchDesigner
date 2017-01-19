@@ -183,10 +183,10 @@ router.use(function(req, res, next) {
     next(); 
 });
 
-
 router.get('/', (req, res) => {
   res.send('API is live!');
 });
+
 
 // Designs routes
 router.route('/designs')
@@ -252,8 +252,5 @@ router.route('/designs/:design_id')
       res.json({ message: 'Successfully deleted' });
     });
   });
-
-
-
 
 module.exports = router;

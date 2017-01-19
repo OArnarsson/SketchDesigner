@@ -8,7 +8,9 @@ const path = require('path');
 const http = require('http');
 const api = require('./routes/api');
 const app = express();
+const cors = require("cors");
 
+app.use(cors());
 // Parsers for POST data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
