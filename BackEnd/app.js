@@ -1,7 +1,11 @@
-const express = require('express');
+global.rootRequire = function(name) {
+    return require('../FrontEnd/node_modules' + '/' + name);
+}
+
+const express = rootRequire('express');
+const bodyParser = rootRequire('body-parser');
 const path = require('path');
 const http = require('http');
-const bodyParser = require('body-parser');
 const api = require('./routes/api');
 const app = express();
 

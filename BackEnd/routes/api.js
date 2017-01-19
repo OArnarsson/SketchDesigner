@@ -1,10 +1,14 @@
-const express = require('express');
+global.rootRequire = function(name) {
+    return require('../../FrontEnd/node_modules' + '/' + name);
+}
+
+const express = rootRequire('express');
 const router = express.Router();
-const _ = require("lodash");
-const mongoose = require('mongoose');
+const _ = rootRequire("lodash");
+const mongoose = rootRequire('mongoose');
 
 // Set up mongoose
-var uri = 'mongodb://onri:<PeppTaco>@ds149577.mlab.com:49577/sketchdesigner'
+var uri = 'mongodb://Onri:PeppTaco@ds149577.mlab.com:49577/sketchdesigner'
 mongoDB = mongoose.connect(uri);
 Schema = mongoose.Schema;
 
