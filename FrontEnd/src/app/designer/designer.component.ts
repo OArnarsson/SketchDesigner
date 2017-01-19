@@ -45,7 +45,7 @@ export class DesignerComponent {
       this.renderer.listenGlobal('document', 'mousedown', (event)=>{
           this.displayVirtualInput(event);
       });
-      this.getDesign();
+      //this.getDesign();
   }
     public getDesign(){
         this.http_.getDesigns()
@@ -67,6 +67,7 @@ export class DesignerComponent {
             x.gui = this.gui;
             this.canvasArr.push(x);
         }
+
     }
     //This is used to get the Dom elem of canvas parent elem.
     @ViewChild('canvasContainer') canvasRef: ElementRef;
@@ -84,7 +85,22 @@ export class DesignerComponent {
     };
     //For testing purpose only
     public logJsonTest(){
-        console.log(this.jsonCanArr)
+        for(let canvas of this.canvasArr){
+            let x = new JsonCanvas();
+            x.class = canvas.class;
+            x.canvasHeight = canvas.canvasHeight;
+            x.canvasWidth = canvas.canvasWidth;
+            x.allDrawings = canvas.allDrawings;
+            this.jsonCanArr.push(x);
+        }
+        var x = {
+            title : "Bingo",
+            dateCreated : "19.01.2017 12:47:00",
+            dateModified : "19.01.2017 12:47:00",
+            canvasArr : this.jsonCanArr
+        };
+        console.log(JSON.stringify(x));
+        //this.refreshCanvasObject();
     }
 
     //Gui Functionality
