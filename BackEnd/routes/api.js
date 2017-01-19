@@ -192,15 +192,14 @@ router.get('/', (req, res) => {
 router.route('/designs')
   .post((req, res) => {
     let design = new Design();
-    design.title = req['data']['title'];
-    design.dateCreated = req['data']['dateCreated'];
-    design.dateModified = req['data']['dateModified'];
-    design.canvasArr = req['data']['canvasArr'];
+    design.title = req.body['data']['title'];
+    design.dateCreated = req.body['data']['dateCreated'];
+    design.dateModified = req.body['data']['dateModified'];
+    design.canvasArr = req.body['data']['canvasArr'];
 
     design.save((err) => {
       if(err)
         res.send(err);
-
       res.json({ log: 'Design saved to db'});  
     });
   })
@@ -216,9 +215,9 @@ router.route('/designs')
 
 
 // Designs/ID routes
-router.route('/designs/:design_id')
+router.route('/designs/:dateCreated')
   .get((req, res) => {
-    Design.findById(req.params.design_id, (err, design) => {
+    Design.findOne({dateCreated: req.params.dateCreated}, (err, design) => {
       if (err)
         res.send(err);
       
@@ -226,26 +225,25 @@ router.route('/designs/:design_id')
     });
   })
 
-  .put(function(req, res) {
-    Design.findById(req.params.design_id, (err, design) => {
+  .put((req, res) => {
+    console.log(req.params);
+    Design.findOne({dateCreated: req.body['data']['dateCreated']}, (err, design) => {
       if (err)
         res.send(err);
-
-      design.name = req.body.name;
+      design.title = req.body['data']['title'];
+      design.dateCreated = req.body['data']['dateCreated'];
+      design.dateModified = req.body['data']['dateModified'];
+      design.canvasArr = req.body['data']['canvasArr'];
       design.save(function(err) {
         if (err)
           res.send(err);
-
         res.json({ message: 'design Design!' });
       });
-
     });
   })
 
   .delete(function(req, res) {
-    Design.remove({
-      _id: req.params.design_id
-    }, function(err, design) {
+    Design.remove({dateCreated: req.body['data']['dateCreated']}, function(err, design) {
       if (err)
         res.send(err);
 

@@ -8,7 +8,7 @@ const path = require('path');
 const http = require('http');
 const api = require('./routes/api');
 const app = express();
-const cors = require("cors");
+const cors = rootRequire("cors");
 
 app.use(cors());
 // Parsers for POST data
