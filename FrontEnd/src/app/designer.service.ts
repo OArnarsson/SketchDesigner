@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Observable }     from 'rxjs/Observable';
-import { JsonCanvas} from './Classes/json-canvas'
+import { Workspace} from './Classes/workspace';
 
 @Injectable()
 export class DesignerService {
@@ -13,10 +13,9 @@ export class DesignerService {
     return this.http.get('http://localhost:3000/api/designs')
       .map(res => res.json());
   }
-    getDesigns():Observable<JsonCanvas[]>{
-        return this.http.get('http://localhost:3000/api/designs')
-            .map(this.extractData)
-            .catch(this.handleError);
+    getWspace(dateTime):Observable<Workspace>{
+        return this.http.get('http://localhost:3000/api/designs/'+encodeURI(dateTime))
+            .map(res => res.json());
     }
 
     public extractData(res: Response) {

@@ -2,7 +2,7 @@ import {Component, ViewChild, ElementRef, Renderer} from '@angular/core';
 import {Canvas} from '../Classes/canvas'
 import {GUI} from '../Classes/gui'
 import {Drawing} from "../Classes/drawing";
-import {JsonCanvas} from "../Classes/json-canvas";
+import {Workspace} from "../Classes/workspace";
 import {DesignerService} from "../designer.service";
 
 @Component({
@@ -17,25 +17,25 @@ export class DesignerComponent {
     public activeCanvas:Canvas;
     public gui:GUI;
     public clipboard:any;
-    public jsonCanArr:JsonCanvas[];
+    public workspace:Workspace;
     public errorMessage:string;
     public loading: boolean;
 
     //testing
-    public designs: any[];
+    public mockTime:string; // Just to get a known canvas.
 
 
   constructor(rend: Renderer, private http_: DesignerService){
-      this.jsonCanArr = []; // For testing purpose only
+      this.workspace = new Workspace();
       this.errorMessage = "";
-      this.loading = true;
-
+      this.loading = true; // This is used for creating new elem.
       this.canvasArr = [];
       this.newCanvas();
       this.renderer = rend;
       this.gui = new GUI();
       this.clipboard = null;
-      this.designs = [];
+      this.mockTime = "19.01.2017 12:47:00";
+
       //This is used for keyShortcuts
       this.renderer.listenGlobal('document', 'keydown', (event)=>{
           this.analyzeKey(event);
@@ -45,30 +45,30 @@ export class DesignerComponent {
       this.renderer.listenGlobal('document', 'mousedown', (event)=>{
           this.displayVirtualInput(event);
       });
-      //this.getDesign();
+      this.getWorkspace();
   }
-    public getDesign(){
-        this.http_.getDesigns()
+    public getWorkspace(){
+        this.http_.getWspace(this.mockTime)
             .subscribe(
-                JsonCanv => this.addToCanvasArr(JsonCanv),
+                workspace => this.mapWorkspace(workspace),
                 error => this.errorMessage = <any>error);
     }
-    public addToCanvasArr(jsonCanv:JsonCanvas[]){
-        this.jsonCanArr = jsonCanv;
-        this.canvasArr = [];
-        for(let canvas of this.jsonCanArr){
-            let x = new Canvas();
-            x.canvasWidth = canvas.canvasWidth;
-            x.canvasHeight = canvas.canvasHeight;
-            x.class = canvas.class;
-            for(let drawing of canvas.allDrawings){
-                x.allDrawings.push(new Drawing(drawing));
-            }
-            x.gui = this.gui;
-            this.canvasArr.push(x);
-        }
-
+    public mapWorkspace(wSpace:Workspace){
+      this.workspace = wSpace;
+      for(let canvas of this.workspace.canvasArr){
+          let c = new Canvas();
+          c.canvasHeight = canvas.canvasHeight;
+          c.canvasWidth = canvas.canvasWidth;
+          c.class = canvas.class;
+          c.gui = this.gui;
+          for(let drawing of canvas.allDrawings){
+              c.allDrawings.push(new Drawing(drawing));
+          }
+          this.canvasArr.push(c);
+      }
+      this.canvasArr.splice(0,1);
     }
+    
     //This is used to get the Dom elem of canvas parent elem.
     @ViewChild('canvasContainer') canvasRef: ElementRef;
     @ViewChild('textInput') textInput: ElementRef;
@@ -83,25 +83,6 @@ export class DesignerComponent {
     ngAfterViewChecked() {
         this.refreshCanvasObject();
     };
-    //For testing purpose only
-    public logJsonTest(){
-        for(let canvas of this.canvasArr){
-            let x = new JsonCanvas();
-            x.class = canvas.class;
-            x.canvasHeight = canvas.canvasHeight;
-            x.canvasWidth = canvas.canvasWidth;
-            x.allDrawings = canvas.allDrawings;
-            this.jsonCanArr.push(x);
-        }
-        var x = {
-            title : "Bingo",
-            dateCreated : "19.01.2017 12:47:00",
-            dateModified : "19.01.2017 12:47:00",
-            canvasArr : this.jsonCanArr
-        };
-        console.log(JSON.stringify(x));
-        //this.refreshCanvasObject();
-    }
 
     //Gui Functionality
   public newCanvas(){
@@ -120,8 +101,11 @@ export class DesignerComponent {
 
         let x = this;
         if(this.loading){
-            setTimeout(function(){ x.refreshCanvas(); }, 100);
+            setTimeout(function(){ x.refreshCanvas(); }, 500);
         }
+    }
+    public logJsonTest(){
+        console.log("U pressed this button, but why?");
     }
     public refreshCanvas(){
         for(let canvas of this.canvasArr){
@@ -221,11 +205,11 @@ export class DesignerComponent {
       this.activeCanvas.redrawCanvas();
   }
 
-    public changeFontSize($event){
-        this.gui.fonty.fontSize = $event.target.value;
-        this.activeCanvas.activeDrawing.gui.fonty.fontSize = $event.target.value;
-        this.activeCanvas.redrawCanvas();
-    }
+  public changeFontSize($event){
+    this.gui.fonty.fontSize = $event.target.value;
+    this.activeCanvas.activeDrawing.gui.fonty.fontSize = $event.target.value;
+    this.activeCanvas.redrawCanvas();
+  }
 
   public changeLineCap(value){
       this.activeCanvas.activeDrawing.gui.lineCap = value;
