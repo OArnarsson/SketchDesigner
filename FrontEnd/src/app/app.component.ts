@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {DesignerService} from "./designer.service";
+
 
 @Component({
   selector: 'app-root',
@@ -11,7 +11,7 @@ export class AppComponent {
   designs: any[];
   public sideMenu:boolean;
 
-  constructor(private designerService: DesignerService){
+  constructor(){
       this.sideMenu = false;
   }
 
@@ -20,11 +20,5 @@ export class AppComponent {
     }
     public setSideMenuOff(){
         this.sideMenu = false;
-    }
-
-    ngOnInit() {
-      this.designerService.getAllDesigns().subscribe(designs => {
-        this.designs = designs;
-      })
     }
 }

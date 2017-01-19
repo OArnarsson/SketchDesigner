@@ -1,0 +1,25 @@
+ public logJsonTest(){
+        for(let canvas of this.canvasArr){
+            let x = new JsonCanvas();
+            x.class = canvas.class;
+            x.canvasHeight = canvas.canvasHeight;
+            x.canvasWidth = canvas.canvasWidth;
+            x.allDrawings = canvas.allDrawings;
+            this.jsonCanArr.push(x);
+        }
+        //console.log(JSON.parse(JSON.stringify(this.jsonCanArr)));
+        for(let canvas of JSON.parse(JSON.stringify(this.jsonCanArr))){
+            let x = new Canvas();
+            x.class = canvas.class;
+            x.canvasHeight = canvas.canvasHeight;
+            x.canvasWidth = canvas.canvasWidth;
+            for(let drawing of canvas['allDrawings']){
+                x.allDrawings.push(new Drawing(drawing));
+            }
+            console.log(x);
+            this.canvasArr.push(x);
+        }
+
+        //console.log(JSON.stringify(this.jsonCanArr));
+        //this.refreshCanvasObject();
+    }

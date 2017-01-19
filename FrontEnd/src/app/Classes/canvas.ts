@@ -14,8 +14,6 @@ export class Canvas {
   public undoneDrawings: Drawing[];
   public activeDrawing: Drawing;
   public active: boolean;
-  public tempDrawing: Drawing;
-  public snapGrid: boolean;
   public searchGrid: boolean;
 
   //Move Props
@@ -24,12 +22,10 @@ export class Canvas {
     public isMoving:boolean;
   //Utilities
   public gui: GUI;
-  private renderer: Renderer;
 
-  constructor(rend: Renderer) {
+  constructor() {
       this.isMoving = false;
     this.gui = new GUI();
-    this.renderer = rend;
     this.class = "mobile";
     this.canvasWidth = 248.4;
     this.canvasHeight = 441.6;
@@ -37,9 +33,7 @@ export class Canvas {
     this.undoneDrawings = [];
     this.activeDrawing = new Drawing();
     this.active = false;
-    this.snapGrid = false;
     this.searchGrid = true;
-    this.tempDrawing = this.activeDrawing;
   }
 
   public mouseDown(e: any) {
@@ -286,20 +280,6 @@ export class Canvas {
       this.renderContext.lineCap = "square";
       this.renderContext.strokeStyle = "#1492E6";
       this.renderContext.lineWidth = 1;
-  }
-
-  public tagGrid(){
-      //console.log("startX"+this.tempDrawing.startX +", center"+124+", EndX:"+this.tempDrawing.startX );
-      if(this.searchGrid && this.tempDrawing.startX == 124 || this.tempDrawing.endX == 124){
-          //console.log("found");
-          this.drawSelectBorder();
-          this.renderContext.beginPath();
-          this.renderContext.moveTo(124, 0);
-          this.renderContext.lineTo(124, this.canvasHeight);
-          this.renderContext.stroke();
-          this.snapGrid = true;
-          this.searchGrid = false;
-      }
   }
 
   public findDrawing(xCord, yCord){

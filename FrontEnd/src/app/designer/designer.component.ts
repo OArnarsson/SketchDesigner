@@ -2,6 +2,8 @@ import {Component, ViewChild, ElementRef, Renderer} from '@angular/core';
 import {Canvas} from '../Classes/canvas'
 import {GUI} from '../Classes/gui'
 import {Drawing} from "../Classes/drawing";
+import {JsonCanvas} from "../Classes/json-canvas";
+import {DesignerService} from "../designer.service";
 
 @Component({
   selector: 'app-designer',
@@ -15,14 +17,25 @@ export class DesignerComponent {
     public activeCanvas:Canvas;
     public gui:GUI;
     public clipboard:any;
+    public jsonCanArr:JsonCanvas[];
+    public errorMessage:string;
+    public loading: boolean;
+
+    //testing
+    public designs: any[];
 
 
-  constructor(rend: Renderer){
+  constructor(rend: Renderer, private http_: DesignerService){
+      this.jsonCanArr = []; // For testing purpose only
+      this.errorMessage = "";
+      this.loading = true;
+
       this.canvasArr = [];
       this.newCanvas();
       this.renderer = rend;
       this.gui = new GUI();
       this.clipboard = null;
+      this.designs = [];
       //This is used for keyShortcuts
       this.renderer.listenGlobal('document', 'keydown', (event)=>{
           this.analyzeKey(event);
@@ -32,7 +45,29 @@ export class DesignerComponent {
       this.renderer.listenGlobal('document', 'mousedown', (event)=>{
           this.displayVirtualInput(event);
       });
+      this.getDesign();
   }
+    public getDesign(){
+        this.http_.getDesigns()
+            .subscribe(
+                JsonCanv => this.addToCanvasArr(JsonCanv),
+                error => this.errorMessage = <any>error);
+    }
+    public addToCanvasArr(jsonCanv:JsonCanvas[]){
+        this.jsonCanArr = jsonCanv;
+        this.canvasArr = [];
+        for(let canvas of this.jsonCanArr){
+            let x = new Canvas();
+            x.canvasWidth = canvas.canvasWidth;
+            x.canvasHeight = canvas.canvasHeight;
+            x.class = canvas.class;
+            for(let drawing of canvas.allDrawings){
+                x.allDrawings.push(new Drawing(drawing));
+            }
+            x.gui = this.gui;
+            this.canvasArr.push(x);
+        }
+    }
     //This is used to get the Dom elem of canvas parent elem.
     @ViewChild('canvasContainer') canvasRef: ElementRef;
     @ViewChild('textInput') textInput: ElementRef;
@@ -47,14 +82,37 @@ export class DesignerComponent {
     ngAfterViewChecked() {
         this.refreshCanvasObject();
     };
+    //For testing purpose only
+    public logJsonTest(){
+        console.log(this.jsonCanArr)
+    }
 
     //Gui Functionality
   public newCanvas(){
-      let can = new Canvas(this.renderer);
+      let can = new Canvas();
       can.gui = this.gui;
       this.canvasArr.push(can);
       this.activeCanvas = this.canvasArr[this.canvasArr.length -1];
   }
+    public refreshCanvasObject(){
+        let i = 0;
+        for(let child of this.canvasRef.nativeElement.children){
+            this.canvasArr[i].rawCanvasObj = child;
+            this.canvasArr[i].renderContext = child.getContext("2d");
+            i++;
+        }
+
+        let x = this;
+        if(this.loading){
+            setTimeout(function(){ x.refreshCanvas(); }, 100);
+        }
+    }
+    public refreshCanvas(){
+        for(let canvas of this.canvasArr){
+            canvas.redrawCanvas();
+        }
+        this.loading = false;
+    }
   public refreshGui(){
       this.activeCanvas.setToolClass(this.gui);
   }
@@ -64,18 +122,21 @@ export class DesignerComponent {
       }
       return false;
   }
+
     public displayBorder(tool){
         if(tool != 'text'){
             return true;
         }
         return false;
     }
+
     public displayBrushStyle(tool){
         if(tool == 'pen' || tool == 'line'){
             return true;
         }
         return false;
     }
+
     public displayTextMenu(tool){
         if(tool == 'text' ){
             return true;
@@ -91,6 +152,7 @@ export class DesignerComponent {
           return "fa fa-square-o";
       }
   }
+
   public toogleHasColor(val){
       if(val == 'fill'){
           this.activeCanvas.activeDrawing.gui.hasFill= !this.activeCanvas.activeDrawing.gui.hasFill;
@@ -100,6 +162,7 @@ export class DesignerComponent {
       }
       this.activeCanvas.redrawCanvas();
   }
+
     public toggleFontStyle(val){
         if(val == 'bold'){
             this.gui.fonty.bold = ! this.gui.fonty.bold;
@@ -125,6 +188,7 @@ export class DesignerComponent {
       }
       this.activeCanvas.redrawCanvas();
   }
+
   public changeOpacity($event){
       this.activeCanvas.activeDrawing.gui.opacity = $event.target.value;
       this.activeCanvas.redrawCanvas();
@@ -134,11 +198,13 @@ export class DesignerComponent {
       this.activeCanvas = canvas;
       canvas.gui = this.gui;
   }
+
   public changeLineWidth($event){
       this.gui.lineWidth = $event.target.value;
       this.activeCanvas.activeDrawing.gui.lineWidth = $event.target.value;
       this.activeCanvas.redrawCanvas();
   }
+
     public changeFontSize($event){
         this.gui.fonty.fontSize = $event.target.value;
         this.activeCanvas.activeDrawing.gui.fonty.fontSize = $event.target.value;
@@ -150,6 +216,7 @@ export class DesignerComponent {
       this.activeCanvas.activeDrawing.gui.lineJoin = value;
       this.activeCanvas.redrawCanvas();
   }
+
   public changeTool(value){
       if(value != "text"){
           this.textInput.nativeElement.style.display = 'none';
@@ -157,11 +224,13 @@ export class DesignerComponent {
       this.gui.tool = value;
       this.refreshGui();
   }
+
   public changeFontFamily(value){
       this.activeCanvas.gui.fonty.font = value;
       this.activeCanvas.activeDrawing.gui.fonty.font = value;
       this.activeCanvas.redrawCanvas();
   }
+
   public undoRedo(action) {
     if(action == 'undo') {
       this.activeCanvas.undoDrawing();
@@ -171,14 +240,6 @@ export class DesignerComponent {
     }
   }
 
-  public refreshCanvasObject(){
-      let i = 0;
-      for(let child of this.canvasRef.nativeElement.children){
-          this.canvasArr[i].rawCanvasObj = child;
-          this.canvasArr[i].renderContext = child.getContext("2d");
-          i++;
-      }
-  }
   public displayVirtualInput(event:any){
       console.log(this.textInput.nativeElement.style.display);
       //first we check if user input is on the canvas
@@ -203,6 +264,7 @@ export class DesignerComponent {
 
       }
   }
+
   public hideVirtual(){
       if(this.textInput.nativeElement.value == ""){
           this.textInput.nativeElement.value = "New Text";
@@ -229,6 +291,7 @@ export class DesignerComponent {
       }
       return false;
   }
+
   public analyzeKey(event:any){
       let key = event.key;
       if(this.gui.tool == 'text' && this.textInput.nativeElement.style.display == 'block'){
