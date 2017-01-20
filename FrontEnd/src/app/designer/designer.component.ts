@@ -4,6 +4,7 @@ import {GUI} from '../Classes/gui'
 import {Drawing} from "../Classes/drawing";
 import {Workspace} from "../Classes/workspace";
 import {DesignerService} from "../designer.service";
+import {JsonCanvas} from "../Classes/json-canvas"
 
 @Component({
   selector: 'app-designer',
@@ -129,6 +130,30 @@ export class DesignerComponent {
             this.canvasArr.push(c);
         }
         console.log(this.canvasArr[0]);
+    }
+
+    public updateWspace(){
+        this.workspace.canvasArr =[];
+        for(let canvas of this.canvasArr){
+            this.workspace.canvasArr.push(new JsonCanvas(canvas));
+        }
+        //console.log(JSON.stringify(this.workspace));
+        this.http_.deleteWspace(this.workspace)
+            .subscribe(
+                status => console.log(status),
+                error => this.errorMessage = <any> error);
+    }
+    public save(){
+        this.workspace.canvasArr =[];
+        for(let canvas of this.canvasArr){
+            this.workspace.canvasArr.push(new JsonCanvas(canvas));
+        }
+        this.workspace.dateModified = "DOES DIS WORK";
+        //console.log(JSON.stringify(this.workspace));
+        this.http_.createWspace(this.workspace)
+            .subscribe(
+                status => console.log(status),
+                error => this.errorMessage = <any> error);
     }
 
     public openWorkspace(wSpace:Workspace){
