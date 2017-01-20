@@ -7,18 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
-  title = 'app works!';
-  designs: any[];
-  public sideMenu:boolean;
-
   constructor(){
-      this.sideMenu = false;
   }
-
-    public toggleSideMenu(){
-        this.sideMenu = !this.sideMenu;
-    }
-    public setSideMenuOff(){
-        this.sideMenu = false;
-    }
 }

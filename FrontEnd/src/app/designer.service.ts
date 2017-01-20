@@ -9,7 +9,7 @@ export class DesignerService {
 
   constructor(private http: Http) { }
 
-  getAllDesigns() {
+  getAllwSpaces():Observable<Workspace[]> {
     return this.http.get('http://localhost:3000/api/designs')
       .map(res => res.json());
   }

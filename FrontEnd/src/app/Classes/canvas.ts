@@ -50,7 +50,7 @@ export class Canvas {
     this.moveY = startY;
 
     this.activeDrawing.startPos(startX, startY);
-    console.log("MouseDown:"+this.activeDrawing.tool);
+    //console.log("MouseDown:"+this.activeDrawing.tool);
 
     if(this.gui.tool == 'select') {
       this.findDrawing(startX, startY);
@@ -61,7 +61,7 @@ export class Canvas {
       }
       this.activeDrawing.endPos(startX,startY);
     }
-    console.log("start(x,y):"+this.activeDrawing.startX+","+this.activeDrawing.startX+"end(x,y):"+this.activeDrawing.endX+","+this.activeDrawing.endY);
+    //console.log("start(x,y):"+this.activeDrawing.startX+","+this.activeDrawing.startX+"end(x,y):"+this.activeDrawing.endX+","+this.activeDrawing.endY);
           this.redrawCanvas();
   }
 
