@@ -47,6 +47,7 @@
                 (click)="changeCanvas(canvas)"
                 (mousedown)="canvas.mouseDown($event)"
                 (mousemove)="canvas.mouseMove($event)"
+                (mouseout)="canvas.mouseUp()"
                 (mouseup)="canvas.mouseUp()"
                 width="{{canvas.canvasWidth}}"
                 height="{{canvas.canvasHeight}}">
