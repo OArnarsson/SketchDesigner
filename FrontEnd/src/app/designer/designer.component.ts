@@ -137,18 +137,18 @@ export class DesignerComponent {
         for(let canvas of this.canvasArr){
             this.workspace.canvasArr.push(new JsonCanvas(canvas));
         }
-        //console.log(JSON.stringify(this.workspace));
+        this.workspace.dateModified = this.workspace.longDate();
         this.http_.deleteWspace(this.workspace)
             .subscribe(
                 status => console.log(status),
                 error => this.errorMessage = <any> error);
     }
+
     public save(){
         this.workspace.canvasArr =[];
         for(let canvas of this.canvasArr){
             this.workspace.canvasArr.push(new JsonCanvas(canvas));
         }
-        this.workspace.dateModified = "DOES DIS WORK";
         //console.log(JSON.stringify(this.workspace));
         this.http_.createWspace(this.workspace)
             .subscribe(
