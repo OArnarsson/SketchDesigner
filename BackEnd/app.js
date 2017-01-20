@@ -12,8 +12,8 @@ const cors = rootRequire("cors");
 
 app.use(cors());
 // Parsers for POST data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({ extended: false, limit: '5mb'}));
 
 app.use(express.static('../FrontEnd/dist'));
 
