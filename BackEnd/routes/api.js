@@ -192,15 +192,15 @@ router.get('/', (req, res) => {
 router.route('/designs')
   .post((req, res) => {
     let design = new Design();
-    design.title = req.body['data']['title'];
-    design.dateCreated = req.body['data']['dateCreated'];
-    design.dateModified = req.body['data']['dateModified'];
-    design.canvasArr = req.body['data']['canvasArr'];
+    design.title = req.body['title'];
+    design.dateCreated = req.body['dateCreated'];
+    design.dateModified = req.body['dateModified'];
+    design.canvasArr = req.body['canvasArr'];
 
     design.save((err) => {
       if(err)
         res.send(err);
-      res.json({ log: 'Design saved to db'});  
+      res.json({ log: 'Design created!'});
     });
   })
 
@@ -227,27 +227,29 @@ router.route('/designs/:dateCreated')
 
   .put((req, res) => {
     console.log(req.params);
-    Design.findOne({dateCreated: req.body['data']['dateCreated']}, (err, design) => {
+    Design.findOne({dateCreated: req.body['dateCreated']}, (err, design) => {
       if (err)
         res.send(err);
-      design.title = req.body['data']['title'];
-      design.dateCreated = req.body['data']['dateCreated'];
-      design.dateModified = req.body['data']['dateModified'];
-      design.canvasArr = req.body['data']['canvasArr'];
+      design.title = req.body['title'];
+      design.dateCreated = req.body['dateCreated'];
+      design.dateModified = req.body['dateModified'];
+      design.canvasArr = req.body['canvasArr'];
       design.save(function(err) {
         if (err)
           res.send(err);
-        res.json({ message: 'design Design!' });
+        res.json({ message: 'Design saved!' });
       });
     });
   })
 
   .delete(function(req, res) {
-    Design.remove({dateCreated: req.body['data']['dateCreated']}, function(err, design) {
+      console.log(req.params.dateCreated);
+    Design.findOneAndRemove({dateCreated: req.params.dateCreated}, (err, design) => {
       if (err)
         res.send(err);
+      console.log(design);
 
-      res.json({ message: 'Successfully deleted' });
+      res.json({ message: 'Design deleted!' });
     });
   });
 
