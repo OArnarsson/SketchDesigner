@@ -40,32 +40,37 @@ export class DesignerComponent {
 
 
     constructor(rend: Renderer, private http_: DesignerService) {
-        this.stage = "menu";
-        this.sideMenu = false;
-        this.allWorkspaces = [];
-        this.loading = true; // This is used for creating new elem.
-        this.canvasArr = [];
-        this.initWorkSpace();
-        //this.newCanvas();
-        this.renderer = rend;
-        this.gui = new GUI();
-        this.clipboard = null;
-        this.mockTime = "19.01.2017 12:47:00"; //Testing
+      this.resetComponent(rend, http_);
+    }
 
-        //This is used for keyShortcuts
-        this.renderer.listenGlobal('document', 'keydown', (event) => {
-            this.analyzeKey(event);
-        });
+    public resetComponent(rend, http) {
+      this.stage = "menu";
+      this.sideMenu = false;
+      this.allWorkspaces = [];
+      this.loading = true; // This is used for creating new elem.
+      this.canvasArr = [];
+      this.initWorkSpace();
+      //this.newCanvas();
+      this.renderer = rend;
+      this.gui = new GUI();
+      this.clipboard = null;
+      this.mockTime = "19.01.2017 12:47:00"; //Testing
 
-        //This is used for displaying input
-        this.renderer.listenGlobal('document', 'mousedown', (event) => {
-            this.displayVirtualInput(event);
-        });
-        //this.getWorkspace();
 
-        //Testing
-        this.getAllWorkspaces();
-        //END Testing
+      //This is used for keyShortcuts
+      this.renderer.listenGlobal('document', 'keydown', (event) => {
+        this.analyzeKey(event);
+      });
+
+      //This is used for displaying input
+      this.renderer.listenGlobal('document', 'mousedown', (event) => {
+        this.displayVirtualInput(event);
+      });
+      //this.getWorkspace();
+
+      //Testing
+      this.getAllWorkspaces();
+      //END Testing
     }
     //This is used to get the Dom elem of canvas parent elem.
     @ViewChild('canvasContainer') canvasRef: ElementRef;
@@ -383,11 +388,11 @@ export class DesignerComponent {
     }
 
     public deleteDrawing() {
-        if (this.gui.tool == 'select') {
-            if (this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length - 1].startX != null) {
-                this.activeCanvas.removeLast();
-            }
+      if (this.gui.tool == 'select') {
+        if (this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length - 1].startX != null) {
+          this.activeCanvas.removeLast();
         }
+      }
     }
 
     public VirtualInCanvas(rawObject: HTMLElement, x, y) {

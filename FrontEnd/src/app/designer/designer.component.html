@@ -8,6 +8,7 @@
     <div class="fr-sp" (click)="updateWspace()"><h5>Save</h5><h5>Ctrl + S</h5></div>
     <div class="fr-sp" (click)="save()"><h5>Save As</h5><h5>Ctrl + Shift + S</h5></div>
     <div class="fr-sp" (click)="deleteWspace()"><h5>Delete</h5><h5>Ctrl + Delete</h5></div>
+    <div class="fr-sp" (click)="resetComponent(this.renderer, this.http)"><h5>Back to Menu</h5><h5>Esc</h5></div>
 </div>
 <div *ngIf="stage!='design'" class="menuContainer">
     <div class="singleWspace" (click)="openWorkspace(workspace)">
