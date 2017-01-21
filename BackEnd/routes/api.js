@@ -44,7 +44,7 @@ router.route('/designs')
                 res.send(err);
 
             res.json(designs);
-        });
+        }).sort({ dateModified: 'desc' });
     });
 
 
