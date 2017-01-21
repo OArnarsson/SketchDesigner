@@ -1,4 +1,3 @@
-global.rootRequire = function(name) {
     return require('../../FrontEnd/node_modules' + '/' + name);
 }
 
@@ -12,79 +11,79 @@ let uri = 'mongodb://Onri:PeppTaco@ds149577.mlab.com:49577/sketchdesigner'
 mongoDB = mongoose.connect(uri);
 
 
-router.use(function(req, res, next) {
+router.use(function (req, res, next) {
     console.log('Request being handled');
-    next(); 
+    next();
 });
 
 router.get('/', (req, res) => {
-  res.send('API is live!');
+    res.send('API is live!');
 });
 
 
 // Designs routes
 router.route('/designs')
-  .post((req, res) => {
-    let design = new Design();
-    design.title = req.body['title'];
-    design.dateCreated = req.body['dateCreated'];
-    design.dateModified = req.body['dateModified'];
-    design.canvasArr = req.body['canvasArr'];
+    .post((req, res) => {
+        let design = new Design();
+        design.title = req.body['title'];
+        design.dateCreated = req.body['dateCreated'];
+        design.dateModified = req.body['dateModified'];
+        design.canvasArr = req.body['canvasArr'];
 
-    design.save((err) => {
-      if(err)
-        res.send(err);
-      res.json({ log: 'Design created!'});
+        design.save((err) => {
+            if (err)
+                res.send(err);
+            res.json({ log: 'Design created!' });
+        });
+    })
+
+    .get((req, res) => {
+        Design.find((err, designs) => {
+            if (err)
+                res.send(err);
+
+            res.json(designs);
+        });
     });
-  })
-
-  .get((req, res) => {
-    Design.find((err, designs) => {
-      if(err)
-        res.send(err);
-
-      res.json(designs);
-    });
-  });
 
 
 // Designs/ID routes
 router.route('/designs/:dateCreated')
-  .get((req, res) => {
-    Design.findOne({dateCreated: req.params.dateCreated}, (err, design) => {
-      if (err)
-        res.send(err);
-      
-      res.json(design);
-    });
-  })
+    .get((req, res) => {
+        Design.findOne({ dateCreated: req.params.dateCreated }, (err, design) => {
+            if (err)
+                res.send(err);
 
-  .put((req, res) => {
-    console.log(req.params);
-    Design.findOne({dateCreated: req.body['dateCreated']}, (err, design) => {
-      if (err)
-        res.send(err);
-      design.title = req.body['title'];
-      design.dateCreated = req.body['dateCreated'];
-      design.dateModified = req.body['dateModified'];
-      design.canvasArr = req.body['canvasArr'];
-      design.save(function(err) {
-        if (err)
-          res.send(err);
-        res.json({ message: 'Design saved!' });
-      });
-    });
-  })
+            res.json(design);
+        });
+    })
 
-  .delete(function(req, res) {
-      console.log(req.params.dateCreated);
-    Design.findOneAndRemove({dateCreated: req.params.dateCreated}, (err, design) => {
-      if (err)
-        res.send(err);
-      console.log(design);
+    .put((req, res) => {
+        console.log(req.params);
+        Design.findOne({ dateCreated: req.body['dateCreated'] }, (err, design) => {
+            if (err)
+                res.send(err);
+            design.title = req.body['title'];
+            design.dateCreated = req.body['dateCreated'];
+            design.dateModified = req.body['dateModified'];
+            design.canvasArr = req.body['canvasArr'];
+            design.save(function (err) {
+                if (err)
+                    res.send(err);
+                res.json({ message: 'Design saved!' });
+            });
+        });
+    })
 
-      res.json({ message: 'Design deleted!' });
+    .delete(function (req, res) {
+        console.log(req.params.dateCreated);
+        Design.findOneAndRemove({ dateCreated: req.params.dateCreated }, (err, design) => {
+            if (err)
+                res.send(err);
+            console.log(design);
+
+            res.json({ message: 'Design deleted!' });
+        });
     });
-  });
 
 module.exports = router;

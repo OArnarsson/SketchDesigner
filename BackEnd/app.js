@@ -1,4 +1,3 @@
-global.rootRequire = function(name) {
     return require('../FrontEnd/node_modules' + '/' + name);
 }
 
@@ -12,8 +11,8 @@ const cors = rootRequire("cors");
 
 app.use(cors());
 // Parsers for POST data
-app.use(bodyParser.json({limit: '5mb'}));
-app.use(bodyParser.urlencoded({ extended: false, limit: '5mb'}));
+app.use(bodyParser.json({ limit: '5mb' }));
+app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }));
 
 app.use(express.static('../FrontEnd/dist'));
 
@@ -22,7 +21,7 @@ app.use('/api', api);
 
 // All other routes and return the index file
 app.get('*', (req, res) => {
-  res.sendFile('FrontEnd/dist/index.html', { root: '../' });
+    res.sendFile('FrontEnd/dist/index.html', { root: '../' });
 });
 
 // Server setup
