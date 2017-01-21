@@ -1,87 +1,87 @@
 export class Selection {
 
-  public lowX: number;
-  public lowY: number;
-  public highX: number;
-  public highY: number;
-  private buffer: number;
+    public lowX: number;
+    public lowY: number;
+    public highX: number;
+    public highY: number;
+    private buffer: number;
 
-  constructor(tool, startX: number, startY: number, endX: number, endY: number) {
-    this.buffer = 10;
+    constructor(tool, startX: number, startY: number, endX: number, endY: number) {
+        this.buffer = 10;
 
-    if(tool == 'square'){
-      if(startX < 0) {
-        startX = endX + startX;
-      }
-      if(startY < 0) {
-        startY = endY+startY;
-      }
+        if (tool == 'square') {
+            if (startX < 0) {
+                startX = endX + startX;
+            }
+            if (startY < 0) {
+                startY = endY + startY;
+            }
 
-      endX = endX+startX;
-      endY = endY+startY;
+            endX = endX + startX;
+            endY = endY + startY;
+        }
+
+        if (Math.abs(startX) > Math.abs(endX)) {
+            this.lowX = Math.abs(endX - this.buffer);
+            this.highX = Math.abs(startX + this.buffer);
+        }
+        else {
+            this.lowX = Math.abs(startX - this.buffer);
+            this.highX = Math.abs(endX + this.buffer);
+        }
+        if (Math.abs(startY) > Math.abs(endY)) {
+            this.lowY = Math.abs(endY - this.buffer);
+            this.highY = Math.abs(startY + this.buffer);
+        }
+        else {
+            this.lowY = Math.abs(startY - this.buffer);
+            this.highY = Math.abs(endY + this.buffer);
+        }
     }
 
-    if(Math.abs(startX) > Math.abs(endX)) {
-      this.lowX = Math.abs(endX - this.buffer);
-      this.highX = Math.abs(startX + this.buffer);
+    movePos(x, y) {
+        this.lowX += x;
+        this.highX += x;
+        this.lowY += y;
+        this.highY += y;
     }
-    else {
-      this.lowX = Math.abs(startX - this.buffer);
-      this.highX = Math.abs(endX + this.buffer);
+
+    topLeft() {
+        return [this.lowX, this.highY];
     }
-    if(Math.abs(startY) > Math.abs(endY)) {
-      this.lowY = Math.abs(endY - this.buffer);
-      this.highY = Math.abs(startY + this.buffer);
+
+    topMiddle() {
+        return [this.getWidth(), this.highY];
     }
-    else {
-      this.lowY = Math.abs(startY - this.buffer);
-      this.highY = Math.abs(endY + this.buffer);
+
+    topRight() {
+        return [this.highX, this.highY];
     }
-  }
 
-  movePos(x, y) {
-    this.lowX += x;
-    this.highX += x;
-    this.lowY += y;
-    this.highY += y;
-  }
+    bottomLeft() {
+        return [this.lowX, this.lowY];
+    }
 
-  topLeft() {
-    return [this.lowX, this.highY];
-  }
+    bottomMiddle() {
+        return [this.getWidth(), this.lowY];
+    }
 
-  topMiddle() {
-    return [this.getWidth(), this.highY];
-  }
+    bottomRight() {
+        return [this.highX, this.lowY];
+    }
 
-  topRight() {
-    return [this.highX, this.highY];
-  }
+    midLeft() {
+        return [this.lowX, this.getHeight()];
+    }
 
-  bottomLeft() {
-    return [this.lowX, this.lowY];
-  }
+    midRight() {
+        return [this.highX, this.getHeight()];
+    }
 
-  bottomMiddle() {
-    return [this.getWidth(), this.lowY];
-  }
-
-  bottomRight() {
-    return [this.highX, this.lowY];
-  }
-
-  midLeft() {
-    return [this.lowX, this.getHeight()];
-  }
-
-  midRight() {
-    return [this.highX, this.getHeight()];
-  }
-
-  public getWidth(){
-    return this.highX-this.lowX;
-  }
-  public getHeight(){
-    return this.highY-this.lowY;
-  }
+    public getWidth() {
+        return this.highX - this.lowX;
+    }
+    public getHeight() {
+        return this.highY - this.lowY;
+    }
 }

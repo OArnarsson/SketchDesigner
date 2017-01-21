@@ -1,10 +1,10 @@
-import {Drawing} from './drawing'
+import { Drawing } from './drawing'
 export class JsonCanvas {
     public class: string;
     public canvasWidth: number;
     public canvasHeight: number;
     public allDrawings: Drawing[];
-    constructor(obj?){
+    constructor(obj?) {
         this.class = "mobile";
         this.canvasWidth = 248.4;
         this.canvasHeight = 441.6;

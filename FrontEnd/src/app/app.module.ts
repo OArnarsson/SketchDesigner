@@ -6,8 +6,8 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { DesignerComponent } from './designer/designer.component';
 import { RouterModule, Routes } from '@angular/router';
-import {ColorPickerModule} from 'angular2-color-picker';
-import {DesignerService} from './designer.service';
+import { ColorPickerModule } from 'angular2-color-picker';
+import { DesignerService } from './designer.service';
 
 import 'rxjs/add/observable/throw';
 // Operators
@@ -20,24 +20,24 @@ import 'rxjs/add/operator/toPromise';
 
 
 const appRoutes: Routes = [
-  {path: '', component: DesignerComponent},
-  {path: '**', component: DesignerComponent}
+    { path: '', component: DesignerComponent },
+    { path: '**', component: DesignerComponent }
 ]
 
 @NgModule({
-declarations: [
-AppComponent,
-DesignerComponent
-],
-imports: [
-BrowserModule,
-FormsModule,
-HttpModule,
-  RouterModule.forRoot(appRoutes),
-    ColorPickerModule
-],
-providers: [DesignerService], //This talks to the API
-bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        DesignerComponent
+    ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        HttpModule,
+        RouterModule.forRoot(appRoutes),
+        ColorPickerModule
+    ],
+    providers: [DesignerService], //This talks to the API
+    bootstrap: [AppComponent]
 })
 
 
