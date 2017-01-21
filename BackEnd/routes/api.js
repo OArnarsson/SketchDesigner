@@ -1,3 +1,4 @@
+global.rootRequire = (name) => {
     return require('../../FrontEnd/node_modules' + '/' + name);
 }
 
