@@ -287,7 +287,8 @@ export class Canvas {
             var selection = this.allDrawings[x].selection;
             if (selection.lowX <= xCord && xCord <= selection.highX && selection.lowY <= yCord && yCord <= selection.highY) {
                 this.activeDrawing = this.allDrawings[x];
-                this.undoneDrawings.push(this.allDrawings[x]);
+                this.allDrawings.push(this.allDrawings[x]);
+                this.allDrawings.splice(x, 1);
                 this.activeDrawing.found = true;
                 this.rawCanvasObj.style.cursor = 'move';
                 return;
@@ -330,8 +331,11 @@ export class Canvas {
     }
 
     public removeLast() {
-        //First we add it to the undoneDrawings
-        this.undoDrawing();
+        this.allDrawings.pop();
         this.redrawCanvas();
+    }
+
+    public removeDrawing() {
+
     }
 }
