@@ -1,7 +1,7 @@
 <i class="fa fa-bars" aria-hidden="true" (click)="toggleSideMenu()"></i>
 <div class="nav">
-  <h5 *ngIf="stage != 'design'">SketchDesigner</h5> //TODO: SET INPUT BOX WHEN EDIT BUTTON IS CLICKED!
-  <h5 *ngIf="stage == 'design'">{{workspace.title}} <i (click)="" class="fa fa-pencil-square-o" aria-hidden="true"></i></h5>
+  <h5 *ngIf="stage != 'design'">SketchDesigner</h5> <!--TODO: SET INPUT BOX WHEN EDIT BUTTON IS CLICKED!-->
+  <h5 *ngIf="stage == 'design'">{{workspace.title}} <i class="fa fa-pencil-square-o" aria-hidden="true"></i></h5>
 </div>
 <div class="sideMenu" [class.hidden]="!sideMenu" (mouseleave)="setSideMenuOff()">
     <div class="fr-sp"><h5>New</h5><h5>Ctrl + N</h5></div>
