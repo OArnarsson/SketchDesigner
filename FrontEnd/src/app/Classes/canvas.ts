@@ -329,13 +329,4 @@ export class Canvas {
         }
         this.redrawCanvas();
     }
-
-    public removeLast() {
-        this.allDrawings.pop();
-        this.redrawCanvas();
-    }
-
-    public removeDrawing() {
-
-    }
 }

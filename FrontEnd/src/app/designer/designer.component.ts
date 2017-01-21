@@ -390,7 +390,7 @@ export class DesignerComponent {
     public deleteDrawing() {
         if (this.gui.tool == 'select') {
             if (this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length - 1].startX != null) {
-                this.activeCanvas.removeLast();
+                this.activeCanvas.undoDrawing();
             }
         }
     }
