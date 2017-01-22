@@ -13,7 +13,9 @@ mongoDB = mongoose.connect(uri);
 
 
 router.use(function (req, res, next) {
-    console.log('Request being handled');
+    let d = new Date();
+    timeStamp = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+    console.log(timeStamp + ' - ' + req.method + ' request - URL: "' + req.originalUrl + '"');
     next();
 });
 
@@ -33,7 +35,7 @@ router.route('/designs')
 
         design.save((err) => {
             if (err)
-                res.send(err);
+                res.status(500).send(err);
             res.json({ log: 'Design created!' });
         });
     })
@@ -41,7 +43,7 @@ router.route('/designs')
     .get((req, res) => {
         Design.find((err, designs) => {
             if (err)
-                res.send(err);
+                res.status(500).send(err);
 
             res.json(designs);
         }).sort({ dateModified: 'desc' });
@@ -70,7 +72,7 @@ router.route('/designs/:dateCreated')
             design.canvasArr = req.body['canvasArr'];
             design.save(function (err) {
                 if (err)
-                    res.send(err);
+                    res.status(500).send(err);
                 res.json({ message: 'Design saved!' });
             });
         });
@@ -80,7 +82,7 @@ router.route('/designs/:dateCreated')
         console.log(req.params.dateCreated);
         Design.findOneAndRemove({ dateCreated: req.params.dateCreated }, (err, design) => {
             if (err)
-                res.send(err);
+                res.status(500).send(err);
             console.log(design);
 
             res.json({ message: 'Design deleted!' });
