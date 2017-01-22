@@ -1,5 +1,5 @@
-global.rootRequire = function(name) {
-    return require('../../FrontEnd/node_modules' + '/' + name);
+global.rootRequire = (name) => {
+	return require('../../FrontEnd/node_modules' + '/' + name);
 }
 
 const mongoose = rootRequire('mongoose');

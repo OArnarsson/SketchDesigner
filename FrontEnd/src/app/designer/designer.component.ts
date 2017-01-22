@@ -1,15 +1,15 @@
-import {Component, ViewChild, ElementRef, Renderer} from '@angular/core';
-import {Canvas} from '../Classes/canvas'
-import {GUI} from '../Classes/gui'
-import {Drawing} from "../Classes/drawing";
-import {Workspace} from "../Classes/workspace";
-import {DesignerService} from "../designer.service";
-import {JsonCanvas} from "../Classes/json-canvas"
+import { Component, ViewChild, ElementRef, Renderer } from '@angular/core';
+import { Canvas } from '../Classes/canvas'
+import { GUI } from '../Classes/gui'
+import { Drawing } from "../Classes/drawing";
+import { Workspace } from "../Classes/workspace";
+import { DesignerService } from "../designer.service";
+import { JsonCanvas } from "../Classes/json-canvas"
 
 @Component({
-  selector: 'app-designer',
-  templateUrl: 'designer.component.html',
-  styleUrls: ['./designer.component.sass']
+    selector: 'app-designer',
+    templateUrl: 'designer.component.html',
+    styleUrls: ['./designer.component.sass']
 })
 
 export class DesignerComponent {
@@ -40,6 +40,10 @@ export class DesignerComponent {
 
 
     constructor(rend: Renderer, private http_: DesignerService) {
+        this.resetComponent(rend, http_);
+    }
+
+    public resetComponent(rend, http) {
         this.stage = "menu";
         this.sideMenu = false;
         this.allWorkspaces = [];
@@ -51,6 +55,7 @@ export class DesignerComponent {
         this.gui = new GUI();
         this.clipboard = null;
         this.mockTime = "19.01.2017 12:47:00"; //Testing
+
 
         //This is used for keyShortcuts
         this.renderer.listenGlobal('document', 'keydown', (event) => {
@@ -83,7 +88,7 @@ export class DesignerComponent {
         }
     };
 
-    public initWorkSpace(){
+    public initWorkSpace() {
         this.workspace = new Workspace();
         this.workspace.title = "New Workspace";
         this.workspace.canvasArr.push(new Canvas());
@@ -91,24 +96,24 @@ export class DesignerComponent {
     }
 
     //Resto Functions
-    public getAllWorkspaces(){
+    public getAllWorkspaces() {
         this.http_.getAllwSpaces()
             .subscribe(
-                workspaces => this.mapAllWorkspaces(workspaces),
-                error => this.errorMessage = <any> error);
+            workspaces => this.mapAllWorkspaces(workspaces),
+            error => this.errorMessage = <any>error);
     }
 
     public getWorkspace() {
         this.http_.getWspace(this.mockTime)
             .subscribe(
-                workspace => this.mapWorkspace(workspace),
-                error => this.errorMessage = <any> error);
+            workspace => this.mapWorkspace(workspace),
+            error => this.errorMessage = <any>error);
     }
 
 
-    public mapAllWorkspaces(workspaces:any){
-        for(let wSpace of workspaces){
-           this.allWorkspaces.push(new Workspace(wSpace));
+    public mapAllWorkspaces(workspaces: any) {
+        for (let wSpace of workspaces) {
+            this.allWorkspaces.push(new Workspace(wSpace));
         }
         console.log(this.allWorkspaces);
     }
@@ -132,51 +137,51 @@ export class DesignerComponent {
         console.log(this.canvasArr[0]);
     }
 
-    public updateWspace(){
-        this.workspace.canvasArr =[];
-        for(let canvas of this.canvasArr){
+    public updateWspace() {
+        this.workspace.canvasArr = [];
+        for (let canvas of this.canvasArr) {
             this.workspace.canvasArr.push(new JsonCanvas(canvas));
         }
         this.workspace.dateModified = this.workspace.longDate();
         this.http_.updateWspace(this.workspace)
             .subscribe(
-                status => console.log(status),
-                error => this.errorMessage = <any> error);
+            status => console.log(status),
+            error => this.errorMessage = <any>error);
     }
 
-    public deleteWspace(){
-      this.http_.deleteWspace(this.workspace)
-        .subscribe(
-          status => console.log(status),
-          error => this.errorMessage = <any> error);
+    public deleteWspace() {
+        this.http_.deleteWspace(this.workspace)
+            .subscribe(
+            status => console.log(status),
+            error => this.errorMessage = <any>error);
     }
 
-    public save(){
-        this.workspace.canvasArr =[];
-        for(let canvas of this.canvasArr){
+    public save() {
+        this.workspace.canvasArr = [];
+        for (let canvas of this.canvasArr) {
             this.workspace.canvasArr.push(new JsonCanvas(canvas));
         }
         //console.log(JSON.stringify(this.workspace));
         this.http_.createWspace(this.workspace)
             .subscribe(
-                status => console.log(status),
-                error => this.errorMessage = <any> error);
+            status => console.log(status),
+            error => this.errorMessage = <any>error);
     }
 
     public callAPI(action) {
-      this.workspace.canvasArr =[];
-      for(let canvas of this.canvasArr){
-        this.workspace.canvasArr.push(new JsonCanvas(canvas));
-      }
-      //console.log(JSON.stringify(this.workspace));
-      action(this.workspace)
-        .subscribe(
-          status => console.log(status),
-          error => this.errorMessage = <any> error);
+        this.workspace.canvasArr = [];
+        for (let canvas of this.canvasArr) {
+            this.workspace.canvasArr.push(new JsonCanvas(canvas));
+        }
+        //console.log(JSON.stringify(this.workspace));
+        action(this.workspace)
+            .subscribe(
+            status => console.log(status),
+            error => this.errorMessage = <any>error);
 
     }
 
-    public openWorkspace(wSpace:Workspace){
+    public openWorkspace(wSpace: Workspace) {
         this.mapWorkspace(wSpace);
 
     }
@@ -199,7 +204,7 @@ export class DesignerComponent {
 
         let x = this;
         if (this.loading) {
-            setTimeout(function() {
+            setTimeout(function () {
                 x.refreshCanvas();
             }, 250);
         }
@@ -385,7 +390,7 @@ export class DesignerComponent {
     public deleteDrawing() {
         if (this.gui.tool == 'select') {
             if (this.activeCanvas.allDrawings[this.activeCanvas.allDrawings.length - 1].startX != null) {
-                this.activeCanvas.removeLast();
+                this.activeCanvas.undoDrawing();
             }
         }
     }
