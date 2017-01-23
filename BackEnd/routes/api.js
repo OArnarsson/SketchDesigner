@@ -55,7 +55,7 @@ router.route('/designs/:dateCreated')
     .get((req, res) => {
         Design.findOne({ dateCreated: req.params.dateCreated }, (err, design) => {
             if (err)
-                res.send(err);
+                res.status(500).send(err);
 
             res.json(design);
         });
@@ -64,7 +64,7 @@ router.route('/designs/:dateCreated')
     .put((req, res) => {
         Design.findOne({ dateCreated: req.body['dateCreated'] }, (err, design) => {
             if (err)
-                res.send(err);
+                res.status(500).send(err);
             design.title = req.body['title'];
             design.dateCreated = req.body['dateCreated'];
             design.dateModified = req.body['dateModified'];
