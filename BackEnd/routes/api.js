@@ -62,7 +62,6 @@ router.route('/designs/:dateCreated')
     })
 
     .put((req, res) => {
-        console.log(req.params);
         Design.findOne({ dateCreated: req.body['dateCreated'] }, (err, design) => {
             if (err)
                 res.send(err);
@@ -79,7 +78,6 @@ router.route('/designs/:dateCreated')
     })
 
     .delete(function (req, res) {
-        console.log(req.params.dateCreated);
         Design.findOneAndRemove({ dateCreated: req.params.dateCreated }, (err, design) => {
             if (err)
                 res.status(500).send(err);
