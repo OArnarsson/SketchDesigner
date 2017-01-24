@@ -1,7 +1,7 @@
-import {Workspace} from './workspace';
-import {Canvas} from './canvas';
-import {Drawing} from './drawing';
-import {Gui} from './gui';
+import {Workspace} from '../classes/workspace';
+import {Canvas} from '../classes/canvas';
+import {Drawing} from '../classes/drawing';
+import {Gui} from '../classes/gui';
 
 export class Manipulator {
     public workspace: Workspace;
@@ -12,7 +12,7 @@ export class Manipulator {
     public moveY: number;
 
     public constructor(workspace:Workspace) {
-        this.workspace = workspace;
+        this.workspace = new Workspace(workspace);
         this.activeCanvas = this.workspace.canvases[0];
         this.selectedDrawings = [];
         this.gui = new Gui();

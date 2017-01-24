@@ -7,6 +7,17 @@ import {AppRoutingModule} from "./app-routing.module";
 import { MenuComponent } from './menu/menu.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { DatePipe } from './pipes/date.pipe';
+import { ManipulatorComponent } from './manipulator/manipulator.component';
+import {ManipulatorService} from "./manipulator/manipulator.service";
+
+import 'rxjs/add/observable/throw';
+// Operators
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/toPromise';
 
 
 @NgModule({
@@ -15,6 +26,7 @@ import { DatePipe } from './pipes/date.pipe';
     MenuComponent,
     WorkspaceComponent,
     DatePipe,
+    ManipulatorComponent,
 
   ],
   imports: [
@@ -23,7 +35,7 @@ import { DatePipe } from './pipes/date.pipe';
     HttpModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [ManipulatorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

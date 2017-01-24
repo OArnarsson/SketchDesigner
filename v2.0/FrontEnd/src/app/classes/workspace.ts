@@ -16,7 +16,7 @@ export class Workspace {
 
         for(let prop in obj) {
             if(prop == 'canvases') {
-                for(let canvas of prop) {
+                for(let canvas of obj[prop]) {
                     this.canvases.push(new Canvas(canvas));
                 }
             }

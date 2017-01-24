@@ -81,7 +81,7 @@ router.route('/workspace/:dateCreated')
             workspace.save(function (err) {
                 if (err)
                     res.status(500).send(err);
-                res.json({ message: 'Workspace saved!' });
+                res.json({ dateModified: workspace.dateModified });            
             });
         });
     })
