@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import {AppRoutingModule} from "./app-routing.module";
 import { MenuComponent } from './menu/menu.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
-import { DatePipe } from './date.pipe';
+import { DatePipe } from './pipes/date.pipe';
 
 
 @NgModule({

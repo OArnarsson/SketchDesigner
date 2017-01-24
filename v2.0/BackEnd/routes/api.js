@@ -8,14 +8,13 @@ const _ = rootRequire("lodash");
 const mongoose = rootRequire('mongoose');
 const Rx = rootRequire('RxJS')
 const Workspace = require('../models/workspace');
+const utility = require('../utility/utility');
 let uri = 'mongodb://Onri:PeppTaco@ds149577.mlab.com:49577/sketchdesigner'
 mongoDB = mongoose.connect(uri);
 
 
 router.use(function (req, res, next) {
-    let d = new Date();
-    timeStamp = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-    console.log(timeStamp + ' - ' + req.method + ' request - URL: "' + req.originalUrl + '"');
+    console.log(utility.shortDate(req));
     next();
 });
 
@@ -28,10 +27,8 @@ router.get('/', (req, res) => {
 router.route('/workspace')
     .post((req, res) => {
         let workspace = new Workspace();
-        workspace.title = req.body['title'];
-        workspace.dateCreated = req.body['dateCreated'];
-        workspace.dateModified = req.body['dateModified'];
-        workspace.canvasArr = req.body['canvasArr'];
+        for (let prop in req.body)
+            workspace[prop] = req.body[prop];
 
         workspace.save((err) => {
             if (err)
@@ -51,24 +48,36 @@ router.route('/workspace')
 
 
 // Designs/ID routes
-router.route('/designs/:dateCreated')
+router.route('/workspace/:dateCreated')
     .get((req, res) => {
-        Design.findOne({ dateCreated: req.params.dateCreated }, (err, workspace) => {
+        if (req.params.dateCreated != 'new')
+            Workspace.findOne({ dateCreated: req.params.dateCreated }, (err, workspace) => {
+                if (err)
+                    res.status(500).send(err);
+
+                res.json(workspace);
+            });
+        else {
+            let workspace = new Workspace();
+            for (let prop in utility.newspace)
+                workspace[prop] = utility.newspace[prop];
+            workspace.dateCreated = utility.longDate();
+            workspace.dateModified = workspace.dateCreated;
+            workspace.save((err) => {
             if (err)
                 res.status(500).send(err);
-
             res.json(workspace);
         });
+        }
     })
 
     .put((req, res) => {
         Workspace.findOne({ dateCreated: req.body['dateCreated'] }, (err, workspace) => {
             if (err)
                 res.status(500).send(err);
-            workspace.title = req.body['title'];
-            workspace.dateCreated = req.body['dateCreated'];
-            workspace.dateModified = req.body['dateModified'];
-            workspace.canvasArr = req.body['canvasArr'];
+            for (let prop in req.body) 
+                workspace[prop] = req.body[prop];
+            workspace.dateModified = utility.longDate();
             workspace.save(function (err) {
                 if (err)
                     res.status(500).send(err);
@@ -81,7 +90,7 @@ router.route('/designs/:dateCreated')
         Workspace.findOneAndRemove({ dateCreated: req.params.dateCreated }, (err, workspace) => {
             if (err)
                 res.status(500).send(err);
-            console.log(design);
+            console.log(workspace);
 
             res.json({ message: 'Workspace deleted!' });
         });

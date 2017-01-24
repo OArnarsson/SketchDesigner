@@ -6,10 +6,10 @@ const mongoose = rootRequire('mongoose');
 Schema = mongoose.Schema;
 
 let workspaceSchema = new Schema({
+	canvases: [],
 	title: String,
-	dateCreated: String,
 	dateModified: String,
-	canvasArr: []
+	dateCreated: String
 });
 
 module.exports = mongoose.model('Workspace', workspaceSchema)
