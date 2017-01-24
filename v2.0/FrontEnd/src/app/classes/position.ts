@@ -1,16 +1,40 @@
 export class Position {
+    public startX: number;
+    public endX: number;
     public posX: number[];
+    public startY: number;
+    public endY: number;
     public posY: number[];
+    public width:number;
+    public height: number;
 
     public constructor(obj?) {
+        this.startX = 0;
+        this.endX = 0;
         this.posX = [];
+        this.startY = 0;
+        this.endY = 0;
         this.posY = [];
+        this.width = 0;
+        this.height = 0;
         for (let prop in obj) this[prop] = obj[prop];
     }
 
-    public pushPos(x, y) {
-        this.posX.push(x);
-        this.posY.push(y);
+    public setPos(action, x, y) {
+        if(action === 'start') {
+            this.startX = x;
+            this.endY = y;
+        }
+        if(action === 'end') {
+            this.endX = x;
+            this.endY = y;
+            this.width = this.endX - this.startX;
+            this.height = this.endY - this.startY;
+        }
+        if(action === 'push') {
+            this.posX.push(x);
+            this.posY.push(y);
+        }
     }
 
     public movePos(tool, x, y) {
