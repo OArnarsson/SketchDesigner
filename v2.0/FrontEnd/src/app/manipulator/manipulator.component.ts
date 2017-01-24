@@ -12,6 +12,8 @@ export class ManipulatorComponent implements OnInit {
     private man:Manipulator;
     private errorMsg:any;
     @Input() param: string;
+
+    //Check the errors: http://localhost:4200/workspace/24.01.2017%2020%3A02%3A33%3A112
     constructor(private http:ManipulatorService) {
         this.man = new Manipulator(null);
     }
@@ -27,7 +29,7 @@ export class ManipulatorComponent implements OnInit {
     }
 
     public testUpdate(){
-        this.man.workspace.title = "Jonny";
+        this.man.workspace.title = "Jonatan";
         this.http.updateWspace(this.man.workspace)
             .subscribe(
                 data => this.man.workspace.dateModified = data.dateModified,

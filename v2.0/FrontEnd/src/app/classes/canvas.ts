@@ -16,7 +16,9 @@ export class Canvas {
         this.width = 441.6;
         for (let prop in obj){
             if(prop == 'drawings') {
-                for(let drawing of prop) {
+                for(let drawing of obj[prop]) {
+                    console.log(drawing);
+                    console.log("im here");
                     this.drawings.push(new Drawing(drawing));
                 }
             }

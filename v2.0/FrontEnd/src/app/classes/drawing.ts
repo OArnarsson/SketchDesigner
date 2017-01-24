@@ -14,7 +14,7 @@ export class Drawing {
             if(prop == 'gui') {
                 this[prop] = obj[prop];
             }
-            else {
+            if(prop == 'currPos') {
                 this[prop] = new Position(obj[prop]);
             }
         }
