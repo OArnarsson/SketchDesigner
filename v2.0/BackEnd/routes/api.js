@@ -64,10 +64,10 @@ router.route('/workspace/:dateCreated')
             workspace.dateCreated = utility.longDate();
             workspace.dateModified = workspace.dateCreated;
             workspace.save((err) => {
-            if (err)
-                res.status(500).send(err);
-            res.json(workspace);
-        });
+                if (err)
+                    res.status(500).send(err);
+                res.json(workspace);
+            });
         }
     })
 
@@ -75,7 +75,7 @@ router.route('/workspace/:dateCreated')
         Workspace.findOne({ dateCreated: req.body['dateCreated'] }, (err, workspace) => {
             if (err)
                 res.status(500).send(err);
-            for (let prop in req.body) 
+            for (let prop in req.body)
                 workspace[prop] = req.body[prop];
             workspace.dateModified = utility.longDate();
             workspace.save(function (err) {
