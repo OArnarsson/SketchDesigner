@@ -66,7 +66,7 @@ let longDate = () => {
 
 let shortDate = (req) => {
     let d = new Date();
-    timeStamp = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
+    timeStamp = ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ":" + ("0" + d.getSeconds()).slice(-2);
     timeString = timeStamp + ' - ' + req.method + ' request - URL: "' + req.originalUrl + '"'
     return timeString;
 }

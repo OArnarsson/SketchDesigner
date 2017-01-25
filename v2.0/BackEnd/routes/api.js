@@ -78,10 +78,10 @@ router.route('/workspace/:dateCreated')
             for (let prop in req.body)
                 workspace[prop] = req.body[prop];
             workspace.dateModified = utility.longDate();
-            workspace.save(function (err) {
+            workspace.save((err) => {
                 if (err)
                     res.status(500).send(err);
-                res.json({ dateModified: workspace.dateModified });            
+                res.json({ dateModified: workspace.dateModified });
             });
         });
     })
