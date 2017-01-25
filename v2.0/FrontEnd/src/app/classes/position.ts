@@ -21,17 +21,17 @@ export class Position {
     }
 
     public setPos(action, x, y) {
-        if(action === 'start') {
+        if(action == 'start') {
             this.startX = x;
-            this.endY = y;
+            this.startY = y;
         }
-        if(action === 'end') {
+        if(action == 'end') {
             this.endX = x;
             this.endY = y;
             this.width = this.endX - this.startX;
             this.height = this.endY - this.startY;
         }
-        if(action === 'push') {
+        if(action == 'push') {
             this.posX.push(x);
             this.posY.push(y);
         }
@@ -44,5 +44,17 @@ export class Position {
             for (let posY of this.posY)
                 posY += y;
         }
+    }
+
+    public setBoxSize(tool) {
+        if(tool == 'pen') {
+            this.startX = Math.min.apply(null, this.posX);
+            this.endX = Math.max.apply(null, this.posX);
+            this.startY = Math.min.apply(null, this.posY);
+            this.endY = Math.max.apply(null, this.posY);
+        }
+
+        this.width = this.endX - this.startX;
+        this.height = this.endY - this.startY;
     }
 }
