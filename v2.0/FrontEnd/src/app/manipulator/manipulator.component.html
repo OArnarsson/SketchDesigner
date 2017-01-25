@@ -1,10 +1,22 @@
 <p>
-  manipulator works! This is the param: {{param}}<br>
-    Created:{{man.workspace.dateCreated}}<br>
-    Modified:{{man.workspace.dateModified}}
+  Title: {{man.workspace.title}}<br> 
+  Created:{{man.workspace.dateCreated}}<br> 
+  Modified:{{man.workspace.dateModified}}
 </p>
+
+<div #canvasContainer class="canvasCon">
+        <canvas *ngFor="let canvas of man.workspace.canvases"
+                [ngClass]="canvas.className"
+                width="{{canvas.width}}"
+                height="{{canvas.height}}">
+        </canvas>
+    </div>
+
 
 <button (click)="testLog()">Logger</button>
 
 <button (click)="testUpdate()">Update</button>
+
+<button (click)="addCanvas()">Add Canvas</button>
+
 

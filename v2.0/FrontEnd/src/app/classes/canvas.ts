@@ -1,4 +1,4 @@
-import {Drawing} from './drawing';
+import { Drawing } from './drawing';
 
 
 export class Canvas {
@@ -14,11 +14,9 @@ export class Canvas {
         this.className = 'mobile';
         this.height = 248.4;
         this.width = 441.6;
-        for (let prop in obj){
-            if(prop == 'drawings') {
-                for(let drawing of obj[prop]) {
-                    console.log(drawing);
-                    console.log("im here");
+        for (let prop in obj) {
+            if (prop == 'drawings') {
+                for (let drawing of obj[prop]) {
                     this.drawings.push(new Drawing(drawing));
                 }
             }

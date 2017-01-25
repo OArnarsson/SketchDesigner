@@ -1,4 +1,4 @@
-import {Canvas} from './canvas';
+import { Canvas } from './canvas';
 
 
 export class Workspace {
@@ -14,9 +14,9 @@ export class Workspace {
         this.dateModified = '';
         this.dateCreated = '';
 
-        for(let prop in obj) {
-            if(prop == 'canvases') {
-                for(let canvas of obj[prop]) {
+        for (let prop in obj) {
+            if (prop == 'canvases') {
+                for (let canvas of obj[prop]) {
                     this.canvases.push(new Canvas(canvas));
                 }
             }
