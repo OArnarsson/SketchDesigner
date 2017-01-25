@@ -43,7 +43,7 @@ router.route('/workspace')
                 res.status(500).send(err);
 
             res.json(workspace);
-        }).sort({ dateModified: 'desc' });
+        }).select('-canvases').sort({ dateModified: 'desc' });
     });
 
 
