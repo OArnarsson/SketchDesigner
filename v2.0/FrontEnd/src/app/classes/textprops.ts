@@ -4,6 +4,7 @@ export class Textprops {
     public allFonts: string[];
     public italic: boolean;
     public bold: boolean;
+    public value: string;
 
     public constructor() {
         this.fontSize = 30;
@@ -11,5 +12,6 @@ export class Textprops {
         this.font = this.allFonts[6];
         this.italic = false;
         this.bold = false;
+        this.value = '';
     }
 }

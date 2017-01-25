@@ -7,16 +7,26 @@
 <div #canvasContainer class="canvasCon">
         <canvas *ngFor="let canvas of man.workspace.canvases"
                 [ngClass]="canvas.className"
+                (click)="man.activateCanvas(canvas)"
+                (mousedown)="man.mouseDown($event)"
+                (mousemove)="man.mouseMove($event)"
+                (mouseup)="man.mouseUp()"
                 width="{{canvas.width}}"
                 height="{{canvas.height}}">
         </canvas>
     </div>
 
 
-<button (click)="testLog()">Logger</button>
+<button (click)="testClear()">Logger</button>
 
 <button (click)="testUpdate()">Update</button>
 
 <button (click)="addCanvas()">Add Canvas</button>
+
+<button (click)="setSquare()">Square</button>
+
+<button (click)="setCircle()">Circle</button>
+
+<button (click)="setLine()">Line</button>
 
 
