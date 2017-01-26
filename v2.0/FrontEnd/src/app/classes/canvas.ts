@@ -62,6 +62,16 @@ export class Canvas {
             }
         }
 
+        if (drawing.gui.tool == 'select') {
+            this.renderContext.globalAlpha = 0.35;
+            this.renderContext.strokeStyle = 'green';
+            this.renderContext.fillStyle = 'green';
+            this.renderContext.strokeRect(pos.startX, pos.startY, pos.width, pos.height);
+            this.renderContext.fillRect(pos.startX, pos.startY, pos.width, pos.height);
+            this.renderContext.globalAlpha = 1;
+
+        }
+
         if (drawing.gui.tool == 'circle') {
             this.renderContext.moveTo(pos.startX, pos.startY + (pos.endY - pos.startY) / 2);
             this.renderContext.bezierCurveTo(pos.startX, pos.startY, pos.endX, pos.startY, pos.endX, pos.startY + (pos.endY - pos.startY) / 2);

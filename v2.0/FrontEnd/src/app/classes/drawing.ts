@@ -5,18 +5,17 @@ import {Gui} from './gui';
 export class Drawing {
     public gui: Gui;
     public currPos: Position;
+    public selectionPos: Position;
 
     constructor (obj?) {
         this.gui = new Gui();
         this.currPos = new Position();
-
+        this.selectionPos = new Position();
         for (let prop in obj) {
-            if(prop == 'gui') {
+            if(prop == 'gui')
                 this[prop] = obj[prop];
-            }
-            if(prop == 'currPos') {
+            if(prop == 'currPos')
                 this[prop] = new Position(obj[prop]);
-            }
         }
     }
 }
