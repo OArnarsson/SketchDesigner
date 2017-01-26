@@ -141,6 +141,7 @@ export class Manipulator {
         else if (this.isMoving) {
             this.isMoving = false;
             this.activeCanvas.redrawCanvas();
+            this.activeCanvas.drawObject(this.selectionZone, true);
         }
 
         console.log(this.selectedDrawings);
@@ -183,7 +184,7 @@ export class Manipulator {
                 return true;
             }
         }
-        if ((sPos.startX >= dPos.startX && dPos.startX <= dPos.endX) || (sPos.endX >= dPos.startX && sPos.endX <= dPos.endX)) {
+        if ((sPos.startX >= dPos.startX && sPos.startX <= dPos.endX) || (sPos.endX >= dPos.startX && sPos.endX <= dPos.endX)) {
             if ((sPos.startY >= dPos.startY && sPos.startY <= dPos.endY) || (sPos.endY >= dPos.startY && sPos.endY <= dPos.endY)) {
                 return true;
             }
