@@ -40,12 +40,14 @@ export class Position {
     public movePos(tool, x, y) {
         this.startX += x;
         this.startY += y;
-        for (let posX of this.posX)
-            posX += x;
-            for (let posY of this.posY)
-                posY += y;
-            this.endX += x;
-            this.endY += y;
+        if(tool == 'pen') {
+            for (let pos of this.posX)
+                pos += x;
+            for (let pos of this.posY)
+                pos += y;
+        }
+        this.endX += x;
+        this.endY += y;
         
     }
 
