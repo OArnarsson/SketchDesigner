@@ -16,6 +16,7 @@ export class Manipulator {
     public moveY: number;
     public isDrawing: boolean;
     public isSelecting: boolean;
+    public isMoving: boolean;
 
     public constructor(workspace: Workspace) {
         this.workspace = new Workspace(workspace);
@@ -28,6 +29,7 @@ export class Manipulator {
         this.moveY = 0;
         this.isDrawing = false;
         this.isSelecting = false;
+        this.isMoving = false;
     }
 
     public mouseDown(e: any) {
@@ -42,7 +44,6 @@ export class Manipulator {
         if (this.gui.tool != 'select') {
             this.selectedDrawings = [];
             this.activeDrawing.gui = JSON.parse(JSON.stringify(this.gui));
-            console.log(startX, startY);
             this.activeDrawing.currPos = new Position(downPos);
             this.isDrawing = true;
             if (this.gui.tool == 'pen') {
@@ -52,7 +53,7 @@ export class Manipulator {
 
         else if (this.gui.tool == 'select') {
             if (this.selectedDrawings.length > 0 && this.inRange(downPos)) {
-                console.log('bingo nugget');
+                this.isMoving = true;
             }
             else {
                 this.selectedDrawings = [];
@@ -80,8 +81,25 @@ export class Manipulator {
             this.activeCanvas.redrawCanvas();
             this.activeCanvas.drawObject(this.selectionZone, true);
         }
-        else if (this.selectedDrawings.length > 0) {
-            //MOVE THE STUFF!
+        else if (this.isMoving) {
+            let xPos = [];
+            let yPos = [];
+            for (let drawing of this.selectedDrawings) {
+                drawing.currPos.movePos(drawing.gui.tool, startX - this.moveX, startY - this.moveY);
+                drawing.selectionPos.movePos(drawing.gui.tool, startX - this.moveX, startY - this.moveY);
+                xPos.push(drawing.selectionPos.startX);
+                xPos.push(drawing.selectionPos.endX);
+                yPos.push(drawing.selectionPos.startY);
+                yPos.push(drawing.selectionPos.endY);
+            }
+            this.selectionZone.selectionPos.setPos('start', Math.min.apply(null, xPos), Math.min.apply(null, yPos));
+            this.selectionZone.selectionPos.setPos('end', Math.max.apply(null, xPos), Math.max.apply(null, yPos));
+            this.selectionZone.currPos.setPos('start', Math.min.apply(null, xPos), Math.min.apply(null, yPos));
+            this.selectionZone.currPos.setPos('end', Math.max.apply(null, xPos), Math.max.apply(null, yPos));
+            this.activeCanvas.redrawCanvas();
+            this.activeCanvas.drawObject(this.selectionZone, true);
+            this.moveX = startX;
+            this.moveY = startY;
         }
     }
 
@@ -113,6 +131,9 @@ export class Manipulator {
             this.isSelecting = false;
             this.selectionZone.selectionPos.setPos('start', Math.min.apply(null, xPos), Math.min.apply(null, yPos));
             this.selectionZone.selectionPos.setPos('end', Math.max.apply(null, xPos), Math.max.apply(null, yPos));
+        }
+        else if (this.isMoving) {
+            this.isMoving = false;
         }
 
         console.log(this.selectedDrawings);
@@ -153,6 +174,11 @@ export class Manipulator {
 
         if ((dPos.startX >= sPos.startX && dPos.startX <= sPos.endX) || (dPos.endX >= sPos.startX && dPos.endX <= sPos.endX)) {
             if ((dPos.startY >= sPos.startY && dPos.startY <= sPos.endY) || (dPos.endY >= sPos.startY && dPos.endY <= sPos.endY)) {
+                return true;
+            }
+        }
+        if ((sPos.startX >= dPos.startX && dPos.startX <= dPos.endX) || (sPos.endX >= dPos.startX && sPos.endX <= dPos.endX)) {
+            if ((sPos.startY >= dPos.startY && sPos.startY <= dPos.endY) || (sPos.endY >= dPos.startY && sPos.endY <= dPos.endY)) {
                 return true;
             }
         }

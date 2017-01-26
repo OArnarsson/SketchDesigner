@@ -38,12 +38,15 @@ export class Position {
     }
 
     public movePos(tool, x, y) {
+        this.startX += x;
+        this.startY += y;
         for (let posX of this.posX)
             posX += x;
-        if(tool != 'square') {
             for (let posY of this.posY)
                 posY += y;
-        }
+            this.endX += x;
+            this.endY += y;
+        
     }
 
     public setBoxSize(tool) {
