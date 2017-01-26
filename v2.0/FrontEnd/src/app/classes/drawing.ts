@@ -14,7 +14,7 @@ export class Drawing {
         for (let prop in obj) {
             if(prop == 'gui')
                 this[prop] = obj[prop];
-            if(prop == 'currPos')
+            if(prop == 'currPos' || prop == 'selectionPos')
                 this[prop] = new Position(obj[prop]);
         }
     }
