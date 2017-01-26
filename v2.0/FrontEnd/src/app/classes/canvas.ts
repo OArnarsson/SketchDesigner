@@ -38,14 +38,8 @@ export class Canvas {
     }
 
     public drawObject(drawing: Drawing, isLive) {
-        //for(let prop in drawing.gui) this.renderContext[prop] = drawing.gui[prop];
-        this.renderContext.lineWidth = drawing.gui.lineWidth;
-        this.renderContext.lineCap = drawing.gui.lineCap;
-        this.renderContext.strokeStyle = drawing.gui.strokeStyle;
-        this.renderContext.fillStyle = drawing.gui.fillStyle;
-        this.renderContext.globalAlpha = drawing.gui.opacity / 100;
+        for (let prop in drawing.gui) this.renderContext[prop] = drawing.gui[prop];
         let pos = drawing.currPos;
-
 
         if (isLive) {
             this.renderContext.beginPath();

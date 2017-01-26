@@ -45,7 +45,7 @@ export class Manipulator {
 
             if (this.gui.tool == 'pen')
                 this.activeDrawing.currPos.setPos('push', startX, startY);
-            this.activeDrawing.currPos.setPos('end', startX, startY);           
+            this.activeDrawing.currPos.setPos('end', startX, startY);
             this.activeCanvas.redrawCanvas();
             this.activeCanvas.drawObject(this.activeDrawing, true);
         }
