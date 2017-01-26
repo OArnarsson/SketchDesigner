@@ -33,7 +33,7 @@ export class ManipulatorComponent implements OnInit {
                 canvas.redrawCanvas();
             }
         }, 300);
-        
+
         this.http.getWspace(this.param)
             .subscribe(
             wSpace => this.man = new Manipulator(wSpace),
@@ -75,6 +75,10 @@ export class ManipulatorComponent implements OnInit {
 
     public setLine() {
         this.man.gui.tool = 'line';
+    }
+
+    public removeCanvas() {
+        this.man.workspace.canvases.splice(this.man.workspace.canvases.indexOf(this.man.activeCanvas, 1));
     }
 
     public testUpdate() {

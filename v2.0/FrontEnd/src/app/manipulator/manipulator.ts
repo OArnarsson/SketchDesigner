@@ -12,7 +12,6 @@ export class Manipulator {
     public moveX: number;
     public moveY: number;
     public isDrawing: boolean;
-    public start: boolean;
 
     public constructor(workspace: Workspace) {
         this.workspace = new Workspace(workspace);
@@ -23,7 +22,6 @@ export class Manipulator {
         this.moveX = 0;
         this.moveY = 0;
         this.isDrawing = false;
-        this.start = true;
     }
 
     public mouseDown(e: any) {
