@@ -17,6 +17,7 @@ export class Manipulator {
     public isDrawing: boolean;
     public isSelecting: boolean;
     public isMoving: boolean;
+    public clipboard: Drawing[];
 
     public constructor(workspace: Workspace) {
         this.workspace = new Workspace(workspace);
@@ -30,6 +31,7 @@ export class Manipulator {
         this.isDrawing = false;
         this.isSelecting = false;
         this.isMoving = false;
+        this.clipboard = [];
     }
 
     public mouseDown(e: any) {
@@ -187,5 +189,23 @@ export class Manipulator {
             }
         }
         return false;
+    }
+
+    public copySelected() {
+        this.clipboard = [];
+        if (this.selectedDrawings.length > 0)
+            for (let i = 0; i < this.selectedDrawings.length; i += 1)
+                this.clipboard.push(new Drawing(this.selectedDrawings[i]));
+    }
+
+    public pasteSelected() {
+        let offset = 5;
+        if (this.clipboard.length > 0)
+            for (let i = 0; i < this.clipboard.length; i += 1) {
+                this.clipboard[i].currPos.movePos(this.clipboard[i].gui.tool, offset, -offset);
+                this.clipboard[i].selectionPos.movePos(this.clipboard[i].gui.tool, offset, -offset);
+                this.activeCanvas.drawings.push(new Drawing(this.clipboard[i]));
+            }
+        this.activeCanvas.redrawCanvas();
     }
 }
