@@ -10,7 +10,7 @@ const Rx = rootRequire('RxJS')
 const Workspace = require('../models/workspace');
 const utility = require('../utility/utility');
 let uri = 'mongodb://Onri:PeppTaco@ds149577.mlab.com:49577/sketchdesigner'
-mongoDB = mongoose.connect(uri);
+mongoose.connect(uri);
 
 
 router.use(function (req, res, next) {

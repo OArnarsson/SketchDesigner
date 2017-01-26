@@ -32,7 +32,7 @@ export class ManipulatorComponent implements OnInit {
             for (let canvas of this.man.workspace. canvases) {
                 canvas.redrawCanvas();
             }
-        }, 300);
+        }, 800);
 
         this.http.getWspace(this.param)
             .subscribe(
@@ -53,7 +53,6 @@ export class ManipulatorComponent implements OnInit {
             workspace.canvases[i].renderContext = child.getContext("2d");
             i++;
         }
-        console.log('bingo');
     }
 
     //Testing 
@@ -82,7 +81,8 @@ export class ManipulatorComponent implements OnInit {
     }
 
     public removeCanvas() {
-        this.man.workspace.canvases.splice(this.man.workspace.canvases.indexOf(this.man.activeCanvas, 1));
+        this.man.workspace.canvases.splice(this.man.workspace.canvases.indexOf(this.man.activeCanvas), 1);
+        this.man.activeCanvas = this.man.workspace.canvases[0];
     }
 
     public testUpdate() {
