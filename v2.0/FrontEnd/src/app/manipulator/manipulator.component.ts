@@ -88,6 +88,14 @@ export class ManipulatorComponent implements OnInit {
         this.man.gui.tool = 'select';
     }
 
+    public duplicateCanvas() {
+        //TODO!!
+    }
+
+    public undoRedo() {
+        //TODO!
+    }
+
     public removeCanvas() {
         this.man.workspace.canvases.splice(this.man.workspace.canvases.indexOf(this.man.activeCanvas), 1);
         this.man.activeCanvas = this.man.workspace.canvases[0];

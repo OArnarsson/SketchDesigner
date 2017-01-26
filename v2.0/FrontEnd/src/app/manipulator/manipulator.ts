@@ -199,6 +199,7 @@ export class Manipulator {
     }
 
     public pasteSelected() {
+        //TODO: MAKE PASTED ITEMS MOVING SO THAT THEY CAN BE MOVED AS A GROUP!
         let offset = 5;
         if (this.clipboard.length > 0)
             for (let i = 0; i < this.clipboard.length; i += 1) {
