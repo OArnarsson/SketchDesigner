@@ -109,7 +109,6 @@ export class Manipulator {
         if (this.isDrawing) {
             this.activeDrawing.currPos.setBoxSize(this.gui.tool);
             this.activeDrawing.selectionPos = new Position(this.getLower(this.activeDrawing.currPos));
-            console.log(this.activeDrawing.selectionPos);
             this.activeCanvas.drawings.push(this.activeDrawing);
             this.activeDrawing = new Drawing();
             this.isDrawing = false;
@@ -143,8 +142,6 @@ export class Manipulator {
             this.activeCanvas.redrawCanvas();
             this.activeCanvas.drawObject(this.selectionZone, true);
         }
-
-        console.log(this.selectedDrawings);
     }
 
     public activateCanvas(canvas: Canvas) {
