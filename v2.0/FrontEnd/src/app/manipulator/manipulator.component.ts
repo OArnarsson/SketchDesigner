@@ -73,6 +73,10 @@ export class ManipulatorComponent implements OnInit {
         this.man.gui.tool = 'circle';
     }
 
+    public setColor(color) {
+        this.man.gui.strokeStyle = color;
+    }
+
     public setLine() {
         this.man.gui.tool = 'line';
     }
@@ -92,12 +96,8 @@ export class ManipulatorComponent implements OnInit {
             data => this.man.workspace.dateModified = data.dateModified,
             error => this.errorMsg = <any>error);
     }
-    public testClear() {
-        for (let canvas of this.man.workspace.canvases) {
-            canvas.renderContext = '';
-            canvas.rawCanvasObj = '';
-        }
 
-        console.log(JSON.stringify(this.man.workspace));
+    public testClear() {
+        console.log(this.man.workspace);
     }
 }
