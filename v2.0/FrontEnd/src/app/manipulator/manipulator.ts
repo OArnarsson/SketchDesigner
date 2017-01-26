@@ -39,7 +39,9 @@ export class Manipulator {
         if (this.gui.tool != 'select') {
             this.selectedDrawings = [];
             this.activeDrawing.gui = JSON.parse(JSON.stringify(this.gui));
+            console.log(startX, startY);
             this.activeDrawing.currPos.setPos('start', startX, startY);
+            this.activeDrawing.currPos.setPos('end', startX, startY);
             this.isDrawing = true;
             if (this.gui.tool == 'pen') {
                 this.activeDrawing.currPos.setPos('push', startX, startY);
@@ -55,6 +57,8 @@ export class Manipulator {
             this.selectionZone = new Drawing();
             this.selectionZone.gui = JSON.parse(JSON.stringify(this.gui));
             this.selectionZone.currPos.setPos('start', startX, startY);
+            this.selectionZone.currPos.setPos('end', startX, startY);
+
             this.isSelecting = true;
             // }
         }
