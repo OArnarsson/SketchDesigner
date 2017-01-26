@@ -76,6 +76,10 @@ export class ManipulatorComponent implements OnInit {
         this.man.gui.strokeStyle = color;
     }
 
+    public setPen() {
+        this.man.gui.tool = 'pen';
+    }
+
     public setLine() {
         this.man.gui.tool = 'line';
     }
