@@ -32,7 +32,7 @@ router.route('/workspace')
 
         workspace.save((err) => {
             if (err)
-                res.status(500).send(err);
+                return res.status(500).send(err);
             res.json({ log: 'Workspace created!' });
         });
     })
@@ -40,7 +40,7 @@ router.route('/workspace')
     .get((req, res) => {
         Workspace.find((err, workspace) => {
             if (err)
-                res.status(500).send(err);
+                return res.status(500).send(err);
 
             res.json(workspace);
         }).select('-canvases').sort({ dateModified: 'desc' });
@@ -53,7 +53,7 @@ router.route('/workspace/:dateCreated')
         if (req.params.dateCreated != 'new')
             Workspace.findOne({ dateCreated: req.params.dateCreated }, (err, workspace) => {
                 if (err)
-                    res.status(500).send(err);
+                    return res.status(500).send(err);
 
                 res.json(workspace);
             });
@@ -65,7 +65,7 @@ router.route('/workspace/:dateCreated')
             workspace.dateModified = workspace.dateCreated;
             workspace.save((err) => {
                 if (err)
-                    res.status(500).send(err);
+                    return res.status(500).send(err);
                 res.json(workspace);
             });
         }
@@ -80,7 +80,7 @@ router.route('/workspace/:dateCreated')
             workspace.dateModified = utility.longDate();
             workspace.save((err) => {
                 if (err)
-                    res.status(500).send(err);
+                    return res.status(500).send(err);
                 res.json({ dateModified: workspace.dateModified });
             });
         });
@@ -89,7 +89,7 @@ router.route('/workspace/:dateCreated')
     .delete(function (req, res) {
         Workspace.findOneAndRemove({ dateCreated: req.params.dateCreated }, (err, workspace) => {
             if (err)
-                res.status(500).send(err);
+                return res.status(500).send(err);
             console.log(workspace);
 
             res.json({ message: 'Workspace deleted!' });
