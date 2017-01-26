@@ -113,6 +113,8 @@ export class Manipulator {
             this.activeCanvas.drawings.push(this.activeDrawing);
             this.activeDrawing = new Drawing();
             this.isDrawing = false;
+            this.activeCanvas.redrawCanvas();
+
         }
         else if (this.isSelecting) {
             let xPos = [];
@@ -129,15 +131,19 @@ export class Manipulator {
                 }
             }
             this.isSelecting = false;
+            this.selectionZone.currPos.setPos('start', Math.min.apply(null, xPos), Math.min.apply(null, yPos));
+            this.selectionZone.currPos.setPos('end', Math.max.apply(null, xPos), Math.max.apply(null, yPos));
             this.selectionZone.selectionPos.setPos('start', Math.min.apply(null, xPos), Math.min.apply(null, yPos));
             this.selectionZone.selectionPos.setPos('end', Math.max.apply(null, xPos), Math.max.apply(null, yPos));
+            this.activeCanvas.redrawCanvas();
+            this.activeCanvas.drawObject(this.selectionZone, true);
         }
         else if (this.isMoving) {
             this.isMoving = false;
+            this.activeCanvas.redrawCanvas();
         }
 
         console.log(this.selectedDrawings);
-        this.activeCanvas.redrawCanvas();
     }
 
     public activateCanvas(canvas: Canvas) {
