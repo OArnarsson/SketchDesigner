@@ -89,6 +89,13 @@ export class ManipulatorComponent implements OnInit {
         this.man.activeCanvas = this.man.workspace.canvases[0];
     }
 
+    public removeDrawing() {
+        if (this.man.selectedDrawings.length > 0)
+            for (let drawing of this.man.selectedDrawings)
+                this.man.activeCanvas.drawings.splice(this.man.activeCanvas.drawings.indexOf(drawing), 1);
+        this.man.activeCanvas.redrawCanvas();
+    }
+
     public testUpdate() {
         for (let canvas of this.man.workspace.canvases) {
             canvas.renderContext = '';
