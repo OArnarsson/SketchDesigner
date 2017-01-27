@@ -1,1 +1,19 @@
-<router-outlet></router-outlet>
+<div id="themeContainer" ngClass="theme-{{theme}}">
+        <div class="nav">
+        <i class="fa fa-bars" aria-hidden="true" (click)="toggleLeftSidebar()"></i>
+        <h1>Sketch Designer</h1>
+       <div class="themeCon" (click)="toggleDropDown()">
+           <h1>Theme</h1>
+           <h1>{{theme}}</h1>
+       </div>
+    </div>
+    <div class="themDropDown" [ngClass]="{dropHidden: hiddenDropDown}" (mouseleave)="hideSection('dropDown')">
+        <h2 (click)="setTheme('Light')">Light</h2>
+        <h2 (click)="setTheme('Dark')">Dark</h2>
+    </div>
+    <div class="leftNavSidebar" [ngClass]="{navHidden: hiddenSideBar}" (mouseleave)="hideSection('nav')">
+        <h2>Hello</h2>
+        <h2>Hello</h2>
+    </div>
+    <router-outlet ngClass="theme-{{theme}}"></router-outlet>
+</div>

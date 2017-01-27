@@ -40,11 +40,11 @@ export class ManipulatorComponent implements OnInit {
         this.refreshCanvasObject();
     };
 
-
     public refreshCanvasObject() {
         let workspace = this.man.workspace;
         let i = 0;
-        for (let child of this.canvasRef.nativeElement.children) {
+        for (let child of this.canvasRef.nativeElement.querySelectorAll('canvas')) {
+            console.log(child.nativeElement);
             workspace.canvases[i].rawCanvasObj = child;
             workspace.canvases[i].renderContext = child.getContext("2d");
             i++;
@@ -101,10 +101,7 @@ export class ManipulatorComponent implements OnInit {
         //TODO!
     }
 
-    public removeCanvas() {
-        this.man.workspace.canvases.splice(this.man.workspace.canvases.indexOf(this.man.activeCanvas), 1);
-        this.man.activeCanvas = this.man.workspace.canvases[0];
-    }
+
 
     public removeDrawing() {
         if (this.man.selectedDrawings.length > 0)

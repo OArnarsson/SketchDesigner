@@ -34,6 +34,15 @@ export class Manipulator {
         this.clipboard = [];
     }
 
+    public removeCanvas(canvas:Canvas) {
+        this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas), 1);
+        this.activeCanvas = this.workspace.canvases[0];
+    }
+
+
+    public setTool(tool){
+        this.gui.tool = tool;
+    }
     public mouseDown(e: any) {
         let startX = e.pageX - this.activeCanvas.rawCanvasObj.offsetLeft;
         let startY = e.pageY - this.activeCanvas.rawCanvasObj.offsetTop;
@@ -209,4 +218,5 @@ export class Manipulator {
             }
         this.activeCanvas.redrawCanvas();
     }
+
 }
