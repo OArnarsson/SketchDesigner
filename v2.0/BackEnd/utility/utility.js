@@ -48,8 +48,8 @@ let newspace = {
                 }
             ],
             "className": "mobile",
-            "height": 248.4,
-            "width": 441.6
+            "height": 441.6,
+            "width": 248.4
         }
     ],
     "title": "Untitled",
