@@ -8,6 +8,7 @@ export class Canvas {
     public className: string;
     public rawCanvasObj: any;
     public renderContext: any;
+    public label: string;
 
     constructor(obj?) {
         this.drawings = [];
