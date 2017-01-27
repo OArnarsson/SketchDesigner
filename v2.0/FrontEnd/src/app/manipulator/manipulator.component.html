@@ -8,14 +8,16 @@
     <i (click)="undoRedo('undo')" class="fa fa-undo" aria-hidden="true"></i><div>Undo (CTRL+ Z)</div>
     <i (click)="undoRedo('redo')" class="fa fa-repeat" aria-hidden="true"></i><div>Redo (CTRL+ Y)</div>
     <i (click)="removeDrawing()" class="fa fa-trash" aria-hidden="true"></i><div>Remove (Delete)</div>
+    <i (click)="testUpdate()" class="fa fa-floppy-o" aria-hidden="true"></i><div>Save</div>
     <i (click)="addCanvas()" class="fa fa-file" aria-hidden="true"></i><div>Artboard (A)</div>
+
 </div>
 
 <div #canvasContainer class="canvasCon">
-    <div class="singleCanvas" *ngFor="let canvas of man.workspace.canvases; let i=index" (mouseenter)="man.activateCanvas(canvas)">
+    <div class="singleCanvas" *ngFor="let canvas of man.workspace.canvases; let i=index" (click)="man.activateCanvas(canvas)">
         <div class="canvasHeader" [class.active]="man.activeCanvas==canvas">
             <input placeholder="Artboard - {{i+1}}" value="Artboard - {{i+1}}">
-
+            <i class="fa fa-files-o" aria-hidden="true" (click)="man.duplicateCanvas(canvas)"></i>
             <i class="fa fa-times" aria-hidden="true" (click)="man.removeCanvas(canvas)"></i>
         </div>
         <canvas
