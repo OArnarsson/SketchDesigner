@@ -28,11 +28,7 @@ export class ManipulatorComponent implements OnInit {
     }
 
     ngOnInit() {
-        setTimeout(() => {
-            for (let canvas of this.man.workspace. canvases) {
-                canvas.redrawCanvas();
-            }
-        }, 800);
+        this.renderCanvases();
 
         this.http.getWspace(this.param)
             .subscribe(
@@ -89,7 +85,16 @@ export class ManipulatorComponent implements OnInit {
     }
 
     public duplicateCanvas() {
-        //TODO!!
+        this.man.workspace.canvases.push(new Canvas(this.man.activeCanvas));
+        this.renderCanvases();
+    }
+
+    public renderCanvases() {
+        setTimeout(() => {
+            for (let canvas of this.man.workspace.canvases) {
+                canvas.redrawCanvas();
+            }
+        }, 350);
     }
 
     public undoRedo() {
@@ -105,6 +110,7 @@ export class ManipulatorComponent implements OnInit {
         if (this.man.selectedDrawings.length > 0)
             for (let drawing of this.man.selectedDrawings)
                 this.man.activeCanvas.drawings.splice(this.man.activeCanvas.drawings.indexOf(drawing), 1);
+        this.man.selectionZone = new Drawing();
         this.man.activeCanvas.redrawCanvas();
     }
 
