@@ -38,8 +38,9 @@ export class Manipulator {
         this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas), 1);
         this.activeCanvas = this.workspace.canvases[0];
     }
+
     public duplicateCanvas(canvas) {
-        this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas)+1, 0, new Canvas(this.activeCanvas));
+        this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas)+1, 0, new Canvas(canvas));
         this.renderCanvases();
     }
 
