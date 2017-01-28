@@ -1,3 +1,15 @@
+<div class="fakeNav">
+    <i class="fa fa-bars" aria-hidden="true" (click)="toggleLeftSidebar()"></i>
+    <h1> - </h1>
+    <input [(ngModel)]="man.workspace.title">
+</div>
+<div class="leftNavSidebar" [ngClass]="{navHidden: hiddenSideBar}" (mouseleave)="hideLeftSideBar()">
+    <div (click)="crudAction('Do you wish to save current workspace ?','new')"><h2>New</h2><h2>Ctrl+N</h2></div><!-- Need to Alert with Modal -->
+    <div (click)="crudAction('Save','save')"><h2>Save</h2><h2>Ctrl+S</h2></div><!-- Send a request -->
+    <div (click)="crudAction('Save As','saveAs')"><h2>Save</h2><h2>Shift+Ctrl+S</h2></div><!-- Send a request -->
+    <div (click)="crudAction('Are you sure you wish to delete current workspace?','delete')"><h2>Remove</h2><h2>Ctrl+Del</h2></div><!-- Send a request -->
+    <div (click)="crudAction('Do you wish to save before you leave?','exit')"><h2>Exit to Menu</h2><h2>Ctrl+Q</h2></div>
+</div>
 <div class="leftSidebar">
     <i (click)="man.setTool('select')" class="fa fa-paper-plane" [class.active]="man.gui.tool=='select'" aria-hidden="true"></i><div>Select (V)</div>
     <i (click)="man.setTool('pen')" class="fa fa-pencil" [class.active]="man.gui.tool=='pen'" aria-hidden="true"></i><div>Pen (P)</div>
@@ -10,7 +22,6 @@
     <i (click)="removeDrawing()" class="fa fa-trash" aria-hidden="true"></i><div>Remove (Delete)</div>
     <i (click)="testUpdate()" class="fa fa-floppy-o" aria-hidden="true"></i><div>Save</div>
     <i (click)="addCanvas()" class="fa fa-file" aria-hidden="true"></i><div>Artboard (A)</div>
-
 </div>
 
 <div #canvasContainer class="canvasCon">
@@ -34,6 +45,26 @@
 
 <div class="rightSidebar">
     <h1>Appearance</h1>
+</div>
+
+<div class="popUpModal" [ngClass]="{hiddenModal: hiddenModal}">
+    <div class="popContainer">
+        <div class="flexRow">
+            <h2>{{modalTitle}}</h2>
+            <i class="fa fa-times" aria-hidden="true" (click)="hideModal()"></i>
+        </div>
+        <div class="flexRow" *ngIf="restAction !='delete'">
+            <h2>Workspace Title: </h2>
+            <input [(ngModel)]="man.workspace.title">
+        </div>
+        <div class="flexRow">
+            <button class="defaultBtn" (click)="restSwitch(true)">{{modalBtnLeft}}</button> <button class="defaultBtn" (click)="hideModal('btn')">{{modalBtnRight}}</button>
+        </div>
+    </div>
+</div>
+
+<div #saveVis class="saveVisual">
+    <h2>{{man.workspace.title}} has been Saved!</h2>
 </div>
 
 

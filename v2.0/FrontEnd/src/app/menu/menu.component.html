@@ -1,9 +1,12 @@
 <div class="menuContainer">
     <div class="innerCon">
         <div class="singleWspace" [routerLink]="['/workspace', 'new']">
-           <div class="fr">
-           <h3>SketchDesigner</h3>
-           </div>
+            <div class="flexRow">
+                <h3>New Workspace</h3>
+                <div class="flexCol">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
+                </div>
+            </div>
        </div>
        <div class="singleWspace" *ngFor="let wspace of itemList" [routerLink]="['/workspace', wspace.dateCreated]">
            <div class="flexRow">

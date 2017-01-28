@@ -1,6 +1,6 @@
 <div id="themeContainer" ngClass="theme-{{theme}}">
         <div class="nav">
-        <i class="fa fa-bars" aria-hidden="true" (click)="toggleLeftSidebar()"></i>
+        <i class="fa fa-bars" aria-hidden="true"></i>
         <h1>Sketch Designer</h1>
        <div class="themeCon" (click)="toggleDropDown()">
            <h1>Theme | {{theme}}</h1>
@@ -9,13 +9,6 @@
     <div class="themDropDown" [ngClass]="{dropHidden: hiddenDropDown}" (mouseleave)="hideSection('dropDown')">
         <h2 (click)="setTheme('Light')">Light</h2>
         <h2 (click)="setTheme('Dark')">Dark</h2>
-    </div>
-    <div class="leftNavSidebar" [ngClass]="{navHidden: hiddenSideBar}" (mouseleave)="hideSection('nav')">
-        <div (click)="manipulator.logStuff()"><h2>New</h2><h2>Ctrl+N</h2></div><!-- Need to Alert with Modal -->
-        <div><h2>Save</h2><h2>Ctrl+S</h2></div><!-- Send a request -->
-        <div><h2>Save As</h2><h2>Shift+Ctrl+S</h2></div>
-        <div><h2>Exit to Menu</h2><h2>Ctrl+Q</h2></div>
-
     </div>
     <router-outlet ngClass="theme-{{theme}}"></router-outlet>
 </div>
