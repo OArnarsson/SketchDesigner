@@ -247,5 +247,30 @@ export class Manipulator {
             this.gui.hasBorder = !this.gui.hasBorder;
         }
     }
+    public setFont(font){
+        this.gui.textprops.font = font;
+    }
+    public toggleFontStyle(style){
+        if(style == 'bold'){
+            this.gui.textprops.bold = !this.gui.textprops.bold;
+        }
+        else {
+            this.gui.textprops.italic = !this.gui.textprops.italic;
+        }
+    }
+    public onDisplay(container){
+        if(container == 'fillCon' && this.gui.tool!='line' && this.gui.tool!='text'){
+            return true;
+        }
+
+        if(container == 'strokeCon' && this.gui.tool!='text'){
+            return true;
+        }
+
+        if(container == 'fontCon' && (this.gui.tool=='text' || this.gui.tool=='select')){
+            return true;
+        }
+        return false;
+    }
 
 }

@@ -27,6 +27,7 @@ export class ManipulatorComponent implements OnInit {
     @ViewChild('canvasContainer') canvasRef: ElementRef;
     @ViewChild('textInput') textInput: ElementRef;
     @ViewChild('saveVis') saveVis: ElementRef;
+    @ViewChild('textVis') textVis: ElementRef;
 
     constructor(private http: ManipulatorService, private rend: Renderer, private router: Router) {
         this.man = new Manipulator(new Workspace());
@@ -38,8 +39,8 @@ export class ManipulatorComponent implements OnInit {
         this.restAction = "";
 
 
-        this.rend.listenGlobal('document', 'change', (event) => {
-            console.log(event);
+        this.rend.listenGlobal('document', 'mousedown', (event) => {
+            this.displayVirtualInput(event);
         });
     }
 
@@ -113,7 +114,50 @@ export class ManipulatorComponent implements OnInit {
     }
 
     /* End Save Visual */
+    public displayVirtualInput(event: any) {
+        //console.log(this.textInput.nativeElement.style.display);
+        //first we check if user input is on the canvas
 
+        if (this.man.gui.tool == 'text' && this.VirtualInCanvas(this.man.activeCanvas.rawCanvasObj, event.pageX, event.pageY)) {
+            if (this.textInput.nativeElement.style.display != 'block') {
+                let left = event.pageX + "px";
+                let top = event.pageY + "px";
+                this.textInput.nativeElement.style.position = 'absolute';
+                this.textInput.nativeElement.style.top = top;
+                this.textInput.nativeElement.style.left = left;
+                this.textInput.nativeElement.style.display = 'block';
+                this.textInput.nativeElement.style.color = this.man.gui.strokeStyle;
+                this.textInput.nativeElement.style.font = this.man.gui.textprops.font;
+                //console.log(this.textInput.nativeElement.id);
+            }
+            //now we check if user is trying to click away from the input
+            else {
+                if (!this.VirtualInCanvas(this.textInput.nativeElement, event.pageX, event.pageY)) {
+                    this.hideVirtual();
+                }
+            }
+
+        }
+    }
+
+    public hideVirtual() {
+        if (this.textInput.nativeElement.value == "") {
+            this.textInput.nativeElement.value = "New Text";
+        }
+        //this.man.newText(this.textInput.nativeElement.value, this.textInput.nativeElement.offsetLeft, this.textInput.nativeElement.offsetTop);
+        this.textInput.nativeElement.value = "";
+        this.textInput.nativeElement.style.display = 'none';
+    }
+
+    public VirtualInCanvas(rawObject: HTMLElement, x, y) {
+        if (rawObject.offsetLeft <= x && x <=
+            (rawObject.offsetLeft + rawObject.offsetWidth) &&
+            rawObject.offsetTop <= y &&
+            y <= (rawObject.offsetTop + rawObject.offsetHeight)) {
+            return true;
+        }
+        return false;
+    }
 
     /*
         *END VIEW FUNCTIONS
