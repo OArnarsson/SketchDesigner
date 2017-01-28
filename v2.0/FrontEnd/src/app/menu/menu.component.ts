@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ManipulatorService } from '../manipulator/manipulator.service';
-import { Router } from '@angular/router';
-
 
 @Component({
     selector: 'app-menu',
@@ -11,7 +9,6 @@ import { Router } from '@angular/router';
 export class MenuComponent implements OnInit {
     public itemList: any[];
     public errorMsg: any;
-    public router: Router;
 
     constructor(private http: ManipulatorService) {
         this.itemList = [];
@@ -23,11 +20,6 @@ export class MenuComponent implements OnInit {
             wSpace => this.itemList = wSpace,
             error => this.errorMsg = <any>error);
     }
-
-    openWorkspace(date) {
-        this.router.navigateByUrl(`/${date}`);
-    }
-
 }
 
 

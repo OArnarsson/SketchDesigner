@@ -6,7 +6,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class DatePipe implements PipeTransform {
 
   transform(value: any, args?: any): any {
-    return null;
+      return value.slice(0, 10);
   }
 
 }

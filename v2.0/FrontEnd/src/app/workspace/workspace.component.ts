@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './workspace.component.html',
   styleUrls: ['./workspace.component.sass']
 })
-export class WorkspaceComponent implements OnInit {
+export class WorkspaceComponent implements OnInit  {
     private sub:any; // Need to take a look into this.
     private date:string;
 
@@ -15,7 +15,7 @@ export class WorkspaceComponent implements OnInit {
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
-            this.date = params['id'];
+            this.date = params['date'];
         });
     }
 

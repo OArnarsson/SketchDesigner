@@ -6,7 +6,7 @@ import { WorkspaceComponent } from './workspace/workspace.component';
 
 const appRoutes: Routes = [
     {path: '', component: MenuComponent},
-    {path: 'workspace/:id', component: WorkspaceComponent},
+    {path: 'workspace/:date', component: WorkspaceComponent},
     {path: '**', component: MenuComponent}
 ]
 

@@ -1,16 +1,18 @@
 <div class="menuContainer">
-  <div class="singleWspace" (click)="openWorkspace(workspace)">
-    <div class="fr">
-      <h3>SketchDesigner</h3>
+    <div class="innerCon">
+        <div class="singleWspace" [routerLink]="['/workspace', 'new']">
+           <div class="fr">
+           <h3>SketchDesigner</h3>
+           </div>
+       </div>
+       <div class="singleWspace" *ngFor="let wspace of itemList" [routerLink]="['/workspace', wspace.dateCreated]">
+           <div class="flexRow">
+               <h3>{{wspace.title}}</h3>
+               <div class="flexCol">
+                   <div class="tiny-label grayish">Created: {{wspace.dateCreated | date}}</div>
+                    <div class="tiny-label">Modified: {{wspace.dateModified | date}}</div>
+               </div>
+           </div>
+        </div>
     </div>
-  </div>
-  <div class="singleWspace" *ngFor="let wspace of itemList" [routerLink]="['/workspace', wspace.dateCreated]">
-    <div class="fr-sp">
-      <h3>{{wspace.title}}</h3>
-      <div class="fc-c">
-        <div class="tiny-label grayish">Created: {{wspace.dateCreated}}</div>
-        <div class="tiny-label">Modified: {{wspace.dateModified}}</div>
-      </div>
-    </div>
-  </div>
 </div>

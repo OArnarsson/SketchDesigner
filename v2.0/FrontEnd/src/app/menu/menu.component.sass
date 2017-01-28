@@ -1,20 +1,45 @@
 @import ../variables
 
 .menuContainer
-  display: flex
-  width: 100%
-  height: 90vh
-.menuContainer
+  min-height: 90vh
   padding: 2% 2%
-  flex-wrap: wrap
-  justify-content: flex-start
-  .singleWspace
+  overflow-y: scroll
+  &::-webkit-scrollbar
+    -webkit-box-shadow: inset 0 0 1px rgba(200, 200, 200, 0)
+    width: 15px
+  &::-webkit-scrollbar-thumb
+    background-color: $d-main
+    outline: 1px solid $d-main*0.8
+  .innerCon
     display: flex
-    flex-direction: column
-    justify-content: center
-    width: 17%
-    height: 150px
-    margin: 1% 0.5%
-    padding: 0% 3%
-    &:hover
-      cursor: pointer
+    flex-wrap: wrap
+    justify-content: flex-start
+    .singleWspace
+      display: flex
+      flex-direction: column
+      justify-content: center
+      width: 318px
+      height: 140px
+      margin: 0.3% 0.3%
+      padding: 0% 1%
+      &:hover
+        cursor: pointer
+      .flexRow
+        display: flex
+        justify-content: space-between
+        h3
+          width: 59%
+          display: flex
+          flex-direction: column
+          align-self: center
+        .flexCol
+          width: 40%
+          display: flex
+          flex-direction: column
+          div
+            display: flex
+            flex-direction: column
+            align-self: center
+            font-size: 12px
+            &:nth-of-type(1)
+              opacity: 0.6

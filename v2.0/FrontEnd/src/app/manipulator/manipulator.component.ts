@@ -15,7 +15,7 @@ import { Drawing } from '../classes/drawing';
 export class ManipulatorComponent implements OnInit {
     private man: Manipulator;
     private errorMsg: any;
-    @Input() param: string;
+    @Input() date: string;
     @ViewChild('canvasContainer') canvasRef: ElementRef;
     @ViewChild('textInput') textInput: ElementRef;
 
@@ -27,10 +27,11 @@ export class ManipulatorComponent implements OnInit {
         });
     }
 
+
     ngOnInit() {
         this.renderCanvases();
 
-        this.http.getWspace(this.param)
+        this.http.getWspace(this.date)
             .subscribe(
             wSpace => this.man = new Manipulator(wSpace),
             error => this.errorMsg = <any>error);

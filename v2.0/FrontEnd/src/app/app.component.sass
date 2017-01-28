@@ -23,11 +23,13 @@
     flex-grow: 2
   .themeCon
     display: flex
-    justify-content: space-around
+    justify-content: center
+    text-align: center
     padding: 0% $navPadding
     width: 225px
 
 .leftNavSidebar
+  z-index: 1
   position: fixed
   display: flex
   flex-direction: column
@@ -35,19 +37,21 @@
   width: $navLeftSidebarWidth
   left: 0
   opacity: 1
-  z-index: 1
-  transition: all ease 0.4s
-  h2
-    padding: $navPadding/2
-    font-size: 18px
-    width: auto
+  transition: all ease 0.3s
+  margin-left: 0
+  div
+    display: flex
+    justify-content: space-between
     &:hover
       cursor: pointer
+    h2
+      padding: $navPadding/2
+      font-size: 18px
+      width: auto
 .navHidden
-  width: 0px
-  opacity: 0
   z-index: 0
-  padding: 0
+  margin-left: -10%
+  opacity: 0
 
 .themDropDown
   position: absolute
@@ -58,7 +62,7 @@
   width: $navLeftSidebarWidth
   right: 0
   z-index: 2
-  transition: all ease 0.4s
+  transition: all ease 0.3s
   margin-top: 0
   h2
     padding: $navPadding/2
@@ -82,10 +86,9 @@
   .leftNavSidebar
     background-color: $d-main
     color: $d-main-font
-    h2
+    div
       &:hover
         background-color: $d-hoverCol
-
   .themDropDown
     background-color: $d-main
     color: $d-main-font

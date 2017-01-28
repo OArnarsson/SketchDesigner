@@ -3,8 +3,7 @@
         <i class="fa fa-bars" aria-hidden="true" (click)="toggleLeftSidebar()"></i>
         <h1>Sketch Designer</h1>
        <div class="themeCon" (click)="toggleDropDown()">
-           <h1>Theme</h1>
-           <h1>{{theme}}</h1>
+           <h1>Theme | {{theme}}</h1>
        </div>
     </div>
     <div class="themDropDown" [ngClass]="{dropHidden: hiddenDropDown}" (mouseleave)="hideSection('dropDown')">
@@ -12,8 +11,11 @@
         <h2 (click)="setTheme('Dark')">Dark</h2>
     </div>
     <div class="leftNavSidebar" [ngClass]="{navHidden: hiddenSideBar}" (mouseleave)="hideSection('nav')">
-        <h2>Hello</h2>
-        <h2>Hello</h2>
+        <div (click)="manipulator.logStuff()"><h2>New</h2><h2>Ctrl+N</h2></div><!-- Need to Alert with Modal -->
+        <div><h2>Save</h2><h2>Ctrl+S</h2></div><!-- Send a request -->
+        <div><h2>Save As</h2><h2>Shift+Ctrl+S</h2></div>
+        <div><h2>Exit to Menu</h2><h2>Ctrl+Q</h2></div>
+
     </div>
     <router-outlet ngClass="theme-{{theme}}"></router-outlet>
 </div>

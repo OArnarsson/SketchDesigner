@@ -15,6 +15,7 @@ export class AppComponent {
         this.hiddenDropDown = true;
         this.theme = 'Dark';
     }
+
     toggleLeftSidebar(){
 
         this.hiddenSideBar = !this.hiddenSideBar;
