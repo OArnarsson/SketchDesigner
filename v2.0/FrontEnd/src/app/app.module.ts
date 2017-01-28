@@ -9,6 +9,7 @@ import { WorkspaceComponent } from './workspace/workspace.component';
 import { DatePipe } from './pipes/date.pipe';
 import { ManipulatorComponent } from './manipulator/manipulator.component';
 import {ManipulatorService} from "./manipulator/manipulator.service";
+import { ColorPickerModule } from 'angular2-color-picker';
 
 import 'rxjs/add/observable/throw';
 // Operators
@@ -21,21 +22,22 @@ import 'rxjs/add/operator/toPromise';
 
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MenuComponent,
-    WorkspaceComponent,
-    DatePipe,
-    ManipulatorComponent,
+    declarations: [
+      AppComponent,
+      MenuComponent,
+      WorkspaceComponent,
+      DatePipe,
+      ManipulatorComponent,
 
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    AppRoutingModule
-  ],
-  providers: [ManipulatorService],
-  bootstrap: [AppComponent]
+    ],
+    imports: [
+      BrowserModule,
+      FormsModule,
+      HttpModule,
+      AppRoutingModule,
+      ColorPickerModule
+    ],
+    providers: [ManipulatorService],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

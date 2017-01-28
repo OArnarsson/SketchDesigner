@@ -12,3 +12,80 @@ body
     margin: 0
     padding: 0
 
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button
+  -webkit-appearance: none
+input[type="number"]
+  -moz-appearance: textfield
+
+input[type=range]
+  -webkit-appearance: none
+  margin: 10px 0
+  width: 100%
+  &:focus
+    outline: none
+  &::-webkit-slider-runnable-track
+    box-shadow: 0px 0px 0px #000000
+    background: #666666
+    border: 0px solid #000000
+    border-radius: 1px
+    width: 100%
+    height: 2px
+    cursor: pointer
+    animate: 0.2s
+    &:focus
+      background: #666666
+  &::-webkit-slider-thumb
+    box-shadow: 0px 0px 0px #000000
+    background: #FFFFFF
+    border: 2px solid #666666
+    border-radius: 15px
+    width: 17px
+    height: 17px
+    cursor: pointer
+    -webkit-appearance: none
+    margin-top: -8.5px
+  &::-moz-range-track
+    box-shadow: 0px 0px 0px #000000
+    background: #666666
+    border: 0px solid #000000
+    border-radius: 1px
+    height: 2px
+    width: 100%
+    cursor: pointer
+    animate: 0.2s
+  &::-moz-range-thumb
+    box-shadow: 0px 0px 0px #000000
+    background: #FFFFFF
+    border: 2px solid #666666
+    border-radius: 15px
+    width: 17px
+    height: 17px
+    cursor: pointer
+  &::-ms-track
+    width: 100%
+    height: 2px
+    cursor: pointer
+    animate: 0.2s
+    background: transparent
+    border-color: transparent
+    color: transparent
+  &::-ms-fill-lower
+    box-shadow: 0px 0px 0px #000000
+    background: #666666
+    border: 0px solid #000000
+    border-radius: 2px
+  &::-ms-fill-upper
+    box-shadow: 0px 0px 0px #000000
+    background: #666666
+    border: 0px solid #000000
+    border-radius: 2px
+  &::-ms-thumb
+    box-shadow: 0px 0px 0px #000000
+    background: #FFFFFF
+    border: 2px solid #666666
+    border-radius: 15px
+    height: 17px
+    width: 17px
+    cursor: pointer
+  &:focus::-ms-fill-lower, :focus::-ms-fill-upper
+    background: #666666

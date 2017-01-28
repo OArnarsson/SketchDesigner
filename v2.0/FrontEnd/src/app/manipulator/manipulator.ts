@@ -232,4 +232,20 @@ export class Manipulator {
         this.activeCanvas.redrawCanvas();
     }
 
+    //Utilities for View
+    public getIconClass(fill){
+        if(fill){
+            return "fa fa-check-square-o";
+        }
+        return  "fa fa-square-o";
+    }
+    public toggleHasCol(style){
+        if(style == 'fill'){
+            this.gui.hasFill = !this.gui.hasFill;
+        }
+        else{
+            this.gui.hasBorder = !this.gui.hasBorder;
+        }
+    }
+
 }

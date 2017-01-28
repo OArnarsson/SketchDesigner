@@ -39,7 +39,12 @@ export class Canvas {
     }
 
     public drawObject(drawing: Drawing, isLive) {
-        for (let prop in drawing.gui) this.renderContext[prop] = drawing.gui[prop];
+        for (let prop in drawing.gui) {
+            this.renderContext[prop] = drawing.gui[prop];
+            if(prop == 'globalAlpha')
+                this.renderContext[prop] = drawing.gui[prop]/100;
+        }
+
         let pos = drawing.currPos;
 
         if (isLive) {

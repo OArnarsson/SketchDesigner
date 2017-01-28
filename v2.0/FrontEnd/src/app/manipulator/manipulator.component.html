@@ -43,9 +43,33 @@
 </div>
 
 <div class="rightSidebar">
-    <h1>Appearance</h1>
+    <h4>Appearance</h4>
+    <div class="opacityCon">
+        <h5 class="label">Opacity</h5>
+        <div class="innerCon">
+            <input type="range" [(ngModel)]="man.gui.globalAlpha">
+            <h5 class="label" >{{man.gui.globalAlpha}}%</h5>
+        </div>
+    </div>
+    <div class="colorCon">
+        <i (click)="man.toggleHasCol('fill')" [ngClass]="man.getIconClass(man.gui.hasFill)" aria-hidden="true"></i>
+        <input class="colorBox" [(colorPicker)]="man.gui.fillStyle"
+               [style.background]="man.gui.fillStyle"
+               [cpPosition]="'left'"/>
+        <h5>Fill</h5>
+    </div>
+    <div class="colorCon">
+        <i (click)="man.toggleHasCol('stroke')" [ngClass]="man.getIconClass(man.gui.hasBorder)" aria-hidden="true"></i>
+        <input class="colorBox" [(colorPicker)]="man.gui.strokeStyle"
+               [style.background]="man.gui.strokeStyle"
+               [cpPosition]="'left'"/>
+        <h5 class="smaller">Border</h5>
+        <input class="borderSize" type="number" min="1" max="100" [(ngModel)]="man.gui.lineWidth">
+    </div>
 </div>
 
+
+<!--  Utilities  -->
 <div class="popUpModal" [ngClass]="{hiddenModal: hiddenModal}">
     <div class="popContainer">
         <div class="flexRow">
@@ -61,7 +85,6 @@
         </div>
     </div>
 </div>
-
 <div #saveVis class="saveVisual">
     <h2>{{man.workspace.title}} has been saved!</h2>
 </div>

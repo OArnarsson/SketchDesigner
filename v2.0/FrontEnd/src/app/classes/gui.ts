@@ -9,7 +9,7 @@ export class Gui {
     public lineJoin: string;
     public tool: string;
     public textprops: Textprops;
-    public opacity: number;
+    public globalAlpha: number;
     public hasFill: boolean;
     public hasBorder: boolean;
 
@@ -19,7 +19,7 @@ export class Gui {
         this.lineJoin = "round";
         this.lineWidth = 5;
         this.tool = 'pen';
-        this.opacity = 100;
+        this.globalAlpha = 100;
         this.hasFill = false;
         this.hasBorder = true;
         this.fillStyle = "#FFFFFF";
