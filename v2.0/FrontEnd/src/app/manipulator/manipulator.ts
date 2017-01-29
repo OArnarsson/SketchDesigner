@@ -81,7 +81,7 @@ export class Manipulator {
         this.moveX = startX;
         this.moveY = startY;
 
-        if (this.gui.tool != 'select') {
+        if (this.gui.tool != 'select' && this.gui.tool != 'text') {
             this.selectedDrawings = [];
             this.activeDrawing.gui = JSON.parse(JSON.stringify(this.gui));
             this.activeDrawing.currPos = new Position(downPos);
@@ -299,16 +299,19 @@ export class Manipulator {
     public newText(value, xPos, yPos) {
         let textDrawing = new Drawing();
         textDrawing.gui = JSON.parse(JSON.stringify(this.gui));
-        textDrawing.gui.textprops.value = value;
-        //In order to use measureText from renderContext, we have to render into the canvas the font size.
-        this.activeCanvas.renderContext.font = this.gui.textprops.fontSize + "px " + " " + this.gui.textprops.font;
-        let downPos = new Position();
-        downPos.setPos('start', xPos - this.activeCanvas.rawCanvasObj.offsetLeft, yPos - this.activeCanvas.rawCanvasObj.offsetTop);
-        downPos.setPos('end', (xPos - this.activeCanvas.rawCanvasObj.offsetLeft)+this.activeCanvas.renderContext.measureText(value).width, (yPos - this.activeCanvas.rawCanvasObj.offsetTop)+50);
-        textDrawing.currPos = new Position(downPos);
-        textDrawing.selectionPos = new Position(downPos);
-        this.activeCanvas.drawings.push(textDrawing);
-        this.activeCanvas.redrawCanvas();
+        console.log(value.length);
+        if(value.length >0) {
+            textDrawing.gui.textprops.value = value;
+            //In order to use measureText from renderContext, we have to render into the canvas the font size.
+            this.activeCanvas.renderContext.font = this.gui.textprops.fontSize + "px " + " " + this.gui.textprops.font;
+            let downPos = new Position();
+            downPos.setPos('start', xPos - this.activeCanvas.rawCanvasObj.offsetLeft, yPos - this.activeCanvas.rawCanvasObj.offsetTop);
+            downPos.setPos('end', (xPos - this.activeCanvas.rawCanvasObj.offsetLeft) + this.activeCanvas.renderContext.measureText(value).width, (yPos - this.activeCanvas.rawCanvasObj.offsetTop) + 50);
+            textDrawing.currPos = new Position(downPos);
+            textDrawing.selectionPos = new Position(downPos);
+            this.activeCanvas.drawings.push(textDrawing);
+            this.activeCanvas.redrawCanvas();
+        }
     }
 
 }

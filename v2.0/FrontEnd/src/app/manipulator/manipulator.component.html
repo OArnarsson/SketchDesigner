@@ -67,7 +67,7 @@
         <input class="borderSize" type="number" min="1" max="100" [(ngModel)]="man.gui.lineWidth">
     </div>
 
-    <div class="fontCon" *ngIf="man.onDisplay('fontCon')">
+    <div class="fontCon" *ngIf="man.onDisplay('fontCon')" (change)="styleInput()">
         <h5>Text</h5>
         <div class="innerCon">
             <select [ngModel]="man.gui.textprops.font" (change)="man.setFont($event.target.value)">

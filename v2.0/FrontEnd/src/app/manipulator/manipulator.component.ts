@@ -40,8 +40,12 @@ export class ManipulatorComponent implements OnInit {
 
 
         this.rend.listenGlobal('document', 'mousedown', (event) => {
-            if (this.man.gui.tool == 'text' && this.man.workspace.canvases.length > 0)
+            if (this.man.gui.tool == 'text' && this.man.workspace.canvases.length > 0){
                 this.displayVirtualInput(event);
+            }
+            else{
+                this.hideVirtual();
+            }
         });
     }
 
@@ -88,6 +92,7 @@ export class ManipulatorComponent implements OnInit {
     public toggleLeftSidebar(){
         this.hiddenSideBar = !this.hiddenSideBar;
     }
+
     public hideLeftSideBar(){
         this.hiddenSideBar = true;
     }
@@ -121,6 +126,27 @@ export class ManipulatorComponent implements OnInit {
     /* End Save Visual */
 
     /* Visual TextBox*/
+    public styleInput(){
+        this.textInput.nativeElement.style.color = this.man.gui.strokeStyle;
+        this.textInput.nativeElement.style.font = this.man.gui.textprops.font;
+        this.textInput.nativeElement.style.fontSize = this.man.gui.textprops.fontSize + "px";
+        this.textInput.nativeElement.style.fontFamily = this.man.gui.textprops.font;
+        if(this.man.gui.textprops.bold){
+            this.textInput.nativeElement.style.fontWeight = '800';
+        }
+        else {
+            this.textInput.nativeElement.style.fontWeight = '300';
+        }
+        if(this.man.gui.textprops.italic){
+            this.textInput.nativeElement.style.fontStyle = 'italic';
+        }
+        else{
+            this.textInput.nativeElement.style.fontStyle = 'normal';
+        }
+
+
+    }
+
     public displayVirtualInput(event: any) {
         //first we check if user input is on the canvas
         if (this.man.gui.tool == 'text' && this.VirtualInCanvas(this.man.activeCanvas.rawCanvasObj, event.pageX, event.pageY)) {
@@ -131,8 +157,8 @@ export class ManipulatorComponent implements OnInit {
                 this.textInput.nativeElement.style.top = top;
                 this.textInput.nativeElement.style.left = left;
                 this.textInput.nativeElement.style.display = 'block';
-                this.textInput.nativeElement.style.color = this.man.gui.strokeStyle;
-                this.textInput.nativeElement.style.font = this.man.gui.textprops.font;
+
+                this.textInput.nativeElement.focus();
             }
             //now we check if user is trying to click away from the input
             else {
@@ -143,10 +169,9 @@ export class ManipulatorComponent implements OnInit {
 
         }
     }
+
     public hideVirtual() {
-        if (this.textInput.nativeElement.value == "") {
-            this.textInput.nativeElement.value = "New Text";
-        }
+        this.textInput.nativeElement.focus();
         this.man.newText(this.textInput.nativeElement.value, this.textInput.nativeElement.offsetLeft, this.textInput.nativeElement.offsetTop);
         this.textInput.nativeElement.value = "";
         this.textInput.nativeElement.style.display = 'none';
@@ -217,6 +242,7 @@ export class ManipulatorComponent implements OnInit {
         }
         this.hideModal();
     }
+
     public saveWorkspace(){
         for (let canvas of this.man.workspace.canvases) {
             canvas.renderContext = '';
