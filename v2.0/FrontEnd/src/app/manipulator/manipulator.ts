@@ -70,6 +70,21 @@ export class Manipulator {
 
     public setTool(tool) {
         this.gui.tool = tool;
+        this.setCursor();
+    }
+
+    public setCursor() {
+        let style = '';
+        if (this.gui.tool == 'square' || this.gui.tool == 'circle' || this.gui.tool == 'line')
+            style = 'crosshair';
+        else if (this.gui.tool == 'text')
+            style = 'text';
+        else if (this.gui.tool == 'select')
+            style = 'pointer';
+        else if (this.gui.tool == 'pen')
+            style == 'default'
+        for(let i = 0; i < this.workspace.canvases.length; i += 1)
+            this.workspace.canvases[i].rawCanvasObj.style.cursor = style;
     }
 
     public mouseDown(e: any) {
@@ -192,6 +207,7 @@ export class Manipulator {
             this.selectedDrawings = [];
             this.activeCanvas.redrawCanvas();
             this.activeCanvas = canvas;
+            this.setCursor();
         }
     }
 
