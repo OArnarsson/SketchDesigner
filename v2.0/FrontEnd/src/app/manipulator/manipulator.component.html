@@ -19,12 +19,14 @@
     <i (click)="man.setTool('text')" class="fa fa-font" [class.active]="man.gui.tool=='text'" aria-hidden="true"></i><div>Text (T)</div>
     <i (click)="undoRedo('undo')" class="fa fa-undo" aria-hidden="true"></i><div>Undo (CTRL+ Z)</div>
     <i (click)="undoRedo('redo')" class="fa fa-repeat" aria-hidden="true"></i><div>Redo (CTRL+ Y)</div>
+    <i (click)="man.copySelected()" class="fa fa-plus-square-o" aria-hidden="true"></i><div>Copy (CTRL + C)</div>
+    <i (click)="man.pasteSelected()" class="fa fa-plus-square" aria-hidden="true"></i><div>Paste (CTRL + P)</div>
     <i (click)="man.removeDrawing()" class="fa fa-trash" aria-hidden="true"></i><div>Remove (Delete)</div>
     <i (click)="man.addCanvas()" class="fa fa-file" aria-hidden="true"></i><div>Artboard (A)</div>
 </div>
 
 <div #canvasContainer class="canvasCon">
-    <div class="singleCanvas" *ngFor="let canvas of man.workspace.canvases; let i=index" (mouseenter)="man.activateCanvas(canvas)" >
+    <div class="singleCanvas" *ngFor="let canvas of man.workspace.canvases; let i=index" (mouseenter)="man.activateCanvas(canvas)" (dblclick)="man.activateCanvas(canvas)">
         <div class="canvasHeader" [class.active]="man.activeCanvas==canvas">
             <input placeholder="Artboard - {{i+1}}" value="{{canvas.label}}" [(ngModel)]="canvas.label">
             <i class="fa fa-files-o" aria-hidden="true" (click)="man.duplicateCanvas(canvas)"></i>
