@@ -1,5 +1,5 @@
 global.rootRequire = (name) => {
-    return require('../../node_modules' + '/' + name);
+    return require('../node_modules' + '/' + name);
 }
 
 const express = rootRequire('express');
