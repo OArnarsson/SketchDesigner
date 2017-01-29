@@ -187,6 +187,9 @@ export class Manipulator {
     }
 
     public activateCanvas(canvas: Canvas) {
+        this.selectionZone = new Drawing();
+        this.selectedDrawings = [];
+        this.activeCanvas.redrawCanvas();
         this.activeCanvas = canvas;
     }
 
