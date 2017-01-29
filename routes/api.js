@@ -14,12 +14,24 @@ mongoose.connect(uri);
 
 router.use(function (req, res, next) {
     console.log(utility.shortDate(req));
+    app.use(forceSSL());
     next();
 });
 
 router.get('/', (req, res) => {
     res.send('API is live!');
 });
+
+const forceSSL = function() {
+  return function (req, res, next) {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+      return res.redirect(
+       ['https://', req.get('Host'), req.url].join('')
+      );
+    }
+    next();
+  }
+}
 
 
 // Designs routes
