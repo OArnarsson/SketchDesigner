@@ -305,8 +305,8 @@ export class Manipulator {
         let downPos = new Position();
         downPos.setPos('start', xPos - this.activeCanvas.rawCanvasObj.offsetLeft, yPos - this.activeCanvas.rawCanvasObj.offsetTop);
         downPos.setPos('end', (xPos - this.activeCanvas.rawCanvasObj.offsetLeft)+this.activeCanvas.renderContext.measureText(value).width, (yPos - this.activeCanvas.rawCanvasObj.offsetTop)+50);
-        textDrawing.currPos = downPos;
-        textDrawing.selectionPos = downPos;
+        textDrawing.currPos = new Position(downPos);
+        textDrawing.selectionPos = new Position(downPos);
         this.activeCanvas.drawings.push(textDrawing);
         this.activeCanvas.redrawCanvas();
     }
