@@ -7,11 +7,11 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class ManipulatorService {
 
-    private baseUrl = 'http://localhost:3000/api/workspace/';
+    private baseUrl = '/api/workspace/';
     constructor(private http: Http) { }
 
     getAllwSpaces() {
-        return this.http.get('http://localhost:3000/api/workspace')
+        return this.http.get(this.baseUrl)
             .map(res => res.json());
     }
 
