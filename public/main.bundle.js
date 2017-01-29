@@ -46224,10 +46224,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var ManipulatorService = (function () {
     function ManipulatorService(http) {
         this.http = http;
-        this.baseUrl = 'http://localhost:3000/api/workspace/';
+        this.baseUrl = '/api/workspace/';
     }
     ManipulatorService.prototype.getAllwSpaces = function () {
-        return this.http.get('http://localhost:3000/api/workspace')
+        return this.http.get(this.baseUrl)
             .map(function (res) { return res.json(); });
     };
     ManipulatorService.prototype.getWspace = function (dateTime) {
