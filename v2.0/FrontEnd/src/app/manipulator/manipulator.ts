@@ -44,7 +44,7 @@ export class Manipulator {
         this.manageHistory('KILL CANVAS');
     }
 
-    public removeDrawing(drawing: Drawing) {
+    public removeDrawing() {
         if (this.selectedDrawings.length > 0) {
             for(let drawing of this.selectedDrawings)
                 this.activeCanvas.drawings.splice(this.activeCanvas.drawings.indexOf(drawing), 1);
@@ -187,6 +187,9 @@ export class Manipulator {
     }
 
     public activateCanvas(canvas: Canvas) {
+        this.selectionZone = new Drawing();
+        this.selectedDrawings = [];
+        this.activeCanvas.redrawCanvas();
         this.activeCanvas = canvas;
     }
 

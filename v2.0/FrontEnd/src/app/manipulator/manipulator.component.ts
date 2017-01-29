@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, Renderer } from '@angular/core';
-import { Router} from '@angular/router'
+import { Router } from '@angular/router'
 import { Manipulator } from './manipulator';
 import { ManipulatorService } from './manipulator.service'
 import { Workspace } from '../classes/workspace';
@@ -16,12 +16,12 @@ import { Drawing } from '../classes/drawing';
 export class ManipulatorComponent implements OnInit {
     private man: Manipulator;
     private errorMsg: any;
-    public hiddenSideBar:boolean; //Used for displaying Sidebar
-    public hiddenModal:boolean; //Used for displaying Modal
-    public modalTitle:string;
-    public restAction:string;
-    public modalBtnLeft:string;
-    public modalBtnRight:string;
+    public hiddenSideBar: boolean; //Used for displaying Sidebar
+    public hiddenModal: boolean; //Used for displaying Modal
+    public modalTitle: string;
+    public restAction: string;
+    public modalBtnLeft: string;
+    public modalBtnRight: string;
 
     @Input() date: string;
     @ViewChild('canvasContainer') canvasRef: ElementRef;
@@ -38,6 +38,10 @@ export class ManipulatorComponent implements OnInit {
         this.modalTitle = "";
         this.restAction = "";
 
+        //This is used for keyShortcuts
+        this.rend.listenGlobal('document', 'keydown', (event) => {
+            this.keyboardShortcuts(event);
+        });
 
         this.rend.listenGlobal('document', 'mousedown', (event) => {
             if (this.man.gui.tool == 'text' && this.man.workspace.canvases.length > 0){
@@ -55,10 +59,10 @@ export class ManipulatorComponent implements OnInit {
         this.http.getWspace(this.date)
             .subscribe(
             wSpace => this.man = new Manipulator(wSpace),
-            error => { 
-                if(error) {
+            error => {
+                if (error) {
                     this.router.navigate(['/']);
-            }
+                }
             });
     }
 
@@ -89,24 +93,24 @@ export class ManipulatorComponent implements OnInit {
     */
 
     /* SideBar */
-    public toggleLeftSidebar(){
+    public toggleLeftSidebar() {
         this.hiddenSideBar = !this.hiddenSideBar;
     }
 
-    public hideLeftSideBar(){
+    public hideLeftSideBar() {
         this.hiddenSideBar = true;
     }
     /* End SideBar */
 
     /* Modal */
-    public displayModal(){
+    public displayModal() {
         this.hiddenModal = false;
     }
-    public hideModal(any?){
-        if(this.restAction == 'new' && any == 'btn'){
+    public hideModal(any?) {
+        if (this.restAction == 'new' && any == 'btn') {
             this.restSwitch(false);
         }
-        if(this.restAction == 'exit' && any == 'btn'){
+        if (this.restAction == 'exit' && any == 'btn') {
             this.router.navigate(['/']);
         }
 
@@ -115,10 +119,10 @@ export class ManipulatorComponent implements OnInit {
     /* End Modal */
 
     /* Save Visual */
-    public showSaveVis(){
+    public showSaveVis() {
         this.saveVis.nativeElement.style.marginTop = '15%';
         let that = this;
-        setTimeout(function(){
+        setTimeout(function () {
             that.saveVis.nativeElement.style.marginTop = '-10%';
         }, 2000);
     }
@@ -196,20 +200,19 @@ export class ManipulatorComponent implements OnInit {
     /*
         *CRUD REST FUNCTIONS
      */
-    public crudAction(modalTitle,action){
+    public crudAction(modalTitle, action) {
         this.hideLeftSideBar();
         this.modalTitle = modalTitle;
         this.restAction = action;
-        if(action == 'save'){
-            this.showSaveVis();
+        if (action == 'save') {
             this.saveWorkspace();
             return;
         }
-        if(action != 'saveAs'){
+        if (action != 'saveAs') {
             this.modalBtnLeft = 'Yes';
             this.modalBtnRight = 'No';
         }
-        else{
+        else {
             this.modalBtnLeft = "Save";
             this.modalBtnRight = "Cancel";
         }
@@ -218,10 +221,10 @@ export class ManipulatorComponent implements OnInit {
 
     }
 
-    public restSwitch(any?){
-        switch(this.restAction){
+    public restSwitch(any?) {
+        switch (this.restAction) {
             case 'new':
-                if(any){
+                if (any) {
                     this.saveWorkspace();
                 }
                 this.getNewWorkspace();
@@ -251,26 +254,28 @@ export class ManipulatorComponent implements OnInit {
 
         this.http.updateWspace(this.man.workspace)
             .subscribe(
-                data => this.man.workspace.dateModified = data.dateModified,
-                error => this.errorMsg = <any>error);
+            data => this.man.workspace.dateModified = data.dateModified,
+            error => this.errorMsg = <any>error);
+
+        this.showSaveVis();
     }
 
-    public deleteWorkspace(){
+    public deleteWorkspace() {
         for (let canvas of this.man.workspace.canvases) {
             canvas.renderContext = '';
             canvas.rawCanvasObj = '';
         }
         this.http.deleteWspace(this.man.workspace)
             .subscribe(
-                data => this.man.workspace.dateModified = data.dateModified,
-                error => this.errorMsg = <any>error);
+            data => this.man.workspace.dateModified = data.dateModified,
+            error => this.errorMsg = <any>error);
     }
 
-    public getNewWorkspace(){
+    public getNewWorkspace() {
         this.http.getWspace('new')
             .subscribe(
-                wSpace => this.man = new Manipulator(wSpace),
-                error => this.errorMsg = <any>error);
+            wSpace => this.man = new Manipulator(wSpace),
+            error => this.errorMsg = <any>error);
     }
 
     /*
@@ -279,9 +284,83 @@ export class ManipulatorComponent implements OnInit {
 
 
 
-    public undoRedo() {
+    public undoRedo(meh) {
         //TODO!
     }
+
+    public keyboardShortcuts(event: KeyboardEvent) {
+        let key = event.key;
+        if (this.man.gui.tool == 'text' && this.textInput.nativeElement.style.display == 'block') {
+            if (key.toLowerCase() == 'enter') {
+                this.hideVirtual();
+            }
+            return;
+        }
+        switch (key.toLowerCase()) {
+            case "v":
+                if (event.ctrlKey) {
+                    this.man.pasteSelected();
+                }
+                this.man.setTool('select');
+                break;
+            
+            case "p":
+                this.man.setTool('pen');
+                break;
+            
+            case "s":
+                if (event.ctrlKey) {
+                    event.preventDefault();
+                    this.saveWorkspace()
+                }
+                else {
+                    this.man.setTool('square');
+                }
+                break;
+            
+            case "c":
+                if (event.ctrlKey) {
+                    this.man.copySelected()
+                } else {
+                    this.man.setTool('circle');
+                }
+                break;
+           
+            case "delete":
+                this.man.removeDrawing();
+                break
+            
+            case "l":
+                this.man.setTool('line');
+                break;
+            
+            case "t":
+                this.man.setTool('text');
+                break;
+            
+            case "e":
+                this.man.setTool('eraser');
+                break;
+            
+            case "z":
+                if (event.ctrlKey) {
+                    event.preventDefault();
+                    this.undoRedo('undo');
+                }
+                break;
+            
+            case "y":
+                if (event.ctrlKey) {
+                    event.preventDefault();
+                    this.undoRedo('redo');
+                }
+                break;
+            
+            case "a":
+                this.man.addCanvas();
+        }
+    }
+
 
 
 }
