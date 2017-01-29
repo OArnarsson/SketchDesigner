@@ -5,7 +5,7 @@ const http = require('http');
 const api = require('./routes/api');
 const app = express();
 
-app.use(express.static(__dirname + '../public'));
+app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }));
