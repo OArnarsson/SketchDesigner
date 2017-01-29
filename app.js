@@ -1,15 +1,11 @@
-global.rootRequire = (name) => {
-    return require('./node_modules' + '/' + name);
-}
-
-const express = rootRequire('express');
-const bodyParser = rootRequire('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
 const path = require('path');
 const http = require('http');
 const api = require('./routes/api');
 const app = express();
 
-app.use(express.static('../dist'));
+app.use(express.static(__dirname + '../public'));
 
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }));
@@ -19,7 +15,7 @@ app.use('/api', api);
 
 // All other routes return the index file
 app.get('*', (req, res) => {
-    res.sendFile('dist/index.html', { root: './' });
+    res.sendFile('/public/index.html', { root: './' });
 });
 
 // Server setup
