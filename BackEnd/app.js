@@ -19,7 +19,6 @@ app.use('/api', api);
 
 // All other routes return the index file
 app.get('*', (req, res) => {
-    res.sendFile('dist/index.html', { root: '../' });
 });
 
 // Server setup
