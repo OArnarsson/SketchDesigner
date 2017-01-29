@@ -14,7 +14,6 @@ mongoose.connect(uri);
 
 router.use(function (req, res, next) {
     console.log(utility.shortDate(req));
-    app.use(forceSSL());
     next();
 });
 
