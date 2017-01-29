@@ -46,9 +46,11 @@ export class Manipulator {
     }
 
     public removeCanvas(canvas: Canvas) {
-        this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas), 1);
-        this.activeCanvas = this.workspace.canvases[0];
-        this.manageHistory('KILL CANVAS');
+        if (this.workspace.canvases.length > 1) {
+            this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas), 1);
+            this.activeCanvas = this.workspace.canvases[0];
+            this.manageHistory('KILL CANVAS');
+        }
     }
 
     public removeDrawing() {
@@ -102,7 +104,7 @@ export class Manipulator {
         downPos.setPos('end', startX, startY);
         this.moveX = startX;
         this.moveY = startY;
-        for(let i = 0; i < this.selectedDrawings.length; i+=1){
+        for (let i = 0; i < this.selectedDrawings.length; i += 1) {
             console.log("found");
             this.mapSelectedDrawing(this.selectedDrawings[i]);
         }
@@ -211,9 +213,9 @@ export class Manipulator {
             this.manageHistory('MOVE');
         }
     }
-    public mapSelectedDrawing(drawing:Drawing){
-        for(let prop in drawing.gui){
-            if(prop!= 'tool'){
+    public mapSelectedDrawing(drawing: Drawing) {
+        for (let prop in drawing.gui) {
+            if (prop != 'tool') {
                 drawing.gui[prop] = this.gui[prop];
             }
         }
@@ -301,7 +303,7 @@ export class Manipulator {
         else {
             console.log('CHANGE DETECTED!');
             this.history.push(new Workspace(this.workspace));
-            this.currHistory = this.history.length-1;
+            this.currHistory = this.history.length - 1;
         }
     }
 
@@ -314,9 +316,10 @@ export class Manipulator {
                 this.workspace.canvases[i] = new Canvas(this.history[this.currHistory].canvases[i]);
             }
         }
+        let that = this;
         setTimeout(() => {
-            for (let i = 0; i < this.workspace.canvases.length; i += 1) {
-                this.workspace.canvases[i].redrawCanvas();
+            for (let i = 0; i < that.workspace.canvases.length; i += 1) {
+                that.workspace.canvases[i].redrawCanvas();
             }
         }, 250);
 
