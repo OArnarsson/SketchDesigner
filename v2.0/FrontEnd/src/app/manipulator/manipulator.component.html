@@ -49,7 +49,7 @@
     <div class="opacityCon">
         <h5>Opacity</h5>
         <div class="innerCon">
-            <input type="range" [(ngModel)]="man.gui.globalAlpha">
+            <input type="range" [(ngModel)]="man.gui.globalAlpha" (ngModelChange)="man.redrawSelect()">
             <h5>{{man.gui.globalAlpha}}%</h5>
         </div>
     </div>
@@ -57,22 +57,24 @@
         <i (click)="man.toggleHasCol('fill')" [ngClass]="man.getIconClass(man.gui.hasFill)" aria-hidden="true"></i>
         <input class="colorBox" [(colorPicker)]="man.gui.fillStyle"
                [style.background]="man.gui.fillStyle"
-               [cpPosition]="'left'"/>
+               [cpPosition]="'left'"
+               (colorPickerChange)="man.redrawSelect()"/>
         <h5>Fill</h5>
     </div>
     <div class="colorCon" *ngIf="man.onDisplay('strokeCon')">
         <i (click)="man.toggleHasCol('stroke')" [ngClass]="man.getIconClass(man.gui.hasBorder)" aria-hidden="true"></i>
         <input class="colorBox" [(colorPicker)]="man.gui.strokeStyle"
                [style.background]="man.gui.strokeStyle"
-               [cpPosition]="'left'"/>
+               [cpPosition]="'left'"
+               (colorPickerChange)="man.redrawSelect()"/>
         <h5 class="smaller">Border</h5>
-        <input class="borderSize" type="number" min="1" max="100" [(ngModel)]="man.gui.lineWidth">
+        <input class="borderSize" type="number" min="1" max="100" [(ngModel)]="man.gui.lineWidth" (ngModelChange)="man.redrawSelect()">
     </div>
 
     <div class="fontCon" *ngIf="man.onDisplay('fontCon')" (change)="styleInput()">
         <h5>Text</h5>
         <div class="innerCon">
-            <select [ngModel]="man.gui.textprops.font" (change)="man.setFont($event.target.value)">
+            <select [ngModel]="man.gui.textprops.font" (change)="man.setFont($event.target.value)" (ngModelChange)="man.redrawSelect()">
                 <option [value]="font" *ngFor="let font of man.gui.textprops.allFonts">{{font}}</option>
             </select>
         </div>
@@ -80,17 +82,19 @@
             <i (click)="man.toggleHasCol('stroke')" [ngClass]="man.getIconClass(man.gui.strokeStyle)" aria-hidden="true"></i>
             <input class="colorBox" [(colorPicker)]="man.gui.strokeStyle"
                    [style.background]="man.gui.strokeStyle"
-                   [cpPosition]="'left'"/>
+                   [cpPosition]="'left'"
+                   (colorPickerChange)="man.redrawSelect()"/>
             <h5>Fill</h5>
         </div>
         <div class="innerCon">
             <h5>Font Size</h5>
-            <input type="number" min="1" max="100" [(ngModel)]="man.gui.textprops.fontSize">
+            <input type="number" min="1" max="100" [(ngModel)]="man.gui.textprops.fontSize" (ngModelChange)="man.redrawSelect()">
             <i (click)="man.toggleFontStyle('bold')" class="fa fa-bold" aria-hidden="true"      [ngClass]="{'active': man.gui.textprops.bold}"></i>
             <i (click)="man.toggleFontStyle('italic')" class="fa fa-italic" aria-hidden="true"  [ngClass]="{'active': man.gui.textprops.italic}"></i>
         </div>
     </div>
 </div>
+
 
 
 <!--  Utilities  -->

@@ -96,10 +96,6 @@ export class Manipulator {
         downPos.setPos('end', startX, startY);
         this.moveX = startX;
         this.moveY = startY;
-        for(let i = 0; i < this.selectedDrawings.length; i+=1){
-            console.log("found");
-            this.mapSelectedDrawing(this.selectedDrawings[i]);
-        }
         if (this.gui.tool != 'select' && this.gui.tool != 'text') {
             this.selectedDrawings = [];
             this.activeDrawing.gui = JSON.parse(JSON.stringify(this.gui));
@@ -208,8 +204,26 @@ export class Manipulator {
     public mapSelectedDrawing(drawing:Drawing){
         for(let prop in drawing.gui){
             if(prop!= 'tool'){
-                drawing.gui[prop] = this.gui[prop];
+                if(prop == 'textprops'){
+                    for(let innerProp in drawing.gui[prop]){
+                        if(innerProp != 'value') {
+                            drawing.gui[prop][innerProp] = JSON.parse(JSON.stringify(this.gui[prop][innerProp]));
+                        }
+                    }
+                }
+                else
+                    drawing.gui[prop] = JSON.parse(JSON.stringify(this.gui[prop]));
             }
+        }
+    }
+
+    public redrawSelect(){
+        if(this.gui.tool == 'select'){
+            for(let drawing of this.selectedDrawings){
+                this.mapSelectedDrawing(drawing);
+                this.activeCanvas.drawObject(drawing, true);
+            }
+
         }
     }
 
@@ -295,6 +309,7 @@ export class Manipulator {
         }
         return "fa fa-square-o";
     }
+
     public toggleHasCol(style) {
         if (style == 'fill') {
             this.gui.hasFill = !this.gui.hasFill;
@@ -303,9 +318,11 @@ export class Manipulator {
             this.gui.hasBorder = !this.gui.hasBorder;
         }
     }
+
     public setFont(font) {
         this.gui.textprops.font = font;
     }
+
     public toggleFontStyle(style) {
         if (style == 'bold') {
             this.gui.textprops.bold = !this.gui.textprops.bold;
@@ -326,7 +343,6 @@ export class Manipulator {
         if (container == 'fontCon' && (this.gui.tool == 'text' || this.gui.tool == 'select')) {
             return true;
         }
-        return false;
     }
 
     public newText(value, xPos, yPos) {

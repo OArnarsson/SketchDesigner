@@ -141,14 +141,6 @@ export class ManipulatorComponent implements OnInit {
         else {
             this.textInput.nativeElement.style.fontWeight = '300';
         }
-        if(this.man.gui.textprops.italic){
-            this.textInput.nativeElement.style.fontStyle = 'italic';
-        }
-        else{
-            this.textInput.nativeElement.style.fontStyle = 'normal';
-        }
-
-
     }
 
     public displayVirtualInput(event: any) {

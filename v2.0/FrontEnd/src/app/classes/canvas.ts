@@ -69,6 +69,7 @@ export class Canvas {
         }
 
         if (drawing.gui.tool == 'select') {
+            console.log("im drawing select");
             this.renderContext.globalAlpha = 0.35;
             this.renderContext.strokeStyle = 'green';
             this.renderContext.fillStyle = 'green';
@@ -93,6 +94,7 @@ export class Canvas {
         }
 
         if (drawing.gui.tool == 'text') {
+            console.log(drawing.gui);
             this.renderContext.textBaseline = 'top';
             if (drawing.gui.textprops.value == '') {
                 return;
