@@ -24,7 +24,7 @@
 </div>
 
 <div #canvasContainer class="canvasCon">
-    <div class="singleCanvas" *ngFor="let canvas of man.workspace.canvases; let i=index" (mouseenter)="man.activateCanvas(canvas)">
+    <div class="singleCanvas" *ngFor="let canvas of man.workspace.canvases; let i=index" (mouseenter)="man.activateCanvas(canvas)" >
         <div class="canvasHeader" [class.active]="man.activeCanvas==canvas">
             <input placeholder="Artboard - {{i+1}}" value="{{canvas.label}}" [(ngModel)]="canvas.label">
             <i class="fa fa-files-o" aria-hidden="true" (click)="man.duplicateCanvas(canvas)"></i>

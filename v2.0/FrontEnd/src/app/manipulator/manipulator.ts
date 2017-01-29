@@ -11,6 +11,7 @@ export class Manipulator {
     public selectedDrawings: Drawing[];
     public activeDrawing: Drawing;
     public selectionZone: Drawing;
+    public selectionGui: Gui;
     public gui: Gui;
     public moveX: number;
     public moveY: number;
@@ -80,7 +81,10 @@ export class Manipulator {
         downPos.setPos('end', startX, startY);
         this.moveX = startX;
         this.moveY = startY;
-
+        for(let i = 0; i < this.selectedDrawings.length; i+=1){
+            console.log("found");
+            this.mapSelectedDrawing(this.selectedDrawings[i]);
+        }
         if (this.gui.tool != 'select' && this.gui.tool != 'text') {
             this.selectedDrawings = [];
             this.activeDrawing.gui = JSON.parse(JSON.stringify(this.gui));
@@ -170,6 +174,7 @@ export class Manipulator {
                     yPos.push(drawing.selectionPos.endY);
                 }
             }
+
             this.isSelecting = false;
             this.selectionZone.currPos.setPos('start', Math.min.apply(null, xPos), Math.min.apply(null, yPos));
             this.selectionZone.currPos.setPos('end', Math.max.apply(null, xPos), Math.max.apply(null, yPos));
@@ -183,6 +188,13 @@ export class Manipulator {
             this.activeCanvas.redrawCanvas();
             this.activeCanvas.drawObject(this.selectionZone, true);
             this.manageHistory('MOVE');
+        }
+    }
+    public mapSelectedDrawing(drawing:Drawing){
+        for(let prop in drawing.gui){
+            if(prop!= 'tool'){
+                drawing.gui[prop] = this.gui[prop];
+            }
         }
     }
 
