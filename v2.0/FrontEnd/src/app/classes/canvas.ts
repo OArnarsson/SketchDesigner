@@ -93,6 +93,7 @@ export class Canvas {
         }
 
         if (drawing.gui.tool == 'text') {
+            this.renderContext.textBaseline = 'top';
             if (drawing.gui.textprops.value == '') {
                 return;
             }

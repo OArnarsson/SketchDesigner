@@ -114,10 +114,10 @@ export class ManipulatorComponent implements OnInit {
     }
 
     /* End Save Visual */
-    public displayVirtualInput(event: any) {
-        //console.log(this.textInput.nativeElement.style.display);
-        //first we check if user input is on the canvas
 
+    /* Visual TextBox*/
+    public displayVirtualInput(event: any) {
+        //first we check if user input is on the canvas
         if (this.man.gui.tool == 'text' && this.VirtualInCanvas(this.man.activeCanvas.rawCanvasObj, event.pageX, event.pageY)) {
             if (this.textInput.nativeElement.style.display != 'block') {
                 let left = event.pageX + "px";
@@ -128,7 +128,6 @@ export class ManipulatorComponent implements OnInit {
                 this.textInput.nativeElement.style.display = 'block';
                 this.textInput.nativeElement.style.color = this.man.gui.strokeStyle;
                 this.textInput.nativeElement.style.font = this.man.gui.textprops.font;
-                //console.log(this.textInput.nativeElement.id);
             }
             //now we check if user is trying to click away from the input
             else {
@@ -139,12 +138,11 @@ export class ManipulatorComponent implements OnInit {
 
         }
     }
-
     public hideVirtual() {
         if (this.textInput.nativeElement.value == "") {
             this.textInput.nativeElement.value = "New Text";
         }
-        //this.man.newText(this.textInput.nativeElement.value, this.textInput.nativeElement.offsetLeft, this.textInput.nativeElement.offsetTop);
+        this.man.newText(this.textInput.nativeElement.value, this.textInput.nativeElement.offsetLeft, this.textInput.nativeElement.offsetTop);
         this.textInput.nativeElement.value = "";
         this.textInput.nativeElement.style.display = 'none';
     }
@@ -158,6 +156,7 @@ export class ManipulatorComponent implements OnInit {
         }
         return false;
     }
+    /* END Visual TextBox*/
 
     /*
         *END VIEW FUNCTIONS

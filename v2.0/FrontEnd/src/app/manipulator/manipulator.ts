@@ -272,5 +272,17 @@ export class Manipulator {
         }
         return false;
     }
+    public newText(value, xPos, yPos) {
+        let textDrawing = new Drawing();
+        textDrawing.gui = JSON.parse(JSON.stringify(this.gui));
+        textDrawing.gui.textprops.value = value;
+        let downPos = new Position();
+        downPos.setPos('start', xPos - this.activeCanvas.rawCanvasObj.offsetLeft, yPos - this.activeCanvas.rawCanvasObj.offsetTop);
+        downPos.setPos('end', (xPos - this.activeCanvas.rawCanvasObj.offsetLeft)+this.activeCanvas.renderContext.measureText(value).width, (yPos - this.activeCanvas.rawCanvasObj.offsetTop)+55);
+        textDrawing.currPos = downPos;
+        textDrawing.selectionPos = downPos;
+        this.activeCanvas.drawings.push(textDrawing);
+        this.activeCanvas.redrawCanvas();
+    }
 
 }
