@@ -187,10 +187,12 @@ export class Manipulator {
     }
 
     public activateCanvas(canvas: Canvas) {
-        this.selectionZone = new Drawing();
-        this.selectedDrawings = [];
-        this.activeCanvas.redrawCanvas();
-        this.activeCanvas = canvas;
+        if (this.selectedDrawings.length < 1) {
+            this.selectionZone = new Drawing();
+            this.selectedDrawings = [];
+            this.activeCanvas.redrawCanvas();
+            this.activeCanvas = canvas;
+        }
     }
 
     public getLower(pos: Position) {
@@ -303,7 +305,7 @@ export class Manipulator {
         let textDrawing = new Drawing();
         textDrawing.gui = JSON.parse(JSON.stringify(this.gui));
         console.log(value.length);
-        if(value.length >0) {
+        if (value.length > 0) {
             textDrawing.gui.textprops.value = value;
             //In order to use measureText from renderContext, we have to render into the canvas the font size.
             this.activeCanvas.renderContext.font = this.gui.textprops.fontSize + "px " + " " + this.gui.textprops.font;
