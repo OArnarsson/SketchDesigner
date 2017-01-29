@@ -51,7 +51,11 @@ export class ManipulatorComponent implements OnInit {
         this.http.getWspace(this.date)
             .subscribe(
             wSpace => this.man = new Manipulator(wSpace),
-            error => this.errorMsg = <any>error);
+            error => { 
+                if(error) {
+                    this.router.navigate(['/']);
+            }
+            });
     }
 
     ngAfterViewChecked() {

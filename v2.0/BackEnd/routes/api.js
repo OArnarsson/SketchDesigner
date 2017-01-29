@@ -54,8 +54,10 @@ router.route('/workspace/:dateCreated')
             Workspace.findOne({ dateCreated: req.params.dateCreated }, (err, workspace) => {
                 if (err)
                     return res.status(500).send(err);
-
-                res.json(workspace);
+                if(workspace)
+                    return res.json(workspace);
+                    
+                res.status(404).send('Workspace not found!');
             });
         else {
             let workspace = new Workspace();
