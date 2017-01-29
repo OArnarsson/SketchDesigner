@@ -34,9 +34,24 @@ export class Manipulator {
         this.clipboard = [];
     }
 
+    public addCanvas() {
+        this.workspace.canvases.push(new Canvas());
+    }
+
     public removeCanvas(canvas:Canvas) {
         this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas), 1);
         this.activeCanvas = this.workspace.canvases[0];
+        this.manageHistory('KILL CANVAS');
+    }
+
+    public removeDrawing(drawing: Drawing) {
+        if (this.selectedDrawings.length > 0) {
+            for(let drawing of this.selectedDrawings)
+                this.activeCanvas.drawings.splice(this.activeCanvas.drawings.indexOf(drawing), 1);
+            this.selectionZone = new Drawing();
+            this.activeCanvas.redrawCanvas();
+            this.manageHistory('KILL DRAWING');
+        }
     }
 
     public duplicateCanvas(canvas) {
@@ -49,13 +64,14 @@ export class Manipulator {
             for (let canvas of this.workspace.canvases) {
                 canvas.redrawCanvas();
             }
-        }, 100);
+        }, 150);
     }
 
 
     public setTool(tool){
         this.gui.tool = tool;
     }
+
     public mouseDown(e: any) {
         let startX = e.pageX - this.activeCanvas.rawCanvasObj.offsetLeft;
         let startY = e.pageY - this.activeCanvas.rawCanvasObj.offsetTop;
@@ -137,6 +153,7 @@ export class Manipulator {
             this.activeDrawing = new Drawing();
             this.isDrawing = false;
             this.activeCanvas.redrawCanvas();
+            this.manageHistory('DRAW');
 
         }
         else if (this.isSelecting) {
@@ -165,6 +182,7 @@ export class Manipulator {
             this.isMoving = false;
             this.activeCanvas.redrawCanvas();
             this.activeCanvas.drawObject(this.selectionZone, true);
+            this.manageHistory('MOVE');
         }
     }
 
@@ -230,6 +248,11 @@ export class Manipulator {
                 this.activeCanvas.drawings.push(new Drawing(this.clipboard[i]));
             }
         this.activeCanvas.redrawCanvas();
+        this.manageHistory('PASTED');
+    }
+
+    public manageHistory(action) {
+        console.log(action, " happened!");
     }
 
     //Utilities for View
@@ -272,6 +295,7 @@ export class Manipulator {
         }
         return false;
     }
+    
     public newText(value, xPos, yPos) {
         let textDrawing = new Drawing();
         textDrawing.gui = JSON.parse(JSON.stringify(this.gui));

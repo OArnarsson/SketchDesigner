@@ -40,7 +40,8 @@ export class ManipulatorComponent implements OnInit {
 
 
         this.rend.listenGlobal('document', 'mousedown', (event) => {
-            this.displayVirtualInput(event);
+            if (this.man.gui.tool == 'text' && this.man.workspace.canvases.length > 0)
+                this.displayVirtualInput(event);
         });
     }
 
@@ -248,24 +249,8 @@ export class ManipulatorComponent implements OnInit {
 
 
 
-
-    public addCanvas() {
-        this.man.workspace.canvases.push(new Canvas());
-    }
-
-
     public undoRedo() {
         //TODO!
-    }
-
-
-
-    public removeDrawing() {
-        if (this.man.selectedDrawings.length > 0)
-            for (let drawing of this.man.selectedDrawings)
-                this.man.activeCanvas.drawings.splice(this.man.activeCanvas.drawings.indexOf(drawing), 1);
-        this.man.selectionZone = new Drawing();
-        this.man.activeCanvas.redrawCanvas();
     }
 
 

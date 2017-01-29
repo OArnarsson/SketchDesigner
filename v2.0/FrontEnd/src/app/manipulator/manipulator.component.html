@@ -19,8 +19,8 @@
     <i (click)="man.setTool('text')" class="fa fa-font" [class.active]="man.gui.tool=='text'" aria-hidden="true"></i><div>Text (T)</div>
     <i (click)="undoRedo('undo')" class="fa fa-undo" aria-hidden="true"></i><div>Undo (CTRL+ Z)</div>
     <i (click)="undoRedo('redo')" class="fa fa-repeat" aria-hidden="true"></i><div>Redo (CTRL+ Y)</div>
-    <i (click)="removeDrawing()" class="fa fa-trash" aria-hidden="true"></i><div>Remove (Delete)</div>
-    <i (click)="addCanvas()" class="fa fa-file" aria-hidden="true"></i><div>Artboard (A)</div>
+    <i (click)="man.removeDrawing()" class="fa fa-trash" aria-hidden="true"></i><div>Remove (Delete)</div>
+    <i (click)="man.addCanvas()" class="fa fa-file" aria-hidden="true"></i><div>Artboard (A)</div>
 </div>
 
 <div #canvasContainer class="canvasCon">
