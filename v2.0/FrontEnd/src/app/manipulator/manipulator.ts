@@ -38,7 +38,7 @@ export class Manipulator {
         this.workspace.canvases.push(new Canvas());
     }
 
-    public removeCanvas(canvas:Canvas) {
+    public removeCanvas(canvas: Canvas) {
         this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas), 1);
         this.activeCanvas = this.workspace.canvases[0];
         this.manageHistory('KILL CANVAS');
@@ -46,7 +46,7 @@ export class Manipulator {
 
     public removeDrawing() {
         if (this.selectedDrawings.length > 0) {
-            for(let drawing of this.selectedDrawings)
+            for (let drawing of this.selectedDrawings)
                 this.activeCanvas.drawings.splice(this.activeCanvas.drawings.indexOf(drawing), 1);
             this.selectionZone = new Drawing();
             this.activeCanvas.redrawCanvas();
@@ -55,7 +55,7 @@ export class Manipulator {
     }
 
     public duplicateCanvas(canvas) {
-        this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas)+1, 0, new Canvas(canvas));
+        this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas) + 1, 0, new Canvas(canvas));
         this.renderCanvases();
     }
 
@@ -68,7 +68,7 @@ export class Manipulator {
     }
 
 
-    public setTool(tool){
+    public setTool(tool) {
         this.gui.tool = tool;
     }
 
@@ -259,46 +259,46 @@ export class Manipulator {
     }
 
     //Utilities for View
-    public getIconClass(fill){
-        if(fill){
+    public getIconClass(fill) {
+        if (fill) {
             return "fa fa-check-square-o";
         }
-        return  "fa fa-square-o";
+        return "fa fa-square-o";
     }
-    public toggleHasCol(style){
-        if(style == 'fill'){
+    public toggleHasCol(style) {
+        if (style == 'fill') {
             this.gui.hasFill = !this.gui.hasFill;
         }
-        else{
+        else {
             this.gui.hasBorder = !this.gui.hasBorder;
         }
     }
-    public setFont(font){
+    public setFont(font) {
         this.gui.textprops.font = font;
     }
-    public toggleFontStyle(style){
-        if(style == 'bold'){
+    public toggleFontStyle(style) {
+        if (style == 'bold') {
             this.gui.textprops.bold = !this.gui.textprops.bold;
         }
         else {
             this.gui.textprops.italic = !this.gui.textprops.italic;
         }
     }
-    public onDisplay(container){
-        if(container == 'fillCon' && this.gui.tool!='line' && this.gui.tool!='text'){
+    public onDisplay(container) {
+        if (container == 'fillCon' && this.gui.tool != 'line' && this.gui.tool != 'text') {
             return true;
         }
 
-        if(container == 'strokeCon' && this.gui.tool!='text'){
+        if (container == 'strokeCon' && this.gui.tool != 'text') {
             return true;
         }
 
-        if(container == 'fontCon' && (this.gui.tool=='text' || this.gui.tool=='select')){
+        if (container == 'fontCon' && (this.gui.tool == 'text' || this.gui.tool == 'select')) {
             return true;
         }
         return false;
     }
-    
+
     public newText(value, xPos, yPos) {
         let textDrawing = new Drawing();
         textDrawing.gui = JSON.parse(JSON.stringify(this.gui));
