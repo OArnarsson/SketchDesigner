@@ -276,9 +276,11 @@ export class Manipulator {
         let textDrawing = new Drawing();
         textDrawing.gui = JSON.parse(JSON.stringify(this.gui));
         textDrawing.gui.textprops.value = value;
+        //In order to use measureText from renderContext, we have to render into the canvas the font size.
+        this.activeCanvas.renderContext.font = this.gui.textprops.fontSize + "px " + " " + this.gui.textprops.font;
         let downPos = new Position();
         downPos.setPos('start', xPos - this.activeCanvas.rawCanvasObj.offsetLeft, yPos - this.activeCanvas.rawCanvasObj.offsetTop);
-        downPos.setPos('end', (xPos - this.activeCanvas.rawCanvasObj.offsetLeft)+this.activeCanvas.renderContext.measureText(value).width, (yPos - this.activeCanvas.rawCanvasObj.offsetTop)+55);
+        downPos.setPos('end', (xPos - this.activeCanvas.rawCanvasObj.offsetLeft)+this.activeCanvas.renderContext.measureText(value).width, (yPos - this.activeCanvas.rawCanvasObj.offsetTop)+50);
         textDrawing.currPos = downPos;
         textDrawing.selectionPos = downPos;
         this.activeCanvas.drawings.push(textDrawing);
