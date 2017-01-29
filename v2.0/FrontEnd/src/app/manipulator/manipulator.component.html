@@ -17,12 +17,12 @@
     <i (click)="man.setTool('circle')" class="fa fa-circle-thin" [class.active]="man.gui.tool=='circle'" aria-hidden="true"></i><div>Circle (C)</div>
     <i (click)="man.setTool('line')" class="fa fa-minus" [class.active]="man.gui.tool=='line'" aria-hidden="true"></i><div>Line (L)</div>
     <i (click)="man.setTool('text')" class="fa fa-font" [class.active]="man.gui.tool=='text'" aria-hidden="true"></i><div>Text (T)</div>
-    <i (click)="undoRedo('undo')" class="fa fa-undo" aria-hidden="true"></i><div>Undo (CTRL+ Z)</div>
-    <i (click)="undoRedo('redo')" class="fa fa-repeat" aria-hidden="true"></i><div>Redo (CTRL+ Y)</div>
+    <i (click)="man.backHistory()" class="fa fa-undo" aria-hidden="true"></i><div>Undo (CTRL+ Z)</div>
+    <i (click)="man.forwardHistory()" class="fa fa-repeat" aria-hidden="true"></i><div>Redo (CTRL+ Y)</div>
     <i (click)="man.copySelected()" class="fa fa-plus-square-o" aria-hidden="true"></i><div>Copy (CTRL + C)</div>
     <i (click)="man.pasteSelected()" class="fa fa-plus-square" aria-hidden="true"></i><div>Paste (CTRL + P)</div>
     <i (click)="man.removeDrawing()" class="fa fa-trash" aria-hidden="true"></i><div>Remove (Delete)</div>
-    <i (click)="man.addCanvas()" class="fa fa-file" aria-hidden="true"></i><div>Artboard (A)</div>
+    <i (click)="man.addCanvas()" class="fa fa-file" aria-hidden="true"></i><div>Artboard (CTRL + A)</div>
 </div>
 
 <div #canvasContainer class="canvasCon">

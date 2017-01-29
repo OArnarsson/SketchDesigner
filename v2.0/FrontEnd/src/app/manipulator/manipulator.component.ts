@@ -337,19 +337,21 @@ export class ManipulatorComponent implements OnInit {
             case "z":
                 if (event.ctrlKey) {
                     event.preventDefault();
-                    this.undoRedo('undo');
+                    this.man.backHistory();
                 }
                 break;
             
             case "y":
                 if (event.ctrlKey) {
                     event.preventDefault();
-                    this.undoRedo('redo');
+                    this.man.forwardHistory();
                 }
                 break;
             
             case "a":
+            if (event.ctrlKey) {
                 this.man.addCanvas();
+            }
         }
     }
 

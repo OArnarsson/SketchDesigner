@@ -19,6 +19,8 @@ export class Manipulator {
     public isSelecting: boolean;
     public isMoving: boolean;
     public clipboard: Drawing[];
+    public history: Workspace[];
+    public currHistory: number;
 
     public constructor(workspace: Workspace) {
         this.workspace = new Workspace(workspace);
@@ -33,16 +35,22 @@ export class Manipulator {
         this.isSelecting = false;
         this.isMoving = false;
         this.clipboard = [];
+        this.history = [];
+        this.history.push(new Workspace(this.workspace));
+        this.currHistory = 0;
     }
 
     public addCanvas() {
         this.workspace.canvases.push(new Canvas());
+        this.manageHistory('ADD CANVAS');
     }
 
     public removeCanvas(canvas: Canvas) {
-        this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas), 1);
-        this.activeCanvas = this.workspace.canvases[0];
-        this.manageHistory('KILL CANVAS');
+        if (this.workspace.canvases.length > 1) {
+            this.workspace.canvases.splice(this.workspace.canvases.indexOf(canvas), 1);
+            this.activeCanvas = this.workspace.canvases[0];
+            this.manageHistory('KILL CANVAS');
+        }
     }
 
     public removeDrawing() {
@@ -84,7 +92,7 @@ export class Manipulator {
             style = 'pointer';
         else if (this.gui.tool == 'pen')
             style == 'default'
-        for(let i = 0; i < this.workspace.canvases.length; i += 1)
+        for (let i = 0; i < this.workspace.canvases.length; i += 1)
             this.workspace.canvases[i].rawCanvasObj.style.cursor = style;
     }
 
@@ -96,6 +104,7 @@ export class Manipulator {
         downPos.setPos('end', startX, startY);
         this.moveX = startX;
         this.moveY = startY;
+
         if (this.gui.tool != 'select' && this.gui.tool != 'text') {
             this.selectedDrawings = [];
             this.activeDrawing.gui = JSON.parse(JSON.stringify(this.gui));
@@ -201,6 +210,7 @@ export class Manipulator {
             this.manageHistory('MOVE');
         }
     }
+
     public mapSelectedDrawing(drawing:Drawing){
         for(let prop in drawing.gui){
             if(prop!= 'tool'){
@@ -299,7 +309,54 @@ export class Manipulator {
     }
 
     public manageHistory(action) {
-        console.log(action, " happened!");
+        for (let canvas of this.workspace.canvases) {
+            canvas.renderContext = '';
+            canvas.rawCanvasObj = '';
+        }
+        if (JSON.stringify(this.history[this.history.length - 1].canvases) == JSON.stringify(this.workspace.canvases)) {
+            console.log('ALL SAME!')
+        }
+        else {
+            console.log('CHANGE DETECTED!');
+            this.history.push(new Workspace(this.workspace));
+            this.currHistory = this.history.length - 1;
+        }
+    }
+
+    public backHistory() {
+        if (this.currHistory > 0)
+            this.currHistory -= 1;
+        if (this.history[this.currHistory] != null) {
+            this.workspace.canvases = [];
+            for (let i = 0; i < this.history[this.currHistory].canvases.length; i += 1) {
+                this.workspace.canvases[i] = new Canvas(this.history[this.currHistory].canvases[i]);
+            }
+        }
+        let that = this;
+        setTimeout(() => {
+            for (let i = 0; i < that.workspace.canvases.length; i += 1) {
+                that.workspace.canvases[i].redrawCanvas();
+            }
+        }, 250);
+
+    }
+
+    public forwardHistory() {
+        if (this.currHistory < this.history.length)
+            this.currHistory += 1;
+        if (this.history[this.currHistory] != null) {
+            this.workspace.canvases = [];
+            for (let i = 0; i < this.history[this.currHistory].canvases.length; i += 1) {
+                this.workspace.canvases[i] = new Canvas(this.history[this.currHistory].canvases[i]);
+            }
+        }
+        let that = this;
+        setTimeout(() => {
+            for (let i = 0; i < that.workspace.canvases.length; i += 1) {
+                that.workspace.canvases[i].redrawCanvas();
+            }
+        }, 250);
+
     }
 
     //Utilities for View
