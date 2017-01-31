@@ -1,5 +1,7 @@
 # SketchDesigner
 
+###Stack used: [MEAN](http://mean.io)
+
 ### Setup/Usage
 - Navigate to <code>SketchDesigner/FrontEnd</code> and run <code>npm install</code>.  
 - To run the application as is, run the <code>ng build</code> command.
